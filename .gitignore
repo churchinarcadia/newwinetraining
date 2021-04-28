@@ -1,2 +1,27 @@
 
 newwinetraining/settings.py
+exerciseTypes/migrations/__init__.py
+languages/migrations/__init__.py
+localities/migrations/__init__.py
+newwinetraining/__pycache__/__init__.cpython-39.pyc
+newwinetraining/__pycache__/settings.cpython-39.pyc
+newwinetraining/__pycache__/urls.cpython-39.pyc
+recordingLocations/migrations/__init__.py
+registrations/migrations/__init__.py
+terms/migrations/__init__.py
+texts/migrations/__init__.py
+trainingMeetings/migrations/__init__.py
+translations/migrations/__init__.py
+userExercises/migrations/__init__.py
+users/__pycache__/__init__.cpython-39.pyc
+users/__pycache__/apps.cpython-39.pyc
+users/__pycache__/models.cpython-39.pyc
+users/migrations/__init__.py
+userTypes/__pycache__/__init__.cpython-39.pyc
+userTypes/__pycache__/admin.cpython-39.pyc
+userTypes/__pycache__/apps.cpython-39.pyc
+userTypes/__pycache__/models.cpython-39.pyc
+userTypes/migrations/0001_initial.py
+userTypes/migrations/__init__.py
+userTypes/migrations/__pycache__/0001_initial.cpython-39.pyc
+userTypes/migrations/__pycache__/__init__.cpython-39.pyc
