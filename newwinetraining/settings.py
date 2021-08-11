@@ -92,12 +92,12 @@ WSGI_APPLICATION = 'newwinetraining.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'HOST': 'localhost',
         'NAME': 'newwinetraining',
         'USER': 'newwinetraining',
-        'PASSWORD': 'caAXATu8lUO4OUwz',
-        'PORT': 3306,
+        'PASSWORD': 'fBGU&QFTR5%8ohxH',
+        'PORT': 5432,
     }
 }
 
