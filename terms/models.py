@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -12,10 +13,10 @@ class Term(models.Model):
             MaxValueValidator(2040, message='Please enter an appropriate year.'),
         ],
     )
-    language = models.ForeignKey('Language', on_delete = models.RESTRICT)
+    language = models.ForeignKey('languages.Language', on_delete = models.RESTRICT)
     start_date = models.DateField(auto_now = False, auto_now_add = False)
     end_date = models.DateField(auto_now = False, auto_now_add = False, )
     created = models.DateTimeField(auto_now_add = True)
-    creator = models.ForeignKey('User', on_delete = models.RESTRICT)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.RESTRICT)
     modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey('User', on_delete = models.RESTRICT)
+    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.RESTRICT)

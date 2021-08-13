@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 from django.utils import timezone
@@ -7,9 +8,9 @@ from django.utils import timezone
 
 class UserExercise(models.Model):
     date = models.DateField(default = timezone.now)
-    user = models.ForeignKey('User', on_delete = models.RESTRICT)
-    exercisetypes = models.ManyToManyField('ExerciseType')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.RESTRICT)
+    exercisetypes = models.ManyToManyField('exerciseTypes.ExerciseType')
     created = models.DateTimeField(auto_now_add = True)
-    creator = models.ForeignKey('User', on_delete = models.RESTRICT)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.RESTRICT)
     modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey('User', on_delete = models.RESTRICT)
+    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.RESTRICT)
