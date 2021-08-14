@@ -106,7 +106,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': (
                 'usertypes',
                 'groups',
-                'user_permissions'
+                'user_permissions',
                 'is_staff',
                 'is_superuser',
         )}),
@@ -114,6 +114,6 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(User,UserAdmin)
 #admin.site.register(Group)
-#admin.site.register(Permission)
+admin.site.register(Permission)
 admin.site.register(UserType)
 admin.site.register(Locality)

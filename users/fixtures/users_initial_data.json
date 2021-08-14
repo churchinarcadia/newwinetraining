@@ -1,0 +1,98 @@
+[
+    {
+        "model": "users.usertype",
+        "pk": 1,
+        "fields": {
+            "name": "Trainee",
+            "description": "Regular trainee enjoying the training with no adminstrative responsibilities."
+        }
+    },
+    {
+        "model": "users.usertype",
+        "pk": 2,
+        "fields": {
+            "name": "District Responsible",
+            "description": "Responsible for a district (i.e. district responsible brother)."
+        }
+    },
+    {
+        "model": "users.usertype",
+        "pk": 3,
+        "fields": {
+            "name": "Church Responsible",
+            "description": "Responsible for a church (i.e. leading brother)."
+        }
+    },
+    {
+        "model": "users.usertype",
+        "pk": 4,
+        "fields": {
+            "name": "Trainer",
+            "description": "Brothers that serve as trainers/coworkers in the training to give the trainings."
+        }
+    },
+    {
+        "model": "users.usertype",
+        "pk": 5,
+        "fields": {
+            "name": "Administrator",
+            "description": "Those who oversee the adminstration of the entire training."
+        }
+    },
+    {
+        "model": "users.locality",
+        "pk": 1,
+        "fields": {
+            "locality": "Alhambra"
+        }
+    },
+    {
+        "model": "users.locality",
+        "pk": 2,
+        "fields": {
+            "locality": "Arcadia"
+        }
+    },
+    {
+        "model": "users.locality",
+        "pk": 3,
+        "fields": {
+            "locality": "El Monte"
+        }
+    },
+    {
+        "model": "users.locality",
+        "pk": 4,
+        "fields": {
+            "locality": "East LA"
+        }
+    },
+    {
+        "model": "users.locality",
+        "pk": 5,
+        "fields": {
+            "locality": "Monterey Park"
+        }
+    },
+    {
+        "model": "users.locality",
+        "pk": 6,
+        "fields": {
+            "locality": "Pasadena"
+        }
+    },
+    {
+        "model": "users.locality",
+        "pk": 7,
+        "fields": {
+            "locality": "San Gabriel"
+        }
+    },
+    {
+        "model": "users.user",
+        "pk": 1,
+        "fields": {
+            "locality": "Administrator"
+        }
+    }
+]
