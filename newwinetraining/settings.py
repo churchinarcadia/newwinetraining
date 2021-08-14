@@ -42,18 +42,9 @@ INSTALLED_APPS = [
     'phonenumber_field',
 
     #own apps
-    'exerciseTypes',
     'languages',
-    'localities',
-    'recordingLocations',
-    'registrations',
-    'terms',
-    'texts',
-    'trainingMeetings',
-    'translations',
-    'userExercises',
+    'trainings',
     'users',
-    'userTypes',
 ]
 
 MIDDLEWARE = [

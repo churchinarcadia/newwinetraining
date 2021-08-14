@@ -49,7 +49,7 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length = 120)
     chinese_name = models.CharField(max_length = 6)
     gender = models.CharField(max_length = 10,choices = [('B','Brother'),('S','Sister')])
-    locality = models.ForeignKey('localities.Locality', on_delete = models.RESTRICT)
+    locality = models.ForeignKey(Locality, on_delete = models.RESTRICT)
     district = models.CharField(max_length = 8)
     language = models.ForeignKey('languages.Language', verbose_name = 'Primary Language', on_delete = models.RESTRICT)
     
@@ -57,23 +57,23 @@ class User(AbstractBaseUser):
     phone_number = PhoneNumberField(validators = [phone_regex], max_length = 10) # validators should be a list
 
     email = models.CharField(validators = [validate_email], max_length = 255)
-    usertypes = models.ManyToManyField('userTypes.UserType')
+    usertypes = models.ManyToManyField(UserType)
 
     is_staff = models.BooleanField()
     is_superuser = models.BooleanField()
     last_login = models.DateTimeField()
 
-    groups = models.ManyToManyField('Group')
-    user_permissions = models.ManyToManyField('Permission')
+    groups = models.ManyToManyField(Group)
+    user_permissions = models.ManyToManyField(Permission)
 
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey('self', on_delete = models.RESTRICT)
+    modifier = models.ForeignKey(self, on_delete = models.RESTRICT)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'locality', 'district']
 
     def __str__(self):
         if self.first_name != '':
@@ -96,3 +96,18 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         #Simplest possible answer: All staff are staff
         return self.is_staff
+
+class UserType(models.Model):
+    name = models.CharField(max_length = 100)
+    description = models.CharField(max_length = 255)
+    created = models.DateTimeField(auto_now_add = True)
+    creator = models.ForeignKey(User, on_delete = models.RESTRICT)
+    modified = models.DateTimeField(auto_now = True)
+    modifier = models.ForeignKey(User, on_delete = models.RESTRICT)
+
+class Locality(models.Model):
+    locality = models.CharField(max_length = 100)
+    created = models.DateTimeField(auto_now_add = True)
+    creator = models.ForeignKey(User, on_delete = models.RESTRICT)
+    modified = models.DateTimeField(auto_now = True)
+    modifier = models.ForeignKey(User, on_delete = models.RESTRICT)
