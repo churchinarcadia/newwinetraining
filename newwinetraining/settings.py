@@ -138,3 +138,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Custom User database for auth
 AUTH_USER_MODEL = 'users.User'
+
+#Setting up default phone number region for validation
+PHONENUMBER_DEFAULT_REGION = 'US'
