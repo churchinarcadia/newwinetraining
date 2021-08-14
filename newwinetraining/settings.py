@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
+from iommi.style_bootstrap import bootstrap
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
 
     #third party apps
     'phonenumber_field',
+    'iommi',
 
     #own apps
     'languages',
@@ -48,6 +51,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'iommi.live_edit.Middleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,6 +60,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    
+    'iommi.sql_trace.Middleware',
+    'iommi.profiling.Middleware',
+    'iommi.middleware', #must be last in the list
 ]
 
 ROOT_URLCONF = 'newwinetraining.urls'
@@ -62,7 +72,7 @@ ROOT_URLCONF = 'newwinetraining.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR, 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,3 +151,15 @@ AUTH_USER_MODEL = 'users.User'
 
 #Setting up default phone number region for validation
 PHONENUMBER_DEFAULT_REGION = 'US'
+
+#Iommi hook to use project style
+
+
+IOMMI_DEFAULT_STYLE = Style(
+    bootstrap,
+    base_template='newwinetraining/iommi_base.html',
+    root__assets=dict(
+        newwinetraining_custom_css=Asset.css(attrs__href='/static/custom.css'),
+        newwinetraining__custom_js=Asset.js(attrs__src='/static/custom.js'),
+    ),
+)

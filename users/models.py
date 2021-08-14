@@ -78,7 +78,7 @@ class User(AbstractBaseUser):
     district = models.CharField(max_length = 8, blank = True, null = True)
     language = models.ForeignKey('languages.Language', related_name = 'user_languages', verbose_name = 'Primary Language', on_delete = models.RESTRICT, blank = True, null = True)
     
-    #phone_regex = RegexValidator(regex='^[(]?[2-9]\d{2}[) -.]{0,2}\d{3}[ -.]?\d{4}$', message="Please enter your 10-digit phone number including your area code.")
+    #phone_regex = RegexValidator(regex=r'^[(]?[2-9]\d{2}[) -.]{0,2}\d{3}[ -.]?\d{4}$', message="Please enter your 10-digit phone number including your area code.")
     #phone_number = PhoneNumberField(validators = [phone_regex], max_length = 12, blank = True, null = True) # validators should be a list
     phone_number = PhoneNumberField(max_length = 12, blank = True, null = True)
 
@@ -105,9 +105,9 @@ class User(AbstractBaseUser):
         return self.first_name + ' ' + self.last_name
         """
         if self.first_name != '':
-            return self.first_name+' '+self.last_name+' ('+self.locality+', '+self.district+')'
+            return self.first_name + ' ' + self.last_name + ' (' + self.locality + ', ' + self.district+')'
         else:
-            return self.chinese_name+' ('+self.locality+', '+self.district+')'
+            return self.chinese_name + ' (' + self.locality + ', '+self.district + ')'
         """
     
     def has_perm(self, perm, obj = None):
@@ -131,5 +131,3 @@ class User(AbstractBaseUser):
         "Is the user a member of superusers?"
         #Simplest possible answer: All staff are staff
         return self.is_superuser
-
-# pbkdf2_sha256$260000$RQydkjB0pCK42uBdth4LxC$xHrOnANln6Fn00cfd/byL29BQ04KbxjrEdpQjiMGXJE=
