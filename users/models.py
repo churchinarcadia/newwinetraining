@@ -71,6 +71,7 @@ class User(AbstractBaseUser):
     district = models.CharField(max_length = 8)
     language = models.ForeignKey('languages.Language', related_name = 'user_languages', verbose_name = 'Primary Language', on_delete = models.RESTRICT)
     
+    #TODO clean up regex
     phone_regex = RegexValidator(regex='^[(]?[2-9]\d{2}[) -.]{0,2}\d{3}[ -.]?\d{4}$', message="Please enter your 10-digit phone number (including area code) without dashes or anything else.")
     phone_number = PhoneNumberField(validators = [phone_regex], max_length = 12) # validators should be a list
 
