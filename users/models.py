@@ -78,9 +78,9 @@ class User(AbstractBaseUser):
     district = models.CharField(max_length = 8, blank = True, null = True)
     language = models.ForeignKey('languages.Language', related_name = 'user_languages', verbose_name = 'Primary Language', on_delete = models.RESTRICT, blank = True, null = True)
     
-    #TODO clean up regex
-    phone_regex = RegexValidator(regex='^[(]?[2-9]\d{2}[) -.]{0,2}\d{3}[ -.]?\d{4}$', message="Please enter your 10-digit phone number including your area code.")
-    phone_number = PhoneNumberField(max_length = 12, blank = True, null = True) # validators should be a list
+    #phone_regex = RegexValidator(regex='^[(]?[2-9]\d{2}[) -.]{0,2}\d{3}[ -.]?\d{4}$', message="Please enter your 10-digit phone number including your area code.")
+    #phone_number = PhoneNumberField(validators = [phone_regex], max_length = 12, blank = True, null = True) # validators should be a list
+    phone_number = PhoneNumberField(max_length = 12, blank = True, null = True)
 
     email = models.CharField(validators = [validate_email], max_length = 255, unique = True)
     usertypes = models.ManyToManyField(UserType, related_name = 'user_usertypes', blank = True)
