@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
-from iommi.style_bootstrap import bootstrap
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -48,7 +46,15 @@ INSTALLED_APPS = [
     'languages',
     'trainings',
     'users',
+    'pages',
 ]
+
+try:
+    import django_fastdev
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS += ['django_fastdev']
 
 MIDDLEWARE = [
     'iommi.live_edit.Middleware',
@@ -153,7 +159,8 @@ AUTH_USER_MODEL = 'users.User'
 PHONENUMBER_DEFAULT_REGION = 'US'
 
 #Iommi hook to use project style
-
+"""
+from iommi.style_bootstrap import bootstrap
 
 IOMMI_DEFAULT_STYLE = Style(
     bootstrap,
@@ -163,3 +170,4 @@ IOMMI_DEFAULT_STYLE = Style(
         newwinetraining__custom_js=Asset.js(attrs__src='/static/custom.js'),
     ),
 )
+"""
