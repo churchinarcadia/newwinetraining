@@ -63,13 +63,10 @@ class UserChangeForm(forms.ModelForm):
             'phone_number',
             'email',
             'usertypes',
-            'created',
-            'modified',
-            'modifier',
             'is_staff',
             'is_superuser',
             'groups',
-            'user_permissions'
+            'user_permissions',
         )
 
 class UserAdmin(BaseUserAdmin):
@@ -80,6 +77,8 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
+
+    ordering = ('last_name', 'first_name',)
 
     list_display = (
         'first_name',
@@ -114,7 +113,7 @@ class UserAdmin(BaseUserAdmin):
     )
 
 admin.site.register(User,UserAdmin)
-admin.site.register(Group)
-admin.site.register(Permission)
+#admin.site.register(Group)
+#admin.site.register(Permission)
 admin.site.register(UserType)
 admin.site.register(Locality)
