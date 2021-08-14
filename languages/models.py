@@ -11,6 +11,9 @@ class Language(models.Model):
     modified = models.DateTimeField(auto_now = True)
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'language_modifiers', on_delete = models.RESTRICT)
 
+    def __str__(self):
+        return self.language
+
 class Translation(models.Model):
     text = models.ForeignKey('trainings.Text', related_name='translation_texts', on_delete = models.CASCADE)
     language = models.ForeignKey(Language, related_name = 'translation_languages', on_delete = models.RESTRICT)
@@ -19,3 +22,6 @@ class Translation(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translation_creators', on_delete = models.RESTRICT)
     modified = models.DateTimeField(auto_now = True)
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translation_modifiers', on_delete = models.RESTRICT)
+
+    def __str__(self):
+        return self.text + ', ' + self.language

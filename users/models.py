@@ -20,12 +20,18 @@ class UserType(models.Model):
     modified = models.DateTimeField(auto_now = True)
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_modifiers', on_delete = models.RESTRICT)
 
+    def __str__(self):
+        return self.name
+
 class Locality(models.Model):
     locality = models.CharField(max_length = 100)
     created = models.DateTimeField(auto_now_add = True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_creators', on_delete = models.RESTRICT)
     modified = models.DateTimeField(auto_now = True)
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_modifiers', on_delete = models.RESTRICT)
+
+    def __str__(self):
+        return self.locality
 
 class UserManager(BaseUserManager):
     def create_user(self, first_name, last_name, email, password = None):
@@ -58,7 +64,8 @@ class UserManager(BaseUserManager):
             password = password,
         )
 
-        user.is_admin = True
+        user.is_superuser = True
+        user.is_staff = True
         user.save(using = self._db)
         return user
 
@@ -66,28 +73,28 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length = 120, blank = True)
     last_name = models.CharField(max_length = 120, blank = True)
     chinese_name = models.CharField(max_length = 6, blank = True)
-    gender = models.CharField(max_length = 10,choices = [('B','Brother'),('S','Sister')])
-    locality = models.ForeignKey(Locality, related_name = 'user_localities', on_delete = models.RESTRICT)
-    district = models.CharField(max_length = 8)
-    language = models.ForeignKey('languages.Language', related_name = 'user_languages', verbose_name = 'Primary Language', on_delete = models.RESTRICT)
+    gender = models.CharField(max_length = 10, choices = [('B','Brother'),('S','Sister')], blank = True, null = True)
+    locality = models.ForeignKey(Locality, related_name = 'user_localities', on_delete = models.RESTRICT, blank = True, null = True)
+    district = models.CharField(max_length = 8, blank = True, null = True)
+    language = models.ForeignKey('languages.Language', related_name = 'user_languages', verbose_name = 'Primary Language', on_delete = models.RESTRICT, blank = True, null = True)
     
     #TODO clean up regex
-    phone_regex = RegexValidator(regex='^[(]?[2-9]\d{2}[) -.]{0,2}\d{3}[ -.]?\d{4}$', message="Please enter your 10-digit phone number (including area code) without dashes or anything else.")
-    phone_number = PhoneNumberField(validators = [phone_regex], max_length = 12) # validators should be a list
+    phone_regex = RegexValidator(regex='^[(]?[2-9]\d{2}[) -.]{0,2}\d{3}[ -.]?\d{4}$', message="Please enter your 10-digit phone number including your area code.")
+    phone_number = PhoneNumberField(validators = [phone_regex], max_length = 10, blank = True, null = True) # validators should be a list
 
     email = models.CharField(validators = [validate_email], max_length = 255, unique = True)
-    usertypes = models.ManyToManyField(UserType, related_name = 'user_usertypes')
+    usertypes = models.ManyToManyField(UserType, related_name = 'user_usertypes', blank = True)
 
-    is_staff = models.BooleanField()
-    is_superuser = models.BooleanField()
-    last_login = models.DateTimeField()
+    is_staff = models.BooleanField(default = False)
+    is_superuser = models.BooleanField(default = False)
+    last_login = models.DateTimeField(null = True)
 
     groups = models.ManyToManyField(Group, related_name = 'user_groups', blank = True)
     user_permissions = models.ManyToManyField(Permission, related_name = 'user_userpermissions', blank = True)
 
-    created = models.DateTimeField(auto_now_add = True)
-    modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey('self', related_name = 'user_modifiers', on_delete = models.RESTRICT)
+    created = models.DateTimeField(auto_now_add = True, null = True)
+    modified = models.DateTimeField(auto_now = True, null = True)
+    modifier = models.ForeignKey('self', related_name = 'user_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     objects = UserManager()
 
