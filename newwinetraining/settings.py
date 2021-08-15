@@ -158,7 +158,8 @@ AUTH_USER_MODEL = 'users.User'
 PHONENUMBER_DEFAULT_REGION = 'US'
 
 #Iommi hook to use project style
-"""
+
+from iommi import Style, Asset
 from iommi.style_bootstrap import bootstrap
 
 IOMMI_DEFAULT_STYLE = Style(
@@ -169,4 +170,3 @@ IOMMI_DEFAULT_STYLE = Style(
         newwinetraining__custom_js=Asset.js(attrs__src='/static/custom.js'),
     ),
 )
-"""
