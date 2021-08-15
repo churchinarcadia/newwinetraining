@@ -166,7 +166,7 @@ IOMMI_DEFAULT_STYLE = Style(
     bootstrap,
     base_template='newwinetraining/iommi_base.html',
     root__assets=dict(
-        newwinetraining_custom_css=Asset.css(attrs__href='/static/custom.css'),
-        newwinetraining__custom_js=Asset.js(attrs__src='/static/custom.js'),
+        newwinetraining_custom_css=Asset.css(attrs__href='/static/css/sb-admin-2.min.css'),
+        newwinetraining__custom_js=Asset.js(attrs__src='/static/js/sb-admin-2.min.js'),
     ),
 )
