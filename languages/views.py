@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 
-from iommi import Table, Form, Page
+from newwinetraining.iommi import Table, Form, Page
 
 from .models import Language, Translation, Translator
 

@@ -57,7 +57,7 @@ else:
     INSTALLED_APPS += ['django_fastdev']
 
 MIDDLEWARE = [
-    'iommi.live_edit.Middleware',
+    'iommi.live_edit.Middleware', #Must be first in the list
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
