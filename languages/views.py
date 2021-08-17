@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 
-from newwinetraining.iommi import Table, Form, Page
+from newwinetraining.iommi import Table, Form, Page, Column
 from iommi import Fragment
 
 from .models import Language, Translation, Translator
@@ -12,7 +12,38 @@ from .models import Language, Translation, Translator
 # Create your views here.
 
 def language_index(request):
-    return Table(auto__model = Language)
+    
+    class LanguageIndexTable(Table):
+
+        id = Column.number(
+            attr = 'pk',
+        )
+
+        language = Column(
+            attr = 'language',
+        )
+
+        code = Column(
+            attr = 'code',
+        )
+
+        created = Column(
+            attr = 'created',
+        )
+
+        creator = Column(
+            attr = 'creator',
+        )
+
+        modified = Column(
+            attr = 'modified',
+        )
+
+        modifier = Column(
+            attr = 'modifier',
+        )
+        
+    return LanguageIndexTable(rows = Language.objects.all())
 
 def language_view(request):
     return LanguageView()
