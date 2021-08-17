@@ -16,12 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from pages import views
+#from pages import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path ('', views.page_index),
-    #path('/', include('pages.urls')),
+    #path ('', views.page_index),
+    path('', include('pages.urls')),
+    #path('', include(('pages.urls', 'pages'), namespace = 'pages')),
     path('languages/', include('languages.urls')),
     path('trainings/', include('trainings.urls')),
     path('users/', include('users.urls')),
