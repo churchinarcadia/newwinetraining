@@ -25,8 +25,6 @@ def language_index(request):
     
     class LanguageIndexPage(Page):
         
-        context__browser_title = 'Language Index | New Wine Training'
-        
         page_title = html.h1('Languages')
 
         instructions = html.p('Click on the language name to view details about that language entry as well as any associated data.')
@@ -73,6 +71,9 @@ def language_index(request):
 
         table = LanguageIndexTable(rows = Language.objects.all())
         #table = return Table(auto__model = Language)
+        
+        class Meta:
+            context__browser_title = 'Language Index | New Wine Training'
 
     return LanguageIndexPage()
 
