@@ -24,7 +24,7 @@ from .models import Language, Translation, Translator
 def language_index(request):
     
     context = {
-        'title': 'Language Index | New Wine Training',
+        'html_title': 'Language Index | New Wine Training',
     }
     
     class LanguageIndexPage(Page):
@@ -104,7 +104,7 @@ def language_view(request, language_id):
         language_modifier_dt = html.dt('Modifier')
         language_modifier_dd = html.dd(language.modifier)
 
-        html.hr()
+        hr1 = html.hr()
 
         translators_h2 = html.h2(language.language + ' Translators')
         translators = language.translator_languages.all()
@@ -151,7 +151,7 @@ def language_view(request, language_id):
         else: 
             no_translators = html.p('No translators.')
         
-        html.hr()
+        hr2 = html.hr()
 
         translations_h2 = html.h2(language.language + ' Translations')
         translations = language.translation_languages.all()
@@ -204,7 +204,7 @@ def language_view(request, language_id):
         else:
             no_translations = html.p('No translations.')
         
-        html.hr()
+        hr3 = html.hr()
 
         terms_h2 = html.h2(language.language + ' Terms')
         terms = language.term_languages.all()
@@ -264,7 +264,7 @@ def language_view(request, language_id):
         else:
             no_terms = html.p('No terms.')
         
-        html.hr()
+        hr4 = html.hr()
 
         trainingmeetings_h2 = html.h2(language.language + ' Training Meetings')
         trainingmeetings = language.trainingmeeting_languages.all()
