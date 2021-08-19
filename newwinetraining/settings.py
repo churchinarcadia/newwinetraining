@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
-import environ
+import environ, os
 
 # Initialise environment variables
 env = environ.Env()
@@ -31,7 +31,8 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS')
+#ALLOWED_HOSTS = env('ALLOWED_HOSTS')
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -185,3 +186,9 @@ IOMMI_DEFAULT_STYLE = Style(
         newwinetraining_custom_js = Asset.js(attrs__src = STATIC_URL + 'js/sb-admin-2.min.js'),
     ),
 )
+
+#Disabling pycache for development environments
+#if env('DEBUG') == True:
+#    os.environ['PYTHONDONTWRITEBYTECODE'] = 1
+
+os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
