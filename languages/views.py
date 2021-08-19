@@ -23,7 +23,13 @@ from .models import Language, Translation, Translator
 
 def language_index(request):
     
+    context = {
+        'title': 'Language Index | New Wine Training',
+    }
+    
     class LanguageIndexPage(Page):
+        
+        #context__browser_title = 'Language Index | New Wine Training'
         
         page_title = html.h1('Languages')
 
@@ -71,11 +77,8 @@ def language_index(request):
 
         table = LanguageIndexTable(rows = Language.objects.all())
         #table = return Table(auto__model = Language)
-        
-        class Meta:
-            context__browser_title = 'Language Index | New Wine Training'
 
-    return LanguageIndexPage()
+    return LanguageIndexPage(context = context)
 
 def language_view(request, language_id):
     
