@@ -23,65 +23,63 @@ from .models import Language, Translation, Translator
 
 def language_index(request):
     
-    class LanguageIndexTable(Table):
-        
-        id = Column.number(
-            attr = 'pk',
-            render_column = False,
-        )
-
-        language = Column(
-            attr = 'language',
-            #cell__url = lambda row, **_: row.get_absolute_url(),
-            cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,))
-        )
-
-        code = Column(
-            attr = 'code',
-        )
-
-        created = Column(
-            attr = 'created',
-        )
-
-        creator = Column(
-            attr = 'creator',
-        )
-
-        modified = Column(
-            attr = 'modified',
-        )
-
-        modifier = Column(
-            attr = 'modifier',
-        )
-
-        edit = Column(
-                    attr = '',
-                    display_name = '',
-                    cell__value = 'Edit',
-                    cell__url = lambda row, **_: reverse('languages:translator_edit', args = (row.pk,)),
-                )
-
-
-    
     class LanguageIndexPage(Page):
-
+        
+        context__browser_title = 'Language Index | New Wine Training'
+        
         page_title = html.h1('Languages')
 
         instructions = html.p('Click on the language name to view details about that language entry as well as any associated data.')
+        
+        class LanguageIndexTable(Table):
+            
+            id = Column.number(
+                attr = 'pk',
+                render_column = False,
+            )
+
+            language = Column(
+                attr = 'language',
+                #cell__url = lambda row, **_: row.get_absolute_url(),
+                cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,))
+            )
+
+            code = Column(
+                attr = 'code',
+            )
+
+            created = Column(
+                attr = 'created',
+            )
+
+            creator = Column(
+                attr = 'creator',
+            )
+
+            modified = Column(
+                attr = 'modified',
+            )
+
+            modifier = Column(
+                attr = 'modifier',
+            )
+
+            edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('languages:translator_edit', args = (row.pk,)),
+            )
 
         table = LanguageIndexTable(rows = Language.objects.all())
         #table = return Table(auto__model = Language)
 
-    return LanguageIndexPage(title = 'Language Index | New Wine Training')
-    #return LanguageIndexPage()
+    return LanguageIndexPage()
 
 def language_view(request, language_id):
     
     language = get_object_or_404(Language, pk = language_id)
     
-
     class LanguageView(Page):
         h1 = html.h1(language.language)
 
