@@ -166,12 +166,12 @@ PHONENUMBER_DEFAULT_REGION = 'US'
 from iommi import Style, Asset
 from iommi.style_bootstrap import bootstrap, bulma, foundation, semantic_ui, water, django_admin
 
+"""
 IOMMI_DEFAULT_STYLE = Style(
     bootstrap,
 )
-
-
 """
+
 IOMMI_DEFAULT_STYLE = Style(
     bootstrap,
     base_template='newwinetraining/templates/iommi/iommi_base.html',
@@ -180,4 +180,3 @@ IOMMI_DEFAULT_STYLE = Style(
         newwinetraining_custom_js = Asset.js(attrs__src = STATIC_URL + 'js/sb-admin-2.min.js'),
     ),
 )
-"""
