@@ -131,3 +131,5 @@ dmypy.json
 *.pyc
 *.code-workspace
 *.vscode
+
+.idea

@@ -23,13 +23,7 @@ from .models import Language, Translation, Translator
 
 def language_index(request):
     
-    context = {
-        'html_title': 'Language Index | New Wine Training',
-    }
-    
     class LanguageIndexPage(Page):
-        
-        #context__browser_title = 'Language Index | New Wine Training'
         
         page_title = html.h1('Languages')
 
@@ -77,14 +71,11 @@ def language_index(request):
 
         table = LanguageIndexTable(rows = Language.objects.all())
         #table = return Table(auto__model = Language)
-
-    return LanguageIndexPage(context = context)
+        
+            
+    return LanguageIndexPage(context__html_title = 'Language Index | New Wine Training')
 
 def language_view(request, language_id):
-    
-    context = {
-        'html_title': 'Language View | New Wine Training',
-    }
     
     language = get_object_or_404(Language, pk = language_id)
     
@@ -344,20 +335,26 @@ def language_view(request, language_id):
         
         else:
             no_trainingmeetings = html.p('No training meetings.')
+        
+        class Meta:
+                
+            context = dict(
+                html_title = 'Language Index | New Wine Training',
+            )
 
-    return LanguageView(context = context)
+    return LanguageView()
 
 def language_add(request):
     
     class LanguageAddForm(Form):
         
-        
+        fields__id__editable = False,
     
     
     return Form.create(auto__model = Language)
 
 def language_edit(request, language_id):
-    return Form.create(auto__model = Language)
+    return Form.edit(auto__model = Language)
 
 def language_delete(request, language_id):
     return Form.create(auto__model = Language)
