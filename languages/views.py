@@ -82,6 +82,10 @@ def language_index(request):
 
 def language_view(request, language_id):
     
+    context = {
+        'html_title': 'Language View | New Wine Training',
+    }
+    
     language = get_object_or_404(Language, pk = language_id)
     
     class LanguageView(Page):
@@ -341,9 +345,15 @@ def language_view(request, language_id):
         else:
             no_trainingmeetings = html.p('No training meetings.')
 
-    return LanguageView(title = 'Language View | New Wine Training')
+    return LanguageView(context = context)
 
 def language_add(request):
+    
+    class LanguageAddForm(Form):
+        
+        
+    
+    
     return Form.create(auto__model = Language)
 
 def language_edit(request, language_id):

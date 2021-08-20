@@ -191,4 +191,4 @@ IOMMI_DEFAULT_STYLE = Style(
 #if env('DEBUG') == True:
 #    os.environ['PYTHONDONTWRITEBYTECODE'] = 1
 
-os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
+#os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
