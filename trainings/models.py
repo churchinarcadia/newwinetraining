@@ -27,7 +27,8 @@ class Term(models.Model):
 
 class ExerciseType(models.Model):
     name = models.CharField(max_length=100)
-    description=models.TextField(blank = True)
+    description = models.TextField(blank = True)
+    active = models.BooleanField(default = True)
     created = models.DateTimeField(auto_now_add = True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'exercisetype_creators', on_delete = models.RESTRICT)
     modified = models.DateTimeField(auto_now = True)
