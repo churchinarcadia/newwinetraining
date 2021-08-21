@@ -298,7 +298,7 @@ def translation_view(request, translation_id):
             columns__name = Column(
                 cell__url = lambda row, **_: reverse('trainings:text_view', args = (row.pk,)),
             ),
-            columns__edit = Columm(
+            columns__edit = Column(
                 attr = '',
                 display_name = '',
                 cell__value = 'Edit',
@@ -346,7 +346,7 @@ def translation_edit(request, translation_id):
     
     return Form.edit(
         auto__model = Translation,
-        auto__instance = Translation.objects.get(id = langauge_id),
+        auto__instance = Translation.objects.get(id = translation_id),
         auto__include = ['language', 'text', 'content'],
         context__html_title = 'Translation Edit | New Wine Training',
     )
