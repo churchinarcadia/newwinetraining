@@ -189,19 +189,110 @@ def term_delete(request, term_id):
             )
 
 def exercisetype_index(request):
-    return Table(auto__model = ExerciseType)
+    
+    class ExerciseTypeIndexPage(Page):
+        
+        page_title = html.h1('Exercise Types')
+        
+        instructions = html.p('Click on the Exercise Type name to view details about that Exercise Type, as well as any associated data.')
+        
+        table = Table(
+            auto__model = ExerciseType,
+            title = None,
+            columns__name = Column(
+                cell__url = lambda row, **_: reverse('trainings:exercisetype_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:exercisetype_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = 'Exercise Type Index | New Wine Training'
+            )
+    
+    return ExerciseTypeIndexPage()
 
-def exercisetype_view(request):
-    return ExerciseTypeView()
+def exercisetype_view(request,exercisetype_id):
+    
+    exercisetype = get_object_or_404(ExerciseType, pk = exercisetype_id)
 
-class ExerciseTypeView(Page):
-    #h1 = html.h1('NewWineTraining')
-    h1 = Fragment('New Wine Training', tag='h1')
+    class ExerciseTypeViewPage(Page):
+        
+        h1 = html.h1('Exercise Type View: ' + exercisetype.name)
+        
+        exercisetype_h2 = html.h2('Details')
+        dl = html.dl()
+        exercisetype_id_dt = html.dt('ID')
+        exercisetype_id_dd = html.dd(exercisetype.id)
+        exercisetype_name_dt = html.dt('Name')
+        exercisetype_name_dd = html.dd(exercisetype.name)
+        exercisetype_description_dt = html.dt('description')
+        exercisetype_description_dd = html.dd(exercisetype.description)
+        exercisetype_created_dt = html.dt('Created')
+        exercisetype_created_dd = html.dd(exercisetype.created)
+        exercisetype_creator_dt = html.dt('Creator')
+        exercisetype_creator_dd = html.dd(exercisetype.creator)
+        exercisetype_modified_dt = html.dt('Modified')
+        exercisetype_modified_dd = html.dd(exercisetype.modified)
+        exercisetype_modifier_dt = html.dt('Modifier')
+        exercisetype_modifier_dd = html.dd(exercisetype.modifier)
+        
+        hr1 = html.hr()
+        
+        registrations_h2 = html.h2('Registrations')
+        registrations = exercisetype.registration_exercisetypes.all()
+        
+        registrations_table = Table(
+            auto__model = Registration,
+            rows = registrations,
+            title = None,
+            empty_message = 'No registrations',
+            auto_exclude = ['exercisetypes', 'signature'],
+            columns__user = Column(
+                display_name = 'Registrant',
+                cell__url = lambda row, **_: reverse('trainings:registration_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:registration_edit', args = (row.pk,)),
+            ),
+        )
+        
+        hr2 = html.hr()
+        
+        userexercises_h2 = html.h2('User Exercises')
+        userexercises = exercisetype.userexercise_exercisetypes.all()
+        
+        userexercises_table = Table(
+            auto__model = UserExercise,
+            rows = userexercises,
+            title = None,
+            empty_message = 'No user exercises',
+            auto__exclude = ['exercisetypes'],
+            columns__date = Column(
+                cell__url = lambda row, **_: reverse('trainings:userexercise_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:userexercise_edit', args = (row.pk,)),
+            ),
+        )
+        
+        
 
-    body_text = 'Under construction...'
-
-    class Meta:
-        title = 'Home | New Wine Training'
+        class Meta:
+            title = 'Home | New Wine Training'
+    
+    return ExerciseTypeViewPage()
 
 def exercisetype_add(request):
     return Form.create(auto__model = ExerciseType)
