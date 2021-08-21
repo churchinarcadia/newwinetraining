@@ -23,28 +23,170 @@ from languages.models import Language, Translation
 # Create your views here.
 
 def term_index(request):
-    return Table(auto__model = Term)
+    
+    class TermIndexPage(Page):
+    
+        page_title = html.h1('Terms')
+    
+        instructions = html.p('Click on the year or term to view details about that term, as well as any associated data.')
+    
+        table = Table(
+            auto__model = Term,
+            title = None,
+            columns__term = Column(
+                after = 'year',
+                cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
+            ),
+            columns__year = Column(
+                cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:term_edit', args = (row.pk,)),
+            ),
+        )
+    
+        class Meta:
+            context = dict(
+                html_title = 'Term Index | New Wine Training',
+            )
 
-def term_view(request):
-    return TermView()
+    return TermIndexPage()
 
-class TermView(Page):
-    #h1 = html.h1('NewWineTraining')
-    h1 = Fragment('New Wine Training', tag='h1')
+def term_view(request, term_id):
+    
+    term = get_object_or_404(Term, pk = term_id)
 
-    body_text = 'Under construction...'
-
-    class Meta:
-        title = 'Home | New Wine Training'
+    class TermViewPage(Page):
+        
+        h1 = html.h1('Term View: ' + term.year + ' ' + term.term)
+        
+        term_h2 = html.h2('Details')
+        dl = html.dl()
+        term_id_dt = html.dt('ID')
+        term_id_dd = html.dd(term.id)
+        term_term_dt = html.dt('Term')
+        term_term_dd = html.dd(term.term)
+        term_year_dt = html.dt('Year')
+        term_year_dt = html.dd(term.year)
+        term_language_dt = html.dt('Language')
+        term_language_dd = html.dd(term.language)
+        term_start_date_dt = html.dt('Start Date')
+        term_stert_date_dd = html.dd(term.start_date)
+        term_end_date_dt = html.dt('End Date')
+        term_end_date_dd = html.dd(term.end_date)
+        term_created_dt = html.dt('Created')
+        term_created_dd = html.dd(term.created)
+        term_creator_dt = html.dt('Creator')
+        term_creator_dd = html.dd(term.creator)
+        term_modified_dt = html.dt('Modified')
+        term_modified_dd = html.dd(term.modified)
+        term_modifier_dt = html.dt('Modifier')
+        term_modifier_dt = html.dd(term.modifier)
+        
+        hr1 = html.hr()
+        
+        language_h2 = html.h2('Language')
+        languages = term.language.all()
+        
+        languages_table = Table(
+            auto__model = Language,
+            rows = languages,
+            title = None,
+            empty_message = 'No languages',
+            columns__language = Column(
+                cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
+            ),
+        )
+        
+        hr2 = html.hr()
+        
+        trainingmeeting_h2 = html.h2('Training Meetings')
+#        trainingmeetings = TrainingMeeting.objects.filter()
+        #TODO finish filter
+        
+        trainingmeetings_table = Table(
+            auto__model = TrainingMeeting,
+#            rows = trainingmeetings, #TODO
+            title = None,
+            empty_message = 'No training meetings',
+            columns__date = Column(
+                cell__url = lambda row, **_: reverse('trainings:trainingmeeting_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:trainingmeeting_edit', args = (row.pk,)),
+            ),
+        )
+        
+        hr3 = html.hr()
+        
+        registrations_h2 = html.h2('Registrations')
+        registrations = term.registration_terms.all()
+        
+        registrations_table = Table(
+            auto__model = Registration,
+            rows = registrations,
+            title = None,
+            empty_message = 'No registrations',
+            auto__exclude = ['term'],
+            columns__user = Column(
+                display_name = 'Registrant',
+                cell__url = lambda row, **_: reverse('trainings:registration_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:registration_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = 'Term View | New Wine Training',
+            )
+    
+    return TermViewPage()
 
 def term_add(request):
-    return Form.create(auto__model = Term)
+    
+    return Form.create(
+        auto__model = Term,
+        auto__include = ['year', 'term', 'language', 'start_date', 'end_date'],
+        context__html_title = 'Term Create | New Wine Training',
+    )
 
 def term_edit(request, term_id):
-    return Form.create(auto__model = Term)
+    
+    return Form.edit(
+        auto__model = Term,
+        auto__instance = Term.objects.get(id = term_id),
+        auto__include = ['year', 'term', 'language', 'start_date', 'end_date'],
+        context__html_title = 'Term Edit | New Wine Training',
+    )
 
 def term_delete(request, term_id):
-    return Form.create(auto__model = Term)
+    
+    class TermDeleteTemp(Page):
+        page_title = html.h1('Delete Term')
+        additional_spacing = html.p('')
+        temp_disabled = html.h3('This function is disabled for now.')
+        
+        class Meta:
+            context = dict(
+                html_title = 'Term Delete | New Wine Training',
+            )
 
 def exercisetype_index(request):
     return Table(auto__model = ExerciseType)
