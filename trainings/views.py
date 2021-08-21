@@ -1,7 +1,24 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
-from newwinetraining.iommi import Page, Form, Table
-from iommi import Fragment
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.utils import timezone
+from iommi.table import RowConfig
+
+#from newwinetraining.iommi import Table, Form, Page, Column
+from iommi import ( 
+    Fragment,
+    html,
+    Action,
+    Column,
+    Field,
+    Page,
+    Table,
+    Form,
+)
+
+from .models import Term, ExerciseType, RecordingLocation, Registration, TrainingMeeting, UserExercise, Text
+from languages.models import Language, Translation
 
 # Create your views here.
 
