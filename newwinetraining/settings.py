@@ -182,8 +182,9 @@ IOMMI_DEFAULT_STYLE = Style(
     bootstrap,
     base_template='newwinetraining/templates/iommi/iommi_base.html',
     root__assets=dict(
-        newwinetraining_custom_css = Asset.css(attrs__href = STATIC_URL + 'css/sb-admin-2.min.css'),
-        newwinetraining_custom_js = Asset.js(attrs__src = STATIC_URL + 'js/sb-admin-2.min.js'),
+        newwinetraining_sb_admin_2_css = Asset.css(attrs__href = STATIC_URL + 'css/sb-admin-2.min.css'),
+        newwinetraining_custom_css = Asset.css(attrs__href = STATIC_URL + 'css/custom.css'),
+        newwinetraining_sb_admin_2_js = Asset.js(attrs__src = STATIC_URL + 'js/sb-admin-2.min.js'),
     ),
 )
 
