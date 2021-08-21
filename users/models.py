@@ -15,6 +15,7 @@ from django.core.validators import RegexValidator, validate_email
 class UserType(models.Model):
     name = models.CharField(max_length = 100)
     description = models.CharField(max_length = 255)
+    active = models.BooleanField(default = True)
     created = models.DateTimeField(auto_now_add = True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_creators', on_delete = models.RESTRICT)
     modified = models.DateTimeField(auto_now = True)
@@ -25,6 +26,7 @@ class UserType(models.Model):
 
 class Locality(models.Model):
     locality = models.CharField(max_length = 100)
+    active = models.BooleanField(default = True)
     created = models.DateTimeField(auto_now_add = True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_creators', on_delete = models.RESTRICT)
     modified = models.DateTimeField(auto_now = True)
