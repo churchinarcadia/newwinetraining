@@ -19,6 +19,7 @@ from iommi import (
 
 from .models import Term, ExerciseType, RecordingLocation, Registration, TrainingMeeting, UserExercise, Text
 from languages.models import Language, Translation
+from users.models import User
 
 # Create your views here.
 
@@ -290,90 +291,504 @@ def exercisetype_view(request,exercisetype_id):
         
 
         class Meta:
-            title = 'Home | New Wine Training'
+            context = dict(
+                html_title = 'Exercise Type View | New Wine Training',
+            )
     
     return ExerciseTypeViewPage()
 
 def exercisetype_add(request):
-    return Form.create(auto__model = ExerciseType)
+    
+    return Form.create(
+        auto__model = ExerciseType,
+        auto__include = ['name', 'description'],
+        context__html_title = 'Exercise Type Create | New Wine Training',
+    )
 
 def exercisetype_edit(request, exercisetype_id):
-    return Form.create(auto__model = ExerciseType)
+    
+    return Form.edit(
+        auto__model = ExerciseType,
+        auto__instance = ExerciseType.objects.get(id = exercisetype_id),
+        auto__include = ['name', 'description'],
+        context__html_title = 'Exercise Type Edit | New Wine Training',
+    )
 
 def exercisetype_delete(request, exercisetype_id):
-    return Form.create(auto__model = ExerciseType)
+    
+    class ExerciseTypeDeleteTemp(Page):
+        page_title = html.h1('Delete Exercise Type')
+        additional_spacing = html.p('')
+        temp_disabled = html.h3('This function is disabled for now.')
+        
+        class Meta:
+            context = dict(
+                html_title = 'Exercise Type Delete | New Wine Training',
+            )
+    
+    return ExerciseTypeDeleteTemp()
 
 def recordinglocation_index(request):
-    return Table(auto__model = RecordingLocation)
+    
+    class RecordingLocationIndexPage(Page):
+        
+        page_title = html.h1('Recording Locations')
+        
+        instructions = html.p('Click on the recording location to view details about that recording location, as well as any associated data.')
+        
+        table = Table(
+            auto__model = RecordingLocation,
+            title = None,
+            columns__location = Column(
+                cell__url = lambda row, **_: reverse('trainings:recordinglocation_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:recordinglocation_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = 'Recording Location Index | New Wine Training'
+            )
+        
+    return RecordingLocationIndexPage()
 
-def recordinglocation_view(request):
-    return RecordingLocationView()
+def recordinglocation_view(request, recordinglocation_id):
+    
+    recordinglocation = get_object_or_404(RecordingLocation, pk = recordinglocation_id)
+    
+    class RecordingLocationViewPage(Page):
+        
+        h1 = html.h1('Recording Location View: ' + recordinglocation.location)
+        
+        recordinglocation_h2 = html.h2('Details')
+        dl = html.dl()
+        recordinglocation_id_dt = html.dt('ID')
+        recordinglocation_id_dd = html.dd(recordinglocation.id)
+        recordinglocation_location_dt = html.dt('Location')
+        recordinglocation_location_dd = html.dd(recordinglocation.location)
+        recordinglocation_code_before_url_dt = html.dt('Code before URL')
+        recordinglocation_code_before_url_dd = html.dd(recordinglocation.code_before_url)
+        recordinglocation_code_after_url_dt = html.dt('Code after URL')
+        recordinglocation_code_after_url_dd = html.dd(recordinglocation.code_after_url)
+        recordinglocation_url_identifier_dt = html.dt('URL Identifier')
+        recordinglocation_url_identifier_dd = html.dd(recordinglocation.url_identifier)
+        recordinglocation_notes_dt = html.dt('Notes')
+        recordinglocation_notes_dd = html.dd(recordinglocation.notes)
+        recordinglocation_created_dt = html.dt('Created')
+        recordinglocation_created_dd = html.dd(recordinglocation.created)
+        recordinglocation_creator_dt = html.dt('Creator')
+        recordinglocation_creator_dd = html.dd(recordinglocation.creator)
+        recordinglocation_modified_dt = html.dt('Modified')
+        recordinglocation_modified_dd = html.dd(recordinglocation.modified)
+        recordinglocation_modifier_dt = html.dt('Modifier')
+        recordinglocation_modifier_dd = html.dd(recordinglocation.modifier)
+        
+        hr1 = html.hr()
+        
+        trainingmeetings_h2 = html.h2('Training Meetings')
+#        trainingmeetings = TrainingMeeting.objects.filter #TODO
 
-class RecordingLocationView(Page):
-    #h1 = html.h1('NewWineTraining')
-    h1 = Fragment('New Wine Training', tag='h1')
-
-    body_text = 'Under construction...'
-
-    class Meta:
-        title = 'Home | New Wine Training'
+        trainingmeetings_table = Table(
+            auto__model = TrainingMeeting,
+#            rows = trainingmeetings, #TODO
+            title = None,
+            empty_message = 'No training meetings'
+            columns__date = Column(
+                cell__url = lambda row, **_: reverse('trainings:trainingmeeting_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:trainingmeeting_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = 'Recording Location View | New Wine Training',
+            )
+        
+    return RecordingLocationViewPage()
 
 def recordinglocation_add(request):
-    return Form.create(auto__model = RecordingLocation)
+    
+    return Form.create(
+        auto__model = RecordingLocation,
+        auto__include = ['location', 'code_before_url', 'code_after_url', 'url_identifier', 'notes'],
+        context__html_title = 'Recording Location Create | New Wine Training',
+    )
 
 def recordinglocation_edit(request, recordinglocation_id):
-    return Form.create(auto__model = RecordingLocation)
+    
+    return Form.edit(
+        auto__model = RecordingLocation,
+        auto__instance = RecordingLocation.objects.get(id = recordinglocation_id),
+        auto__include = ['location', 'code_before_url', 'code_after_url', 'url_identifier', 'notes'],
+        context__html_title = 'Recording Location Create | New Wine Training',
+    )
 
 def recordinglocation_delete(request, recordinglocation_id):
-    return Form.create(auto__model = RecordingLocation)
+    
+    class RecordingLocationDeleteTemp(Page):
+        page_title = html.h1('Delete Recording Location')
+        additional_spacing = html.p('')
+        temp_disabled = html.h3('This function is disabled for now.')
+        
+        class Meta:
+            context = dict(
+                html_title = 'Recording Location Delete | New Wine Training',
+            )
+    
+    return RecordingLocationDeleteTemp()
 
 def registration_index(request):
-    return Table(auto__model = Registration)
+    
+    class RegistrationIndexPage(Page):
+        
+        page_title = html.h1('Registrations')
+        
+        instructions = html.p('Click on the name to view details about that registration, as well as any associated data.')
+        
+        table = Table(
+            auto__model = Registration,
+            title = None,
+            columns__user = Column(
+                display_name = 'Registrant',
+                cell__url = lambda row, **_: reverse('trainings:registration_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:registration_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = 'Registration Index | New Wine Training'
+            )
+            
+    return RegistrationIndexPage()
 
-def registration_view(request):
-    return RegistrationView()
+def registration_view(request, registration_id):
+    
+    registration = get_object_or_404(Registration, pk = registration_id)
 
-class RegistrationView(Page):
-    #h1 = html.h1('NewWineTraining')
-    h1 = Fragment('New Wine Training', tag='h1')
+    class RegistrationViewPage(Page):
+        
+        h1 = html.h1('Registration View: ' + registration.user + ' (' + registration.term + ')')
+        
+        registration_h2 = html.h2('Details')
+        dl = html.dl()
+        registration_id_dt = html.dt('ID')
+        registration_id_dd = html.dd(registration.id)
+        registration_user_dt = html.dt('Registrant')
+        registration_user_dd = html.dd(registration.user)
+        registration_term_dt = html.dt('Term')
+        registration_term_dd = html.dd(registration.term)
+        registration_exercisetypes_dt = html.dt('Exercise Types')
+        registration_exercisetypes_dd = html.dd(registration.exercisetypes)
+        registration_signature_dt = html.dt('Signature')
+        registration_signature_dd = html.dd(registration.signature)
+        registration_created_dt = html.dt('Created')
+        registration_created_dd = html.dd(registration.created)
+        registration_creator_dt = html.dt('Creator')
+        registration_creator_dd = html.dd(registration.creator)
+        registration_modified_dt = html.dt('Modified')
+        registration_modified_dd = html.dd(registration.modified)
+        registration_modifier_dt = html.dt('Modifier')
+        registration_modifier_dd = html.dd(registration.modifier)
+        
+        hr1 = html.hr()
+        
+        users_h2 = html.h2('Registrant')
+        users = registration.user.all()
+        
+        users_table = Table(
+            auto__model = User,
+            rows = users,
+            title = None,
+            empty_message = 'No registrants',
+            auto_exclude = ['password'],
+            columns__first_name = Column(
+                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+            ),
+            columns__last_name = Column(
+                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+            ),
+            columns__chinese_name = Column(
+                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
+            ),
+        )
+        
+        hr2 = html.hr()
+        
+        terms_h2 = html.h2('Term')
+        terms = registration.term.all()
+        
+        terms_table = Table(
+            auto__model = Table,
+            rows = terms,
+            title = None,
+            empty_message = 'No terms',
+            columns__term = Column(
+                after = 'year',
+                cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
+            ),
+            columns__year = Column(
+                cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:term_edit', args = (row.pk,)),
+            ),
+        )
+        
+        exercisetypes_h2 = html.h2('Exercise Types')
+        exercisetypes = registration.exercisetypes.all()
+        
+        exercisetypes_table = Table(
+            auto__model = ExerciseType,
+            rows = exercisetypes,
+            title = None,
+            empty_message = 'No exercise types',
+            columns__name = Column(
+                cell__url = lambda row, **_: reverse('trainings:exercisetype_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:exercisetype_edit', args = (row.pk,)),
+            ),
+        )
 
-    body_text = 'Under construction...'
-
-    class Meta:
-        title = 'Home | New Wine Training'
+        class Meta:
+            context = dict(
+                html_title = 'Registration View | New Wine Training',
+            )
+    
+    return RegistrationViewPage()
 
 def registration_add(request):
-    return Form.create(auto__model = Registration)
+    
+    return Form.create(
+        auto__model = Registration,
+        auto__include = ['user', 'term', 'exercisetypes', 'signature'],
+        context__html_title = 'Registration Create | New Wine Training',
+    )
 
 def registration_edit(request, registration_id):
-    return Form.create(auto__model = Registration)
+    
+    return Form.edit(
+        auto__model = Registration,
+        auto__instance = Registration.objects.get(id = registration_id),
+        auto__include = ['user', 'term', 'exercisetypes', 'signature'],
+        context__html_title = 'Registration Edit | New Wine Training',
+    )
 
 def registration_delete(request, registration_id):
-    return Form.create(auto__model = Registration)
+    
+    class RegistrationDeleteTemp(Page):
+        page_title = html.h1('Delete Registration')
+        additional_spacing = html.p('')
+        temp_disabled = html.h3('This function is disabled for now.')
+        
+        class Meta:
+            context = dict(
+                html_title = 'Registration Delete | New Wine Training',
+            )
+    
+    return RegistrationDeleteTemp()
 
 def trainingmeeting_index(request):
-    return Table(auto__model = TrainingMeeting)
+    
+    class TrainingMeetingIndexPage(Page):
+        
+        page_title = html.h1('Training Meetings')
+        
+        instructions = html.p('Click on the date to view details about that training meeting, as well as any associated data.')
+        
+        table = Table(
+            auto__model = TrainingMeeting,
+            title = None,
+            columns__date = Column(
+                cell__url = lambda row, **_: reverse('trainings:trainingmeeting_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:trainingmeeting_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+                context = dict(
+                html_title = 'Training Meeting Index | New Wine Training',
+            )
+        
+    return TrainingMeetingIndexPage()
 
-def trainingmeeting_view(request):
-    return TrainingMeetingView()
+def trainingmeeting_view(request, trainingmeeting_id):
+    
+    trainingmeeting = get_object_or_404(TrainingMeeting, pk = trainingmeeting_id)
+    
+    class TrainingMeetingViewPage(Page):
+        
+        h1 = html.h1('Training Meeting View: ' + trainingmeeting.date)
+        
+        trainingmeeting_h2 = html.h2('Details')
+        dl = html.dl()
+        trainingmeeting_id_dt = html.dt('ID')
+        trainingmeeting_id_dd = html.dd(trainingmeeting.id)
+        trainingmeeting_date_dt = html.dt('Date')
+        trainingmeeting_date_dd = html.dd(trainingmeeting.date)
+        trainingmeeting_start_time_dt = html.dt('Start Time')
+        trainingmeeting_start_time_dd = html.dd(trainingmeeting.start_time)
+        trainingmeeting_end_time_dt = html.dt('End Time')
+        trainingmeeting_end_time_dd = html.dd(trainingmeeting.end_time)
+        trainingmeeting_language_dt = html.dt('Language')
+        trainingmeeting_language_dd = html.dd(trainingmeeting.language)
+        trainingmeeting_location_dt = html.dt('Location')
+        trainingmeeting_location_dd = html.dd(trainingmeeting.location)
+        trainingmeeting_recording_url_dt = html.dt('Recording URL')
+        trainingmeeting_recording_url_dd = html.dd(trainingmeeting.recording_url)
+        trainingmeeting_recording_released_datetime_dt = html.dt('Recording Released')
+        trainingmeeting_recording_released_datetime_dd = html.dd(trainingmeeting.recording_released_datetime)
+        trainingmeeting_recording_released_by_dt = html.dt('Released By')
+        trainingmeeting_recording_released_by_dd = html.dd(trainingmeeting.recording_released_by)
+        trainingmeeting_notes_dt = html.dt('Notes')
+        trainingmeeting_notes_dd = html.dd(trainingmeeting.notes)
+        trainingmeeting_created_dt = html.dt('Created')
+        trainingmeeting_created_dd = html.dd(trainingmeeting.created)
+        trainingmeeting_creator_dt = html.dt('Creator')
+        trainingmeeting_creator_dd = html.dd(trainingmeeting.creator)
+        trainingmeeting_modified_dt = html.dt('Modified')
+        trainingmeeting_modified_dd = html.dd(trainingmeeting.modified)
+        trainingmeeting_modifier_dt = html.dt('Modifier')
+        trainingmeeting_modifier_dd = html.dd(trainingmeeting.modifier)
 
-class TrainingMeetingView(Page):
-    #h1 = html.h1('NewWineTraining')
-    h1 = Fragment('New Wine Training', tag='h1')
+        hr1 = html.hr()
+        
+        terms_h2 = html.h2('Term')
+#        terms = Term.objects
 
-    body_text = 'Under construction...'
+        terms_table = Table(
+            auto__model = Term,
+#            rows = terms,
+            title = None,
+            empty_message = 'No terms',
+            columns__term = Column(
+                after = 'year',
+                cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
+            ),
+            columns__year = Column(
+                cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:term_edit', args = (row.pk,)),
+            ),
+        )
+        
+        hr2 = html.hr()
+        
+        languages_h2 = html.h2('Language')
+        languages = trainingmeeting.language.all()
+        
+        languages_table = Table(
+            auto__model = Language,
+            rows = languages,
+            title = None,
+            empty_message = 'No languages',
+            columns__language = Column(
+                #cell__url = lambda row, **_: row.get_absolute_url(),
+                cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
+            ),
+        )
+        
+        hr3 = html.hr()
+        
+        recordinglocations_h2 = html.h2('Recording Location')
+#        recordinglocations = RecordingLocation.objects.
 
-    class Meta:
-        title = 'Home | New Wine Training'
+        recordinglocations_table = Table(
+            auto__model = RecordingLocation,
+#            rows = recordinglocations,
+            title = None,
+            empty_message = 'No recording locations',
+            columns__location = Column(
+                cell__url = lambda row, **_: reverse('trainings:recordinglocation_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:recordinglocation_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = 'Recording Location View | New Wine Training',
+            )
+            
+    return TrainingMeetingViewPage()
 
 def trainingmeeting_add(request):
-    return Form.create(auto__model = TrainingMeeting)
+    
+    return Form.create(
+        auto__model = TrainingMeeting,
+        auto__include = ['language', 'code'],
+        context__html_title = 'Language Create | New Wine Training',
+    )
 
 def trainingmeeting_edit(request, trainingmeeting_id):
-    return Form.create(auto__model = TrainingMeeting)
+    
+    return Form.edit(
+        auto__model = Language,
+        auto__instance = Language.objects.get(id = language_id),
+        auto__include = ['language', 'code'],
+        context__html_title = 'Language Edit | New Wine Training',
+    )
 
 def trainingmeeting_delete(request, trainingmeeting_id):
-    return Form.create(auto__model = TrainingMeeting)
+    
+    class LangaugeDeleteTemp(Page):
+        page_title = html.h1('Delete Language')
+        additional_spacing = html.p('')
+        temp_disabled = html.h3('This function is disabled for now.')
+        
+        class Meta:
+            context = dict(
+                html_title = 'Language Delete | New Wine Training',
+            )
+    
+    return LangaugeDeleteTemp()
 
 def userexercise_index(request):
     return Table(auto__model = UserExercise)
