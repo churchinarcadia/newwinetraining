@@ -424,7 +424,7 @@ def recordinglocation_edit(request, recordinglocation_id):
         auto__model = RecordingLocation,
         auto__instance = RecordingLocation.objects.get(id = recordinglocation_id),
         auto__include = ['location', 'code_before_url', 'code_after_url', 'url_identifier', 'notes'],
-        context__html_title = 'Recording Location Create | New Wine Training',
+        context__html_title = 'Recording Location Edit | New Wine Training',
     )
 
 def recordinglocation_delete(request, recordinglocation_id):
@@ -767,7 +767,7 @@ def trainingmeeting_edit(request, trainingmeeting_id):
         auto__model = TrainingMeeting,
         auto__instance = TrainingMeeting.objects.get(id = trainingmeeting_id),
         auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'recording_url', 'recording_released_datetime', 'recording_released_by', 'notes'],
-        context__html_title = 'Training Meeting Create | New Wine Training',
+        context__html_title = 'Training Meeting Edit | New Wine Training',
     )
 
 def trainingmeeting_delete(request, trainingmeeting_id):
@@ -907,7 +907,7 @@ def userexercise_edit(request, userexercise_id):
         auto__model = UserExercise,
         auto__instance = UserExercise.objects.get(id = userexercise_id),
         auto__include = ['date', 'user', 'exercisetypes'],
-        context__html_title = 'User Exercise Create | New Wine Training',
+        context__html_title = 'User Exercise Edit | New Wine Training',
     )
 
 def userexercise_delete(request, userexercise_id):
@@ -1020,7 +1020,7 @@ def text_edit(request, text_id):
         auto__model = Text,
         auto__instance = Text.objects.get(id = text_id),
         auto__include = ['name', 'description'],
-        context__html_title = 'Text Create | New Wine Training',
+        context__html_title = 'Text Edit | New Wine Training',
     )
 
 def text_delete(request, text_id):

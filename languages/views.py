@@ -224,19 +224,18 @@ def translation_index(request):
         
         page_title = html.h1('Translations')
         
-        instructions = html.p('Click on the original text or the translation text to view details about that translation, as well as any associated data.')
+        instructions = html.p('Click on the text or the translation text to view details about that translation, as well as any associated data.')
     
         table = Table(
             auto__model = Translation,
             title = None,
             columns__text = Column(
-                display_name = 'Original Text',
+                display_name = 'Text',
                 cell__url = lambda row, **_: reverse('languages:translation_view', args = (row.pk,)),
-                cell__url_title = lambda row, **_: row.text[0 : 50] + '...',
             ),
             columns__content = Column(
                 display_name = 'Translation',
-                cell__value = lambda row, **_: row.content[0 : 50] + '...',
+                cell__value = lambda row, **_: row.content[0 : 50] + '...' if len(row.content) > 50 else row.content
             ),
             columns__edit = Column(
                 attr = '',
@@ -421,7 +420,7 @@ def translator_view(request, translator_id):
         languages = translator.language.all()
         
         languages_table = Table(
-            auto_model = Language,
+            auto__model = Language,
             rows = languages,
             title = None,
             empty_message = 'No languages',
@@ -447,9 +446,8 @@ def translator_view(request, translator_id):
             title = None,
             empty_message = 'No translations',
             columns__text = Column(
-                display_name = 'Original Text',
+                display_name = 'Text',
                 cell__url = lambda row, **_: reverse('languages:translation_view', args = (row.pk,)),
-                cell__url_title = lambda row, **_: row.text[0 : 50] + '...' if len(row.text) > 50 else row.text
             ),
             columns__content = Column(
                 display_name = 'Translation',
