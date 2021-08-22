@@ -3,18 +3,14 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
-from iommi.table import RowConfig
 
-#from newwinetraining.iommi import Table, Form, Page, Column
+from newwinetraining.iommi import Page, Form, Table, Column
+
 from iommi import ( 
     Fragment,
     html,
     Action,
-    Column,
     Field,
-    Page,
-    Table,
-    Form,
 )
 
 from .models import Language, Translation, Translator
@@ -115,9 +111,8 @@ def language_view(request, language_id):
             empty_message = 'No translations',
             auto__exclude = ['language'],
             columns__text = Column(
-                display_name = 'Original Text',
+                display_name = 'Text',
                 cell__url = lambda row, **_: reverse('languages:translation_view', args = (row.pk,)),
-                cell__url_title = lambda row, **_: row.text[0 : 50] + '...' if len(row.text) > 50 else row.text
             ),
             columns__content = Column(
                 display_name = 'Translation',
@@ -264,7 +259,7 @@ def translation_view(request, translation_id):
 
     class TranslationViewPage(Page):
         #h1 = html.h1('NewWineTraining')
-        h1 = html.h1('View Translation')
+        h1 = html.h1('Translation View')
 
         translation_h2 = html.h2('Details')
         dl = html.dl()
