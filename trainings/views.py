@@ -3,18 +3,14 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
-from iommi.table import RowConfig
 
-#from newwinetraining.iommi import Table, Form, Page, Column
+from newwinetraining.iommi import Page, Form, Table, Column
+
 from iommi import ( 
     Fragment,
     html,
     Action,
-    Column,
     Field,
-    Page,
-    Table,
-    Form,
 )
 
 from .models import Term, ExerciseType, RecordingLocation, Registration, TrainingMeeting, UserExercise, Text
@@ -287,8 +283,6 @@ def exercisetype_view(request,exercisetype_id):
                 cell__url = lambda row, **_: reverse('trainings:userexercise_edit', args = (row.pk,)),
             ),
         )
-        
-        
 
         class Meta:
             context = dict(
@@ -397,7 +391,7 @@ def recordinglocation_view(request, recordinglocation_id):
             auto__model = TrainingMeeting,
 #            rows = trainingmeetings, #TODO
             title = None,
-            empty_message = 'No training meetings'
+            empty_message = 'No training meetings',
             columns__date = Column(
                 cell__url = lambda row, **_: reverse('trainings:trainingmeeting_view', args = (row.pk,)),
             ),
@@ -763,77 +757,282 @@ def trainingmeeting_add(request):
     
     return Form.create(
         auto__model = TrainingMeeting,
-        auto__include = ['language', 'code'],
-        context__html_title = 'Language Create | New Wine Training',
+        auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'notes'],
+        context__html_title = 'Training Meeting Create | New Wine Training',
     )
 
 def trainingmeeting_edit(request, trainingmeeting_id):
     
     return Form.edit(
-        auto__model = Language,
-        auto__instance = Language.objects.get(id = language_id),
-        auto__include = ['language', 'code'],
-        context__html_title = 'Language Edit | New Wine Training',
+        auto__model = TrainingMeeting,
+        auto__instance = TrainingMeeting.objects.get(id = trainingmeeting_id),
+        auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'recording_url', 'recording_released_datetime', 'recording_released_by', 'notes'],
+        context__html_title = 'Training Meeting Create | New Wine Training',
     )
 
 def trainingmeeting_delete(request, trainingmeeting_id):
     
-    class LangaugeDeleteTemp(Page):
-        page_title = html.h1('Delete Language')
+    class TrainingMeetingDeleteTemp(Page):
+        page_title = html.h1('Delete Training Meeting')
         additional_spacing = html.p('')
         temp_disabled = html.h3('This function is disabled for now.')
         
         class Meta:
             context = dict(
-                html_title = 'Language Delete | New Wine Training',
+                html_title = 'Training Meeting Delete | New Wine Training',
             )
     
-    return LangaugeDeleteTemp()
+    return TrainingMeetingDeleteTemp()
 
 def userexercise_index(request):
-    return Table(auto__model = UserExercise)
+    
+    class UserExerciseIndexPage(Page):
+        
+        page_title = html.h1('User Exercises')
+        
+        instructions = html.p('Click on the date or user to view details about that user exercise, as well as any associated data.')
+        
+        table = Table(
+            auto__model = UserExercise,
+            title = None,
+            columns__date = Column(
+                cell__url = lambda row, **_: reverse('trainings:userexercise_view', args = (row.pk,))
+            ),
+            columns__user = Column(
+                cell__url = lambda row, **_: reverse('trainings:userexercise_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:userexercise_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = 'User Exercise Index | New Wine Training'
+            )
+        
+    return UserExerciseIndexPage()
 
-def userexercise_view(request):
-    return UserExerciseView()
+def userexercise_view(request, userexercise_id):
+    
+    userexercise = get_object_or_404(UserExercise, pk = userexercise_id)
 
-class UserExerciseView(Page):
-    #h1 = html.h1('NewWineTraining')
-    h1 = Fragment('New Wine Training', tag='h1')
-
-    body_text = 'Under construction...'
-
-    class Meta:
-        title = 'Home | New Wine Training'
+    class UserExerciseView(Page):
+        
+        h1 = html.h1('User Exercise View: ' + userexercise.user + ' (' + userexercise.date + ')')
+    
+        userexercise_h2 = html.h2('Details')
+        dl = html.dl()
+        userexercise_id_dt = html.dt('ID')
+        userexercise_id_dd = html.dd(userexercise.id)
+        userexercise_date_dt = html.dt('Date')
+        userexercise_date_dd = html.dd(userexercise.date)
+        userexercise_user_dt = html.dt('User')
+        userexercise_user_dd = html.dd(userexercise.user)
+        userexercise_exercisetypes_dt = html.dt('Exercise Types')
+        userexercise_exercisetypes_dd = html.dd(userexercise.exercisetypes)
+        userexercise_created_dt = html.dt('Created')
+        userexercise_created_dd = html.dd(userexercise.created)
+        userexercise_creator_dt = html.dt('Creator')
+        userexercise_creator_dd = html.dd(userexercise.creator)
+        userexercise_modified_dt = html.dt('Modified')
+        userexercise_modified_dd = html.dd(userexercise.modified)
+        userexercise_modifier_dt = html.dt('Modifier')
+        userexercise_modifier_dd = html.dd(userexercise.modifier)
+        
+        hr1 = html.hr()
+        
+        users_h2 = html.h2('User')
+        users = userexercise.user.all()
+        
+        users_table = Table(
+            auto__model = User,
+            rows = users,
+            title = None,
+            empty_message = 'No users',
+            columns__first_name = Column(
+                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+            ),
+            columns__last_name = Column(
+                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
+            ),
+        )
+        
+        hr2 = html.hr()
+        
+        exercisetypes_h2 = html.h2('Exercise Types')
+        exercisetypes = userexercise.exercisetypes.all()
+        
+        exercisetypes_table = Table(
+            auto__model = ExerciseType,
+            rows = exercisetypes,
+            title = None,
+            empty_message = 'No exercise types',
+            columns__name = Column(
+                cell__url = lambda row, **_: reverse('trainings:exercisetype_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:exercisetype_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = 'User Exercise View | New Wine Training'
+            )
 
 def userexercise_add(request):
-    return Form.create(auto__model = UserExercise)
+    
+    return Form.create(
+        auto__model = UserExercise,
+        auto__include = ['date', 'user', 'exercisetypes'],
+        context__html_title = 'User Exercise Create | New Wine Training',
+    )
 
 def userexercise_edit(request, userexercise_id):
-    return Form.create(auto__model = UserExercise)
+    
+    return Form.edit(
+        auto__model = UserExercise,
+        auto__instance = UserExercise.objects.get(id = userexercise_id),
+        auto__include = ['date', 'user', 'exercisetypes'],
+        context__html_title = 'User Exercise Create | New Wine Training',
+    )
 
 def userexercise_delete(request, userexercise_id):
-    return Form.create(auto__model = UserExercise)
+    
+    class UserExerciseDeleteTemp(Page):
+        page_title = html.h1('Delete User Exercise')
+        additional_spacing = html.p('')
+        temp_disabled = html.h3('This function is disabled for now.')
+        
+        class Meta:
+            context = dict(
+                html_title = 'User Exercise Delete | New Wine Training',
+            )
+    
+    return UserExerciseDeleteTemp()
 
 def text_index(request):
-    return Table(auto__model = Text)
+    
+    class TextIndexPage(Page):
+        
+        page_title = html.h1('Texts')
 
-def text_view(request):
-    return TextView()
+        instructions = html.p('Click on the text name to view details about that text, as well as any associated data.')
+        
+        table = Table(
+            auto__model = Text,
+            title = None,
+            columns__name = Column(
+                cell__url = lambda row, **_: reverse('trainings:text_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('trainings:text_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = 'Text Index | New Wine Training',
+            )
+        
+    return TextIndexPage()
 
-class TextView(Page):
-    #h1 = html.h1('NewWineTraining')
-    h1 = Fragment('New Wine Training', tag='h1')
+def text_view(request, text_id):
+    
+    text = get_object_or_404(Text, pk = text_id)
 
-    body_text = 'Under construction...'
-
-    class Meta:
-        title = 'Home | New Wine Training'
+    class TextViewPage(Page):
+        
+        h1 = html.h1('Text View: ' + text.name)
+        
+        text_h2 = html.h2('Details')
+        dl = html.dl()
+        text_id_dt = html.dt('ID')
+        text_id_dd = html.dd(text.id)
+        text_name_dt = html.dt('Name')
+        text_name_dd = html.dd(text.name)
+        text_description_dt = html.dt('Description')
+        text_description_dd = html.dd(text.description)
+        text_created_dt = html.dt('Created')
+        text_created_dd = html.dd(text.created)
+        text_creator_dt = html.dt('Creator')
+        text_creator_dd = html.dd(text.creator)
+        text_modified_dt = html.dt('Modified')
+        text_modified_dd = html.dd(text.modified)
+        text_modifier_dt = html.dt('Modifier')
+        text_modifier_dd = html.dd(text.modifier)
+        
+        h1 = html.h1()
+        
+        translations_h2 = html.h2('Translations')
+        translations = text.translation_texts.all()
+        
+        translations_table = Table(
+            auto__model = Translation,
+            rows = translations,
+            title = None,
+            empty_message = 'No translations',
+            auto__exclude = ['text'],
+            columns__content = Column(
+                display_name = 'Translation',
+                cell__value = lambda row, **_: row.content[0 : 50] + '...' if len(row.content) > 50 else row.content
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = 'Edit',
+                cell__url = lambda row, **_: reverse('languages:translation_edit', args = (row.pk,)),
+            ),
+        )
+    
+        class Meta:
+            title = 'Text View | New Wine Training'
+    
+    return TextViewPage()
 
 def text_add(request):
-    return Form.create(auto__model = Text)
+    
+    return Form.create(
+        auto__model = Text,
+        auto__include = ['name', 'description'],
+        context__html_title = 'Text Create | New Wine Training',
+    )
 
 def text_edit(request, text_id):
-    return Form.create(auto__model = Text)
+    
+    return Form.edit(
+        auto__model = Text,
+        auto__instance = Text.objects.get(id = text_id),
+        auto__include = ['name', 'description'],
+        context__html_title = 'Text Create | New Wine Training',
+    )
 
 def text_delete(request, text_id):
-    return Form.create(auto__model = Text)
+    
+    class TextDeleteTemp(Page):
+        page_title = html.h1('Delete Text')
+        additional_spacing = html.p('')
+        temp_disabled = html.h3('This function is disabled for now.')
+        
+        class Meta:
+            context = dict(
+                html_title = 'Text Delete | New Wine Training',
+            )
+    
+    return TextDeleteTemp()
