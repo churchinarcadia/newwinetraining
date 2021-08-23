@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.utils import timezone
 
-from newwinetraining.iommi import Page, Form, Table, Column
+from django.contrib.auth import authenticate, login, logout
+
+from newwinetraining.iommi import Page, Form, Table, Column, Menu, MenuItem
 
 from iommi import ( 
     Fragment,
@@ -538,3 +540,54 @@ def user_delete(request, user_id):
             )
     
     return UserDeleteTemp()
+
+def user_register(request):
+    
+    class UserRegisterPage(Page):
+        
+        page_title = html.h1('Register')
+        
+        
+        
+                
+        class Meta:
+            context = dict(
+                html_title = 'Register | New Wine Training',
+            )
+    
+    return UserRegisterPage()
+
+def user_login(request):
+    
+    class LoginForm(Form):
+        
+        title = 'Log in'
+        
+        email = Field.text()
+        password = Field.password()
+        
+        class Meta:
+            context = dict(
+                html_title = 'Login | New Wine Training',
+            )
+    
+    return Form(
+        title = "Log in",
+        context__html_title = 'User Edit | New Wine Training',
+        
+    )
+
+def user_logout(request):
+    
+    logout = logout(request)
+    
+    class UserLogoutPage(Page):
+        
+        confirmation = html.p('You have been successfully logged out.' +  html.url(reverse('users:user_login'), 'Click here to log in.'))
+        
+        class Meta:
+            context = dict(
+                html_title = 'Logout | New Wine Training',
+            )
+    
+    return UserLogoutPage()
