@@ -547,7 +547,22 @@ def user_register(request):
         
         page_title = html.h1('Register')
         
-        
+        registration_form = Form(
+            fields = dict(
+                box = html.div(
+                    attrs__class__box=True,
+                    children__email = Field.email(),
+                    children__password = Field.password(),
+                    children__password_confirmation = Field.password(),
+                ),
+                first_name = Field.text(),
+                last_name = Field.text()
+            )
+            
+            
+            
+            
+        )
         
                 
         class Meta:
@@ -563,9 +578,21 @@ def user_login(request):
         
         title = 'Log in'
         
-        email = Field.text()
+        email = Field.email()
         password = Field.password()
         
+        def post_handler(form, **_):
+            if not form.is_valid():
+                return
+            
+            user = authenticate(request, username = email, password = password)
+            
+            if user is not None:
+                login(request, user)
+            
+#            else:
+#                ThrowError()
+                    
         class Meta:
             context = dict(
                 html_title = 'Login | New Wine Training',
@@ -579,7 +606,7 @@ def user_login(request):
 
 def user_logout(request):
     
-    logout = logout(request)
+    logout(request)
     
     class UserLogoutPage(Page):
         
