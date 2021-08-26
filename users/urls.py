@@ -20,6 +20,6 @@ urlpatterns = [
     path('user/edit/<int:user_id>/', views.user_edit, name = 'user_edit'),
     path('user/delete/<int:user_id>/', views.user_delete, name = 'user_delete'),
     path('user/register/', views.user_register, name = 'user_register'),
-    path('user/login/', views.user_login, name = 'user_login'),
-    path('user/logout/', views.user_logout, name = 'user_logout'),
+#    path('user/login/', views.user_login, name = 'user_login'),
+#    path('user/logout/', views.user_logout, name = 'user_logout'),
 ]
