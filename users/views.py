@@ -309,7 +309,7 @@ def user_view(request, user_id):
 
     class UserViewPage(Page):
         
-        h1 = html.h1('User View: ')# + user)
+        h1 = html.h1('User View: ' + user.__str__())
         
         user_h2 = html.h2('Details')
         dl = html.dl(
@@ -334,7 +334,7 @@ def user_view(request, user_id):
             children__user_email_dt = html.dt('Email'),
             children__user_email_dd = html.dd(user.email),
             children__user_usertypes_dt = html.dt('User Types'),
-            children__user_usertypes_dd = html.dd(user.usertypes),
+            children__user_usertypes_dd = html.dd(', '.join(list(user.usertypes.values_list('name', flat = True)))),
             children__user_is_staff_dt = html.dt('Is Staff?'),
             children__user_is_staff_dd = html.dd(user.is_staff),
             children__user_is_superuser_dt = html.dt('Is Superuser?'),
@@ -342,9 +342,9 @@ def user_view(request, user_id):
             children__user_last_login_dt = html.dt('Last Login'),
             children__user_last_login_dd = html.dd(user.last_login),
             children__user_groups_dt = html.dt('Groups'),
-            children__user_groups_dd = html.dd(user.groups),
+            children__user_groups_dd = html.dd(', '.join(list(user.groups.values_list('name', flat = True)))),
             children__user_user_permissions_dt = html.dt('User Permissions'),
-            children__user_user_permissions_dd = html.dd(user.user_permissions),
+            children__user_user_permissions_dd = html.dd(', '.join(list(user.user_permissions.values_list('name')))), #TODO
             children__user_created_dt = html.dt('Created'),
             children__user_created_dd = html.dd(user.created),
             children__user_modified_dt = html.dt('Modified'),
@@ -356,7 +356,7 @@ def user_view(request, user_id):
         hr1 = html.hr()
         
         localities_h2 = html.h2('Locality')
-        localities = user.locality
+        localities = Locality.objects.filter(pk = user.locality.id)
         
         localities_table = Table(
             auto__model = Locality,
@@ -377,7 +377,7 @@ def user_view(request, user_id):
         hr2 = html.hr()
         
         languages_h2 = html.h2('Languages')
-        languages = user.language
+        languages = Language.objects.filter(pk = user.language.id)
         
         languages_table = Table(
             auto__model = Language,
@@ -398,7 +398,7 @@ def user_view(request, user_id):
         hr3 = html.hr()
         
         usertypes_h2 = html.h2('User Types')
-        usertypes = user.usertypes
+        usertypes = user.usertypes.all()
         
         usertypes_table = Table(
             auto__model = UserType,
@@ -419,7 +419,7 @@ def user_view(request, user_id):
         hr4 = html.hr()
         
         groups_h2 = html.h2('Groups')
-        groups = user.groups
+        groups = user.groups.all()
         
         groups_table = Table(
             auto__model = Group,
@@ -431,7 +431,7 @@ def user_view(request, user_id):
         hr5 = html.hr()
         
         permissions_h2 = html.h2('User Permissions')
-        permissions = user.user_permissions
+        permissions = user.user_permissions.all()
         
         permissions_table = Table(
             auto__model = Permission,
@@ -515,18 +515,37 @@ def user_view(request, user_id):
 
 def user_add(request):
     
+    def add_user_save_post_handler(form, **_):
+        if not form.is_valid():
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        return HttpResponseRedirect(reverse('users:user_index'))
+    
     return Form.create(
         auto__model = User,
         auto__exclude = ['usertypes', 'is_staff', 'is_superuser', 'last_login', 'groups', 'user_permissions', 'created', 'modified', 'modifier'],
-        context__html_title = 'User Create | New Wine Training',
+        actions__submit__post_handler=add_user_save_post_handler,
+#        context__html_title = 'User Create | New Wine Training',
+
     )
 
 def user_edit(request, user_id):
+    
+    def edit_user_save_post_handler(form, **_):
+        if not form.is_valid():
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        return HttpResponseRedirect(reverse('users:user_index'))
     
     return Form.edit(
         auto__model = User,
         auto__instance = User.objects.get(id = user_id),
         auto__exclude = ['password', 'last_login', 'created', 'modified', 'modifier'],
+        actions__submit__post_handler=edit_user_save_post_handler,
 #        context__html_title = 'User Edit | New Wine Training',
     )
 
@@ -545,6 +564,14 @@ def user_delete(request, user_id):
     return UserDeleteTemp()
 
 def user_register(request):
+    
+    def register_user_save_post_handler(form, **_):
+        if not form.is_valid():
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        return HttpResponseRedirect(reverse('trainings:registration_add'))
     
     class UserRegisterPage(Page):
         
@@ -577,16 +604,18 @@ def user_register(request):
                     children__district = Field(),
                     children__language = Field(),
                     children__phone_number = Field(
-                        help_text = 'Please fill in your cell phone number. We will send you text message announcements and reminders.'),
+                        help_text = 'Please fill in your cell phone number. We will send you text message announcements and reminders.'
                     ),
-                )
-                
-            )
+                ),
+            ),
+            actions__submit__post_handler=register_user_save_post_handler,
+        )
                 
         class Meta:
             context = dict(
                 html_title = 'Register | New Wine Training',
             )
+            
     
     return UserRegisterPage()
 
