@@ -15,7 +15,7 @@ from iommi import (
     Field,
 )
 
-from newwinetraining.views import save_post_handler
+#from newwinetraining.views import save_post_handler
 
 from .models import Language, Translation, Translator
 

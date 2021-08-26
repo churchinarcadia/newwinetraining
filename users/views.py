@@ -684,7 +684,7 @@ def user_login(request):
             if not form.is_valid():
                 return
             
-            user = authenticate(request, username = email, password = password)
+            user = authenticate(request, form.email, form.password)
             
             if user is not None:
                 login(request, user)
