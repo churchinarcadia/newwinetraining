@@ -17,9 +17,9 @@ class UserType(models.Model):
     description = models.CharField(max_length = 255)
     active = models.BooleanField(default = True)
     created = models.DateTimeField(auto_now_add = True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_creators', on_delete = models.RESTRICT)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_creators', on_delete = models.RESTRICT, blank = True, null = True)
     modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_modifiers', on_delete = models.RESTRICT)
+    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
         return self.name
@@ -28,9 +28,9 @@ class Locality(models.Model):
     locality = models.CharField(max_length = 100)
     active = models.BooleanField(default = True)
     created = models.DateTimeField(auto_now_add = True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_creators', on_delete = models.RESTRICT)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_creators', on_delete = models.RESTRICT, blank = True, null = True)
     modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_modifiers', on_delete = models.RESTRICT)
+    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
         return self.locality
@@ -89,7 +89,7 @@ class User(AbstractBaseUser):
 
     is_staff = models.BooleanField(default = False)
     is_superuser = models.BooleanField(default = False)
-    last_login = models.DateTimeField(null = True)
+    last_login = models.DateTimeField(blank = True, null = True)
 
     groups = models.ManyToManyField(Group, related_name = 'user_groups', blank = True)
     user_permissions = models.ManyToManyField(Permission, related_name = 'user_userpermissions', blank = True)
