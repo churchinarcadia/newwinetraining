@@ -87,7 +87,7 @@ def term_view(request, term_id):
         hr1 = html.hr()
         
         language_h2 = html.h2('Language')
-        languages = term.language.all()
+        languages = Language.objects.filter(pk = term.language.id)
         
         languages_table = Table(
             auto__model = Language,
@@ -108,12 +108,11 @@ def term_view(request, term_id):
         hr2 = html.hr()
         
         trainingmeeting_h2 = html.h2('Training Meetings')
-#        trainingmeetings = TrainingMeeting.objects.filter()
-        #TODO finish filter
+        trainingmeetings = TrainingMeeting.objects.filter(date__gte = term.start_date, date__lte = term.end_date)
         
         trainingmeetings_table = Table(
             auto__model = TrainingMeeting,
-#            rows = trainingmeetings, #TODO
+            rows = trainingmeetings,
             title = None,
             empty_message = 'No training meetings',
             columns__date = Column(
@@ -229,6 +228,8 @@ def exercisetype_view(request,exercisetype_id):
             children__exercisetype_id_dd = html.dd(exercisetype.id),
             children__exercisetype_name_dt = html.dt('Name'),
             children__exercisetype_name_dd = html.dd(exercisetype.name),
+            children__exercisetype_active_dt = html.dt('Active?'),
+            children__exercisetype_active_dd = html.dd(exercisetype.active),
             children__exercisetype_description_dt = html.dt('description'),
             children__exercisetype_description_dd = html.dd(exercisetype.description),
             children__exercisetype_created_dt = html.dt('Created'),
@@ -388,7 +389,7 @@ def recordinglocation_view(request, recordinglocation_id):
         hr1 = html.hr()
         
         trainingmeetings_h2 = html.h2('Training Meetings')
-#        trainingmeetings = TrainingMeeting.objects.filter #TODO
+#        trainingmeetings = TrainingMeeting.objects.filter() #TODO
 
         trainingmeetings_table = Table(
             auto__model = TrainingMeeting,
@@ -507,7 +508,7 @@ def registration_view(request, registration_id):
         hr1 = html.hr()
         
         users_h2 = html.h2('Registrant')
-        users = registration.user.all()
+        users = User.object.filter(pk = registration.user.id)
         
         users_table = Table(
             auto__model = User,
@@ -535,7 +536,7 @@ def registration_view(request, registration_id):
         hr2 = html.hr()
         
         terms_h2 = html.h2('Term')
-        terms = registration.term.all()
+        terms = Term.objects.filter(pk = registration.term.id)
         
         terms_table = Table(
             auto__model = Table,
@@ -558,7 +559,7 @@ def registration_view(request, registration_id):
         )
         
         exercisetypes_h2 = html.h2('Exercise Types')
-        exercisetypes = registration.exercisetypes.all()
+        exercisetypes = ExerciseType.object.filter(pk = registration.exercisetypes.id)
         
         exercisetypes_table = Table(
             auto__model = ExerciseType,
@@ -686,7 +687,7 @@ def trainingmeeting_view(request, trainingmeeting_id):
         hr1 = html.hr()
         
         terms_h2 = html.h2('Term')
-#        terms = Term.objects
+        terms = Term.objects.filter(start_date__lte = trainingmeeting.date, end_date__gte = trainingmeeting.date)
 
         terms_table = Table(
             auto__model = Term,
@@ -711,7 +712,7 @@ def trainingmeeting_view(request, trainingmeeting_id):
         hr2 = html.hr()
         
         languages_h2 = html.h2('Language')
-        languages = trainingmeeting.language.all()
+        languages = Language.object.filter(pk = trainingmeeting.language.id)
         
         languages_table = Table(
             auto__model = Language,
@@ -719,7 +720,6 @@ def trainingmeeting_view(request, trainingmeeting_id):
             title = None,
             empty_message = 'No languages',
             columns__language = Column(
-                #cell__url = lambda row, **_: row.get_absolute_url(),
                 cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,))
             ),
             columns__edit = Column(
@@ -733,11 +733,11 @@ def trainingmeeting_view(request, trainingmeeting_id):
         hr3 = html.hr()
         
         recordinglocations_h2 = html.h2('Recording Location')
-#        recordinglocations = RecordingLocation.objects.
+#        recordinglocations = RecordingLocation.objects. #TODO
 
         recordinglocations_table = Table(
             auto__model = RecordingLocation,
-#            rows = recordinglocations,
+#            rows = recordinglocations, #TODO
             title = None,
             empty_message = 'No recording locations',
             columns__location = Column(
@@ -852,7 +852,7 @@ def userexercise_view(request, userexercise_id):
         hr1 = html.hr()
         
         users_h2 = html.h2('User')
-        users = userexercise.user.all()
+        users = User.objects.filter(pk = userexercise.user.id)
         
         users_table = Table(
             auto__model = User,
@@ -876,7 +876,7 @@ def userexercise_view(request, userexercise_id):
         hr2 = html.hr()
         
         exercisetypes_h2 = html.h2('Exercise Types')
-        exercisetypes = userexercise.exercisetypes.all()
+        exercisetypes = ExerciseType.objects.filter(pk = userexercise.exercisetypes.id)
         
         exercisetypes_table = Table(
             auto__model = ExerciseType,
