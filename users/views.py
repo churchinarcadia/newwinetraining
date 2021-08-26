@@ -120,7 +120,7 @@ def usertype_add(request):
     return Form.create(
         auto__model = UserType,
         auto__include = ['name', 'description', 'active'],
-        context__html_title = 'User Type Create | New Wine Training',
+#        context__html_title = 'User Type Create | New Wine Training',
     )
 
 def usertype_edit(request, usertype_id):
@@ -129,7 +129,7 @@ def usertype_edit(request, usertype_id):
         auto__model = UserType,
         auto__instance = UserType.objects.get(id = usertype_id),
         auto__include = ['name', 'description', 'active'],
-        context__html_title = 'User Type Edit | New Wine Training',
+#        context__html_title = 'User Type Edit | New Wine Training',
     )
 
 def usertype_delete(request, usertype_id):
@@ -241,7 +241,7 @@ def locality_add(request):
     return Form.create(
         auto__model = Locality,
         auto__include = ['locality', 'active'],
-        context__html_title = 'Locality Create | New Wine Training',
+#        context__html_title = 'Locality Create | New Wine Training',
     )
 
 def locality_edit(request, locality_id):
@@ -250,7 +250,7 @@ def locality_edit(request, locality_id):
         auto__model = Locality,
         auto__instance = Locality.objects.get(id = locality_id),
         auto__include = ['locality', 'active'],
-        context__html_title = 'Locality Edit | New Wine Training',
+#        context__html_title = 'Locality Edit | New Wine Training',
     )
 
 def locality_delete(request, locality_id):

@@ -161,7 +161,7 @@ def term_add(request):
     return Form.create(
         auto__model = Term,
         auto__include = ['year', 'term', 'language', 'start_date', 'end_date'],
-        context__html_title = 'Term Create | New Wine Training',
+#        context__html_title = 'Term Create | New Wine Training',
     )
 
 def term_edit(request, term_id):
@@ -170,7 +170,7 @@ def term_edit(request, term_id):
         auto__model = Term,
         auto__instance = Term.objects.get(id = term_id),
         auto__include = ['year', 'term', 'language', 'start_date', 'end_date'],
-        context__html_title = 'Term Edit | New Wine Training',
+#        context__html_title = 'Term Edit | New Wine Training',
     )
 
 def term_delete(request, term_id):
@@ -299,7 +299,7 @@ def exercisetype_add(request):
     return Form.create(
         auto__model = ExerciseType,
         auto__include = ['name', 'description'],
-        context__html_title = 'Exercise Type Create | New Wine Training',
+#        context__html_title = 'Exercise Type Create | New Wine Training',
     )
 
 def exercisetype_edit(request, exercisetype_id):
@@ -308,7 +308,7 @@ def exercisetype_edit(request, exercisetype_id):
         auto__model = ExerciseType,
         auto__instance = ExerciseType.objects.get(id = exercisetype_id),
         auto__include = ['name', 'description'],
-        context__html_title = 'Exercise Type Edit | New Wine Training',
+#        context__html_title = 'Exercise Type Edit | New Wine Training',
     )
 
 def exercisetype_delete(request, exercisetype_id):
@@ -419,7 +419,7 @@ def recordinglocation_add(request):
     return Form.create(
         auto__model = RecordingLocation,
         auto__include = ['location', 'code_before_url', 'code_after_url', 'url_identifier', 'notes'],
-        context__html_title = 'Recording Location Create | New Wine Training',
+#        context__html_title = 'Recording Location Create | New Wine Training',
     )
 
 def recordinglocation_edit(request, recordinglocation_id):
@@ -428,7 +428,7 @@ def recordinglocation_edit(request, recordinglocation_id):
         auto__model = RecordingLocation,
         auto__instance = RecordingLocation.objects.get(id = recordinglocation_id),
         auto__include = ['location', 'code_before_url', 'code_after_url', 'url_identifier', 'notes'],
-        context__html_title = 'Recording Location Edit | New Wine Training',
+#        context__html_title = 'Recording Location Edit | New Wine Training',
     )
 
 def recordinglocation_delete(request, recordinglocation_id):
@@ -589,7 +589,7 @@ def registration_add(request):
     return Form.create(
         auto__model = Registration,
         auto__include = ['user', 'term', 'exercisetypes', 'signature'],
-        context__html_title = 'Registration Create | New Wine Training',
+#        context__html_title = 'Registration Create | New Wine Training',
     )
 
 def registration_edit(request, registration_id):
@@ -598,7 +598,7 @@ def registration_edit(request, registration_id):
         auto__model = Registration,
         auto__instance = Registration.objects.get(id = registration_id),
         auto__include = ['user', 'term', 'exercisetypes', 'signature'],
-        context__html_title = 'Registration Edit | New Wine Training',
+#        context__html_title = 'Registration Edit | New Wine Training',
     )
 
 def registration_delete(request, registration_id):
@@ -763,7 +763,7 @@ def trainingmeeting_add(request):
     return Form.create(
         auto__model = TrainingMeeting,
         auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'notes'],
-        context__html_title = 'Training Meeting Create | New Wine Training',
+#        context__html_title = 'Training Meeting Create | New Wine Training',
     )
 
 def trainingmeeting_edit(request, trainingmeeting_id):
@@ -772,7 +772,7 @@ def trainingmeeting_edit(request, trainingmeeting_id):
         auto__model = TrainingMeeting,
         auto__instance = TrainingMeeting.objects.get(id = trainingmeeting_id),
         auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'recording_url', 'recording_released_datetime', 'recording_released_by', 'notes'],
-        context__html_title = 'Training Meeting Edit | New Wine Training',
+#        context__html_title = 'Training Meeting Edit | New Wine Training',
     )
 
 def trainingmeeting_delete(request, trainingmeeting_id):
@@ -904,7 +904,7 @@ def userexercise_add(request):
     return Form.create(
         auto__model = UserExercise,
         auto__include = ['date', 'user', 'exercisetypes'],
-        context__html_title = 'User Exercise Create | New Wine Training',
+#        context__html_title = 'User Exercise Create | New Wine Training',
     )
 
 def userexercise_edit(request, userexercise_id):
@@ -913,7 +913,7 @@ def userexercise_edit(request, userexercise_id):
         auto__model = UserExercise,
         auto__instance = UserExercise.objects.get(id = userexercise_id),
         auto__include = ['date', 'user', 'exercisetypes'],
-        context__html_title = 'User Exercise Edit | New Wine Training',
+#        context__html_title = 'User Exercise Edit | New Wine Training',
     )
 
 def userexercise_delete(request, userexercise_id):
@@ -1018,7 +1018,7 @@ def text_add(request):
     return Form.create(
         auto__model = Text,
         auto__include = ['name', 'description'],
-        context__html_title = 'Text Create | New Wine Training',
+#        context__html_title = 'Text Create | New Wine Training',
     )
 
 def text_edit(request, text_id):
@@ -1027,7 +1027,7 @@ def text_edit(request, text_id):
         auto__model = Text,
         auto__instance = Text.objects.get(id = text_id),
         auto__include = ['name', 'description'],
-        context__html_title = 'Text Edit | New Wine Training',
+#        context__html_title = 'Text Edit | New Wine Training',
     )
 
 def text_delete(request, text_id):

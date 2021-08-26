@@ -193,7 +193,7 @@ def language_add(request):
     return Form.create(
         auto__model = Language,
         auto__include = ['language', 'code'],
-        context__html_title = 'Language Create | New Wine Training',
+#        context__html_title = 'Language Create | New Wine Training',
     )
 
 def language_edit(request, language_id):
@@ -202,7 +202,7 @@ def language_edit(request, language_id):
         auto__model = Language,
         auto__instance = Language.objects.get(id = language_id),
         auto__include = ['language', 'code'],
-        context__html_title = 'Language Edit | New Wine Training',
+#        context__html_title = 'Language Edit | New Wine Training',
     )
 
 def language_delete(request, language_id):
@@ -335,7 +335,7 @@ def translation_add(request):
     return Form.create(
         auto__model = Translation,
         auto__include = ['language', 'text', 'content'],
-        context__html_title = 'Translation Create | New Wine Training',
+#        context__html_title = 'Translation Create | New Wine Training',
     )
 
 def translation_edit(request, translation_id):
@@ -344,7 +344,7 @@ def translation_edit(request, translation_id):
         auto__model = Translation,
         auto__instance = Translation.objects.get(id = translation_id),
         auto__include = ['language', 'text', 'content'],
-        context__html_title = 'Translation Edit | New Wine Training',
+#        context__html_title = 'Translation Edit | New Wine Training',
     )
 
 def translation_delete(request, translation_id):
@@ -476,7 +476,7 @@ def translator_add(request):
     return Form.create(
         auto__model = Translator,
         auto__include = ['user', 'language'],
-        context__html_title = 'Translator Create | New Wine Training',
+#        context__html_title = 'Translator Create | New Wine Training',
     )
 
 def translator_edit(request, translator_id):
@@ -485,7 +485,7 @@ def translator_edit(request, translator_id):
         auto__model = Translator,
         auto__instance = Translator.objects.get(id = translator_id),
         auto__include = ['user', 'language'],
-        context__html_title = 'Translator Edit | New Wine Training',
+#        context__html_title = 'Translator Edit | New Wine Training',
     )
 
 def translator_delete(request, translator_id):
