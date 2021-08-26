@@ -284,7 +284,7 @@ def translation_view(request, translation_id):
         hr1 = html.hr()
         
         text_h2 = html.h2('Text')
-        texts = translation.text.all()
+        texts = Text.objects.filter(pk = translation.text.id)
         
         text_table = Table(
             auto__model = Text,
@@ -305,7 +305,7 @@ def translation_view(request, translation_id):
         hr2 = html.hr()
         
         language_h2 = html.h2('Language')
-        languages = translation.language.all()
+        languages = Language.objects.filter(pk = translation.language.id)
         
         language_table = Table(
             auto__model = Language,
@@ -420,7 +420,7 @@ def translator_view(request, translator_id):
         hr1 = html.hr()
         
         language_h2 = html.h2('Language')
-        languages = translator.language.all()
+        languages = Language.objects.filter(pk = translator.language.id)
         
         languages_table = Table(
             auto__model = Language,
@@ -441,7 +441,7 @@ def translator_view(request, translator_id):
         hr2 = html.hr()
         
         translation_h2 = html.h2('Translations')
-        translations = translator.user.translation_creators.all()
+        translations = Translation.objects.filter(creator__id = translator.user.id | modifier__id - translator.user.id)
         
         table = Table(
             auto__model = Translation,
