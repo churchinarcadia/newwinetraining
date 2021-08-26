@@ -6,11 +6,11 @@ from newwinetraining.models import BaseModel
 
 class Language(models.Model):
     language = models.CharField(max_length = 100)
-    code = models.CharField(max_length = 5)
+    code = models.CharField(max_length = 5, blank = True, null = True)
     created = models.DateTimeField(auto_now_add = True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'language_creators', on_delete = models.RESTRICT)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'language_creators', on_delete = models.RESTRICT, blank = True, null = True)
     modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'language_modifiers', on_delete = models.RESTRICT)
+    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'language_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
         return self.language
@@ -20,9 +20,9 @@ class Translation(models.Model):
     language = models.ForeignKey(Language, related_name = 'translation_languages', on_delete = models.RESTRICT)
     content = models.TextField(blank = True)
     created = models.DateTimeField(auto_now_add = True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translation_creators', on_delete = models.RESTRICT)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translation_creators', on_delete = models.RESTRICT, blank = True, null = True)
     modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translation_modifiers', on_delete = models.RESTRICT)
+    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translation_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
         return self.text + ', ' + self.language
@@ -31,9 +31,9 @@ class Translator(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translator_users', on_delete = models.RESTRICT)
     language = models.ForeignKey(Language, related_name = 'translator_languages', on_delete = models.RESTRICT)
     created = models.DateTimeField(auto_now_add = True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translator_creators', on_delete = models.RESTRICT)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translator_creators', on_delete = models.RESTRICT, blank = True, null = True)
     modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translat0r_modifiers', on_delete = models.RESTRICT)
+    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'translat0r_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
         return self.user + ' (' + self.language + ')'
