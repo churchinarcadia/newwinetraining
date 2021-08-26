@@ -58,21 +58,22 @@ def language_view(request, language_id):
         h1 = html.h1('Language View: ' + language.language)
 
         language_h2 = html.h2('Details')
-        dl = html.dl()
-        language_id_dt = html.dt('ID')
-        language_id_dd = html.dd(language.id)
-        language_code_dt = html.dt('Code')
-        language_code_dd = html.dd(language.code)
-        language_language_dt = html.dt('Language')
-        language_language_dd = html.dd(language.language)
-        language_created_dt = html.dt('Created')
-        language_created_dd = html.dd(language.created)
-        language_creator_dt = html.dt('Creator')
-        language_creator_dd = html.dd(language.creator)
-        language_modified_dt = html.dt('Modified')
-        language_modified_dd = html.dd(language.modified)
-        language_modifier_dt = html.dt('Modifier')
-        language_modifier_dd = html.dd(language.modifier)\
+        dl = html.dl(
+            children__language_id_dt = html.dt('ID'),
+            children__language_id_dd = html.dd(language.id),
+            children__language_code_dt = html.dt('Code'),
+            children__language_code_dd = html.dd(language.code),
+            children__language_language_dt = html.dt('Language'),
+            children__language_language_dd = html.dd(language.language),
+            children__language_created_dt = html.dt('Created'),
+            children__language_created_dd = html.dd(language.created),
+            children__language_creator_dt = html.dt('Creator'),
+            children__language_creator_dd = html.dd(language.creator),
+            children__language_modified_dt = html.dt('Modified'),
+            children__language_modified_dd = html.dd(language.modified),
+            children__language_modifier_dt = html.dt('Modifier'),
+            children__language_modifier_dd = html.dd(language.modifier),
+        )
 
         hr1 = html.hr()
 
@@ -261,23 +262,24 @@ def translation_view(request, translation_id):
         h1 = html.h1('Translation View')
 
         translation_h2 = html.h2('Details')
-        dl = html.dl()
-        translation_id_dt = html.dt('ID')
-        translation_id_dd = html.dd(translation.id)
-        translation_langauge_dt = html.dt('Language')
-        translation_language_dd = html.dd(translation.language)
-        translation_text_dt = html.dt('Text Description')
-        translation_text_dd = html.dd(translation.text)
-        translation_content_dt = html.dt('Translation')
-        translation_content_dd = html.dd(translation.content)
-        translation_created_dt = html.dt('Created')
-        translation_created_dd = html.dd(translation.created)
-        translation_creator_dt = html.dt('Creator')
-        translation_creator_dd = html.dd(translation.creator)
-        translation_modified_dt = html.dt('Modified')
-        translation_modified_dd = html.dd(translation.modified)
-        translation_modifier_dt = html.dt('Modifier')
-        translation_modifier_dd = html.dd(translation.modifier)
+        dl = html.dl(
+            children__translation_id_dt = html.dt('ID'),
+            children__translation_id_dd = html.dd(translation.id),
+            children__translation_langauge_dt = html.dt('Language'),
+            children__translation_language_dd = html.dd(translation.language),
+            children__translation_text_dt = html.dt('Text Description'),
+            children__translation_text_dd = html.dd(translation.text),
+            children__translation_content_dt = html.dt('Translation'),
+            children__translation_content_dd = html.dd(translation.content),
+            children__translation_created_dt = html.dt('Created'),
+            children__translation_created_dd = html.dd(translation.created),
+            children__translation_creator_dt = html.dt('Creator'),
+            children__translation_creator_dd = html.dd(translation.creator),
+            children__translation_modified_dt = html.dt('Modified'),
+            children__translation_modified_dd = html.dd(translation.modified),
+            children__translation_modifier_dt = html.dt('Modifier'),
+            children__translation_modifier_dd = html.dd(translation.modifier),
+        )
         
         hr1 = html.hr()
         
@@ -398,21 +400,22 @@ def translator_view(request, translator_id):
         h1 = html.h1('Translator View: ' + translator.user)
         
         translator_h2 = html.h2('Details')
-        dl = html.dl()
-        translator_id_dt = html.dt('ID')
-        translator_id_dd = html.dd(translator.id)
-        translator_user_dt = html.dt('Translator')
-        translator_user_dd = html.dd(translator.user)
-        translator_language_dt = html.dt('Language')
-        translator_language_dd = html.dd(translator.language)
-        translator_created_dt = html.dt('Created')
-        translator_created_dd = html.dd(translator.created)
-        translator_creator_dt = html.dt('Creator')
-        translator_creator_dd = html.dd(translator.creator)
-        translator_modified_dt = html.dt('Modified')
-        translator_modified_dd = html.dd(translator.modified)
-        translator_modifier_dt = html.dt('Modifier')
-        translator_modifier_dd = html.dd(translator.modifier)
+        dl = html.dl(
+            children__translator_id_dt = html.dt('ID'),
+            children__translator_id_dd = html.dd(translator.id),
+            children__translator_user_dt = html.dt('Translator'),
+            children__translator_user_dd = html.dd(translator.user),
+            children__translator_language_dt = html.dt('Language'),
+            children__translator_language_dd = html.dd(translator.language),
+            children__translator_created_dt = html.dt('Created'),
+            children__translator_created_dd = html.dd(translator.created),
+            children__translator_creator_dt = html.dt('Creator'),
+            children__translator_creator_dd = html.dd(translator.creator),
+            children__translator_modified_dt = html.dt('Modified'),
+            children__translator_modified_dd = html.dd(translator.modified),
+            children__translator_modifier_dt = html.dt('Modifier'),
+            children__translator_modifier_dd = html.dd(translator.modifier),
+        )
         
         hr1 = html.hr()
         

@@ -61,27 +61,28 @@ def term_view(request, term_id):
         h1 = html.h1('Term View: ' + term.year + ' ' + term.term)
         
         term_h2 = html.h2('Details')
-        dl = html.dl()
-        term_id_dt = html.dt('ID')
-        term_id_dd = html.dd(term.id)
-        term_term_dt = html.dt('Term')
-        term_term_dd = html.dd(term.term)
-        term_year_dt = html.dt('Year')
-        term_year_dt = html.dd(term.year)
-        term_language_dt = html.dt('Language')
-        term_language_dd = html.dd(term.language)
-        term_start_date_dt = html.dt('Start Date')
-        term_stert_date_dd = html.dd(term.start_date)
-        term_end_date_dt = html.dt('End Date')
-        term_end_date_dd = html.dd(term.end_date)
-        term_created_dt = html.dt('Created')
-        term_created_dd = html.dd(term.created)
-        term_creator_dt = html.dt('Creator')
-        term_creator_dd = html.dd(term.creator)
-        term_modified_dt = html.dt('Modified')
-        term_modified_dd = html.dd(term.modified)
-        term_modifier_dt = html.dt('Modifier')
-        term_modifier_dt = html.dd(term.modifier)
+        dl = html.dl(
+            children__term_id_dt = html.dt('ID'),
+            children__term_id_dd = html.dd(term.id),
+            children__term_term_dt = html.dt('Term'),
+            children__term_term_dd = html.dd(term.term),
+            children__term_year_dt = html.dt('Year'),
+            children__term_year_dd = html.dd(term.year),
+            children__term_language_dt = html.dt('Language'),
+            children__term_language_dd = html.dd(term.language),
+            children__term_start_date_dt = html.dt('Start Date'),
+            children__term_stert_date_dd = html.dd(term.start_date),
+            children__term_end_date_dt = html.dt('End Date'),
+            children__term_end_date_dd = html.dd(term.end_date),
+            children__term_created_dt = html.dt('Created'),
+            children__term_created_dd = html.dd(term.created),
+            children__term_creator_dt = html.dt('Creator'),
+            children__term_creator_dd = html.dd(term.creator),
+            children__term_modified_dt = html.dt('Modified'),
+            children__term_modified_dd = html.dd(term.modified),
+            children__term_modifier_dt = html.dt('Modifier'),
+            children__term_modifier_dd = html.dd(term.modifier),
+        )
         
         hr1 = html.hr()
         
@@ -223,21 +224,22 @@ def exercisetype_view(request,exercisetype_id):
         h1 = html.h1('Exercise Type View: ' + exercisetype.name)
         
         exercisetype_h2 = html.h2('Details')
-        dl = html.dl()
-        exercisetype_id_dt = html.dt('ID')
-        exercisetype_id_dd = html.dd(exercisetype.id)
-        exercisetype_name_dt = html.dt('Name')
-        exercisetype_name_dd = html.dd(exercisetype.name)
-        exercisetype_description_dt = html.dt('description')
-        exercisetype_description_dd = html.dd(exercisetype.description)
-        exercisetype_created_dt = html.dt('Created')
-        exercisetype_created_dd = html.dd(exercisetype.created)
-        exercisetype_creator_dt = html.dt('Creator')
-        exercisetype_creator_dd = html.dd(exercisetype.creator)
-        exercisetype_modified_dt = html.dt('Modified')
-        exercisetype_modified_dd = html.dd(exercisetype.modified)
-        exercisetype_modifier_dt = html.dt('Modifier')
-        exercisetype_modifier_dd = html.dd(exercisetype.modifier)
+        dl = html.dl(
+            children__exercisetype_id_dt = html.dt('ID'),
+            children__exercisetype_id_dd = html.dd(exercisetype.id),
+            children__exercisetype_name_dt = html.dt('Name'),
+            children__exercisetype_name_dd = html.dd(exercisetype.name),
+            children__exercisetype_description_dt = html.dt('description'),
+            children__exercisetype_description_dd = html.dd(exercisetype.description),
+            children__exercisetype_created_dt = html.dt('Created'),
+            children__exercisetype_created_dd = html.dd(exercisetype.created),
+            children__exercisetype_creator_dt = html.dt('Creator'),
+            children__exercisetype_creator_dd = html.dd(exercisetype.creator),
+            children__exercisetype_modified_dt = html.dt('Modified'),
+            children__exercisetype_modified_dd = html.dd(exercisetype.modified),
+            children__exercisetype_modifier_dt = html.dt('Modifier'),
+            children__exercisetype_modifier_dd = html.dd(exercisetype.modifier),
+        )
         
         hr1 = html.hr()
         
@@ -360,27 +362,28 @@ def recordinglocation_view(request, recordinglocation_id):
         h1 = html.h1('Recording Location View: ' + recordinglocation.location)
         
         recordinglocation_h2 = html.h2('Details')
-        dl = html.dl()
-        recordinglocation_id_dt = html.dt('ID')
-        recordinglocation_id_dd = html.dd(recordinglocation.id)
-        recordinglocation_location_dt = html.dt('Location')
-        recordinglocation_location_dd = html.dd(recordinglocation.location)
-        recordinglocation_code_before_url_dt = html.dt('Code before URL')
-        recordinglocation_code_before_url_dd = html.dd(recordinglocation.code_before_url)
-        recordinglocation_code_after_url_dt = html.dt('Code after URL')
-        recordinglocation_code_after_url_dd = html.dd(recordinglocation.code_after_url)
-        recordinglocation_url_identifier_dt = html.dt('URL Identifier')
-        recordinglocation_url_identifier_dd = html.dd(recordinglocation.url_identifier)
-        recordinglocation_notes_dt = html.dt('Notes')
-        recordinglocation_notes_dd = html.dd(recordinglocation.notes)
-        recordinglocation_created_dt = html.dt('Created')
-        recordinglocation_created_dd = html.dd(recordinglocation.created)
-        recordinglocation_creator_dt = html.dt('Creator')
-        recordinglocation_creator_dd = html.dd(recordinglocation.creator)
-        recordinglocation_modified_dt = html.dt('Modified')
-        recordinglocation_modified_dd = html.dd(recordinglocation.modified)
-        recordinglocation_modifier_dt = html.dt('Modifier')
-        recordinglocation_modifier_dd = html.dd(recordinglocation.modifier)
+        dl = html.dl(
+            children__recordinglocation_id_dt = html.dt('ID'),
+            children__recordinglocation_id_dd = html.dd(recordinglocation.id),
+            children__recordinglocation_location_dt = html.dt('Location'),
+            children__recordinglocation_location_dd = html.dd(recordinglocation.location),
+            children__recordinglocation_code_before_url_dt = html.dt('Code before URL'),
+            children__recordinglocation_code_before_url_dd = html.dd(recordinglocation.code_before_url),
+            children__recordinglocation_code_after_url_dt = html.dt('Code after URL'),
+            children__recordinglocation_code_after_url_dd = html.dd(recordinglocation.code_after_url),
+            children__recordinglocation_url_identifier_dt = html.dt('URL Identifier'),
+            children__recordinglocation_url_identifier_dd = html.dd(recordinglocation.url_identifier),
+            children__recordinglocation_notes_dt = html.dt('Notes'),
+            children__recordinglocation_notes_dd = html.dd(recordinglocation.notes),
+            children__recordinglocation_created_dt = html.dt('Created'),
+            children__recordinglocation_created_dd = html.dd(recordinglocation.created),
+            children__recordinglocation_creator_dt = html.dt('Creator'),
+            children__recordinglocation_creator_dd = html.dd(recordinglocation.creator),
+            children__recordinglocation_modified_dt = html.dt('Modified'),
+            children__recordinglocation_modified_dd = html.dd(recordinglocation.modified),
+            children__recordinglocation_modifier_dt = html.dt('Modifier'),
+            children__recordinglocation_modifier_dd = html.dd(recordinglocation.modifier),
+        )
         
         hr1 = html.hr()
         
@@ -480,25 +483,26 @@ def registration_view(request, registration_id):
         h1 = html.h1('Registration View: ' + registration.user + ' (' + registration.term + ')')
         
         registration_h2 = html.h2('Details')
-        dl = html.dl()
-        registration_id_dt = html.dt('ID')
-        registration_id_dd = html.dd(registration.id)
-        registration_user_dt = html.dt('Registrant')
-        registration_user_dd = html.dd(registration.user)
-        registration_term_dt = html.dt('Term')
-        registration_term_dd = html.dd(registration.term)
-        registration_exercisetypes_dt = html.dt('Exercise Types')
-        registration_exercisetypes_dd = html.dd(registration.exercisetypes)
-        registration_signature_dt = html.dt('Signature')
-        registration_signature_dd = html.dd(registration.signature)
-        registration_created_dt = html.dt('Created')
-        registration_created_dd = html.dd(registration.created)
-        registration_creator_dt = html.dt('Creator')
-        registration_creator_dd = html.dd(registration.creator)
-        registration_modified_dt = html.dt('Modified')
-        registration_modified_dd = html.dd(registration.modified)
-        registration_modifier_dt = html.dt('Modifier')
-        registration_modifier_dd = html.dd(registration.modifier)
+        dl = html.dl(
+            children__registration_id_dt = html.dt('ID'),
+            children__registration_id_dd = html.dd(registration.id),
+            children__registration_user_dt = html.dt('Registrant'),
+            children__registration_user_dd = html.dd(registration.user),
+            children__registration_term_dt = html.dt('Term'),
+            children__registration_term_dd = html.dd(registration.term),
+            children__registration_exercisetypes_dt = html.dt('Exercise Types'),
+            children__registration_exercisetypes_dd = html.dd(registration.exercisetypes),
+            children__registration_signature_dt = html.dt('Signature'),
+            children__registration_signature_dd = html.dd(registration.signature),
+            children__registration_created_dt = html.dt('Created'),
+            children__registration_created_dd = html.dd(registration.created),
+            children__registration_creator_dt = html.dt('Creator'),
+            children__registration_creator_dd = html.dd(registration.creator),
+            children__registration_modified_dt = html.dt('Modified'),
+            children__registration_modified_dd = html.dd(registration.modified),
+            children__registration_modifier_dt = html.dt('Modifier'),
+            children__registration_modifier_dd = html.dd(registration.modifier),
+        )
         
         hr1 = html.hr()
         
@@ -648,35 +652,36 @@ def trainingmeeting_view(request, trainingmeeting_id):
         h1 = html.h1('Training Meeting View: ' + trainingmeeting.date)
         
         trainingmeeting_h2 = html.h2('Details')
-        dl = html.dl()
-        trainingmeeting_id_dt = html.dt('ID')
-        trainingmeeting_id_dd = html.dd(trainingmeeting.id)
-        trainingmeeting_date_dt = html.dt('Date')
-        trainingmeeting_date_dd = html.dd(trainingmeeting.date)
-        trainingmeeting_start_time_dt = html.dt('Start Time')
-        trainingmeeting_start_time_dd = html.dd(trainingmeeting.start_time)
-        trainingmeeting_end_time_dt = html.dt('End Time')
-        trainingmeeting_end_time_dd = html.dd(trainingmeeting.end_time)
-        trainingmeeting_language_dt = html.dt('Language')
-        trainingmeeting_language_dd = html.dd(trainingmeeting.language)
-        trainingmeeting_location_dt = html.dt('Location')
-        trainingmeeting_location_dd = html.dd(trainingmeeting.location)
-        trainingmeeting_recording_url_dt = html.dt('Recording URL')
-        trainingmeeting_recording_url_dd = html.dd(trainingmeeting.recording_url)
-        trainingmeeting_recording_released_datetime_dt = html.dt('Recording Released')
-        trainingmeeting_recording_released_datetime_dd = html.dd(trainingmeeting.recording_released_datetime)
-        trainingmeeting_recording_released_by_dt = html.dt('Released By')
-        trainingmeeting_recording_released_by_dd = html.dd(trainingmeeting.recording_released_by)
-        trainingmeeting_notes_dt = html.dt('Notes')
-        trainingmeeting_notes_dd = html.dd(trainingmeeting.notes)
-        trainingmeeting_created_dt = html.dt('Created')
-        trainingmeeting_created_dd = html.dd(trainingmeeting.created)
-        trainingmeeting_creator_dt = html.dt('Creator')
-        trainingmeeting_creator_dd = html.dd(trainingmeeting.creator)
-        trainingmeeting_modified_dt = html.dt('Modified')
-        trainingmeeting_modified_dd = html.dd(trainingmeeting.modified)
-        trainingmeeting_modifier_dt = html.dt('Modifier')
-        trainingmeeting_modifier_dd = html.dd(trainingmeeting.modifier)
+        dl = html.dl(
+            children__trainingmeeting_id_dt = html.dt('ID'),
+            children__trainingmeeting_id_dd = html.dd(trainingmeeting.id),
+            children__trainingmeeting_date_dt = html.dt('Date'),
+            children__trainingmeeting_date_dd = html.dd(trainingmeeting.date),
+            children__trainingmeeting_start_time_dt = html.dt('Start Time'),
+            children__trainingmeeting_start_time_dd = html.dd(trainingmeeting.start_time),
+            children__trainingmeeting_end_time_dt = html.dt('End Time'),
+            children__trainingmeeting_end_time_dd = html.dd(trainingmeeting.end_time),
+            children__trainingmeeting_language_dt = html.dt('Language'),
+            children__trainingmeeting_language_dd = html.dd(trainingmeeting.language),
+            children__trainingmeeting_location_dt = html.dt('Location'),
+            children__trainingmeeting_location_dd = html.dd(trainingmeeting.location),
+            children__trainingmeeting_recording_url_dt = html.dt('Recording URL'),
+            children__trainingmeeting_recording_url_dd = html.dd(trainingmeeting.recording_url),
+            children__trainingmeeting_recording_released_datetime_dt = html.dt('Recording Released'),
+            children__trainingmeeting_recording_released_datetime_dd = html.dd(trainingmeeting.recording_released_datetime),
+            children__trainingmeeting_recording_released_by_dt = html.dt('Released By'),
+            children__trainingmeeting_recording_released_by_dd = html.dd(trainingmeeting.recording_released_by),
+            children__trainingmeeting_notes_dt = html.dt('Notes'),
+            children__trainingmeeting_notes_dd = html.dd(trainingmeeting.notes),
+            children__trainingmeeting_created_dt = html.dt('Created'),
+            children__trainingmeeting_created_dd = html.dd(trainingmeeting.created),
+            children__trainingmeeting_creator_dt = html.dt('Creator'),
+            children__trainingmeeting_creator_dd = html.dd(trainingmeeting.creator),
+            children__trainingmeeting_modified_dt = html.dt('Modified'),
+            children__trainingmeeting_modified_dd = html.dd(trainingmeeting.modified),
+            children__trainingmeeting_modifier_dt = html.dt('Modifier'),
+            children__trainingmeeting_modifier_dd = html.dd(trainingmeeting.modifier),
+        )
 
         hr1 = html.hr()
         
@@ -825,23 +830,24 @@ def userexercise_view(request, userexercise_id):
         h1 = html.h1('User Exercise View: ' + userexercise.user + ' (' + userexercise.date + ')')
     
         userexercise_h2 = html.h2('Details')
-        dl = html.dl()
-        userexercise_id_dt = html.dt('ID')
-        userexercise_id_dd = html.dd(userexercise.id)
-        userexercise_date_dt = html.dt('Date')
-        userexercise_date_dd = html.dd(userexercise.date)
-        userexercise_user_dt = html.dt('User')
-        userexercise_user_dd = html.dd(userexercise.user)
-        userexercise_exercisetypes_dt = html.dt('Exercise Types')
-        userexercise_exercisetypes_dd = html.dd(userexercise.exercisetypes)
-        userexercise_created_dt = html.dt('Created')
-        userexercise_created_dd = html.dd(userexercise.created)
-        userexercise_creator_dt = html.dt('Creator')
-        userexercise_creator_dd = html.dd(userexercise.creator)
-        userexercise_modified_dt = html.dt('Modified')
-        userexercise_modified_dd = html.dd(userexercise.modified)
-        userexercise_modifier_dt = html.dt('Modifier')
-        userexercise_modifier_dd = html.dd(userexercise.modifier)
+        dl = html.dl(
+            children__userexercise_id_dt = html.dt('ID'),
+            children__userexercise_id_dd = html.dd(userexercise.id),
+            children__userexercise_date_dt = html.dt('Date'),
+            children__userexercise_date_dd = html.dd(userexercise.date),
+            children__userexercise_user_dt = html.dt('User'),
+            children__userexercise_user_dd = html.dd(userexercise.user),
+            children__userexercise_exercisetypes_dt = html.dt('Exercise Types'),
+            children__userexercise_exercisetypes_dd = html.dd(userexercise.exercisetypes),
+            children__userexercise_created_dt = html.dt('Created'),
+            children__userexercise_created_dd = html.dd(userexercise.created),
+            children__userexercise_creator_dt = html.dt('Creator'),
+            children__userexercise_creator_dd = html.dd(userexercise.creator),
+            children__userexercise_modified_dt = html.dt('Modified'),
+            children__userexercise_modified_dd = html.dd(userexercise.modified),
+            children__userexercise_modifier_dt = html.dt('Modifier'),
+            children__userexercise_modifier_dd = html.dd(userexercise.modifier),
+        )
         
         hr1 = html.hr()
         
@@ -962,21 +968,22 @@ def text_view(request, text_id):
         h1 = html.h1('Text View: ' + text.name)
         
         text_h2 = html.h2('Details')
-        dl = html.dl()
-        text_id_dt = html.dt('ID')
-        text_id_dd = html.dd(text.id)
-        text_name_dt = html.dt('Name')
-        text_name_dd = html.dd(text.name)
-        text_description_dt = html.dt('Description')
-        text_description_dd = html.dd(text.description)
-        text_created_dt = html.dt('Created')
-        text_created_dd = html.dd(text.created)
-        text_creator_dt = html.dt('Creator')
-        text_creator_dd = html.dd(text.creator)
-        text_modified_dt = html.dt('Modified')
-        text_modified_dd = html.dd(text.modified)
-        text_modifier_dt = html.dt('Modifier')
-        text_modifier_dd = html.dd(text.modifier)
+        dl = html.dl(
+            children__text_id_dt = html.dt('ID'),
+            children__text_id_dd = html.dd(text.id),
+            children__text_name_dt = html.dt('Name'),
+            children__text_name_dd = html.dd(text.name),
+            children__text_description_dt = html.dt('Description'),
+            children__text_description_dd = html.dd(text.description),
+            children__text_created_dt = html.dt('Created'),
+            children__text_created_dd = html.dd(text.created),
+            children__text_creator_dt = html.dt('Creator'),
+            children__text_creator_dd = html.dd(text.creator),
+            children__text_modified_dt = html.dt('Modified'),
+            children__text_modified_dd = html.dd(text.modified),
+            children__text_modifier_dt = html.dt('Modifier'),
+            children__text_modifier_dd = html.dd(text.modifier),
+        )
         
         h1 = html.h1()
         

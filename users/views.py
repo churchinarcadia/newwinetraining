@@ -61,23 +61,24 @@ def usertype_view(request, usertype_id):
         h1 = html.h1('User Type View: ' + usertype.name)
         
         usertype_h2 = html.h2('Details')
-        dl = html.dl()
-        usertype_id_dt = html.dt('ID')
-        usertype_id_dd = html.dd(usertype.id)
-        usertype_name_dt = html.dt('Name')
-        usertype_name_dd = html.dd(usertype.name)
-        usertype_description_dt = html.dt('Description')
-        usertype_description_dd = html.dd(usertype.description)
-        usertype_active_dt = html.dt('Active?')
-        usertype_active_dd = html.dd(usertype.active)
-        usertype_created_dt = html.dt('Created')
-        usertype_created_dd = html.dd(usertype.created)
-        usertype_creator_dt = html.dt('Creator')
-        usertype_creator_dd = html.dd(usertype.creator)
-        usertype_modified_dt = html.dt('Modified')
-        usertype_modified_dd = html.dd(usertype.modified)
-        usertype_modifier_dt = html.dt('Modifier')
-        usertype_modifier_dd = html.dd(usertype.modifier)
+        dl = html.dl(
+            children__usertype_id_dt = html.dt('ID'),
+            children__usertype_id_dd = html.dd(usertype.id),
+            children__usertype_name_dt = html.dt('Name'),
+            children__usertype_name_dd = html.dd(usertype.name),
+            children__usertype_description_dt = html.dt('Description'),
+            children__usertype_description_dd = html.dd(usertype.description),
+            children__usertype_active_dt = html.dt('Active?'),
+            children__usertype_active_dd = html.dd(usertype.active),
+            children__usertype_created_dt = html.dt('Created'),
+            children__usertype_created_dd = html.dd(usertype.created),
+            children__usertype_creator_dt = html.dt('Creator'),
+            children__usertype_creator_dd = html.dd(usertype.creator),
+            children__usertype_modified_dt = html.dt('Modified'),
+            children__usertype_modified_dd = html.dd(usertype.modified),
+            children__usertype_modifier_dt = html.dt('Modifier'),
+            children__usertype_modifier_dd = html.dd(usertype.modifier),
+        )
         
         hr1 = html.hr()
         
@@ -183,21 +184,22 @@ def locality_view(request, locality_id):
         h1 = html.h1('Locality View: ' + locality.locality)
         
         locality_h2 = html.h2('Details')
-        dl = html.dl()
-        locality_id_dt = html.dt('ID')
-        locality_id_dd = html.dd(locality.id)
-        locality_locality_dt = html.dt('Locality')
-        locality_locality_dd = html.dd(locality.locality)
-        locality_active_dt = html.dt('Active?')
-        locality_active_dd = html.dd(locality.active)
-        locality_created_dt = html.dt('Created')
-        locality_created_dd = html.dd(locality.created)
-        locality_creator_dt = html.dt('Creator')
-        locality_creator_dd = html.dd(locality.creator)
-        locality_modified_dt = html.dt('Modified')
-        locality_modified_dd = html.dd(locality.modified)
-        locality_modifier_dt = html.dt('Modifier')
-        locality_modifier_dd = html.dd(locality.modifier)
+        dl = html.dl(
+            children__locality_id_dt = html.dt('ID'),
+            children__locality_id_dd = html.dd(locality.id),
+            children__locality_locality_dt = html.dt('Locality'),
+            children__locality_locality_dd = html.dd(locality.locality),
+            children__locality_active_dt = html.dt('Active?'),
+            children__locality_active_dd = html.dd(locality.active),
+            children__locality_created_dt = html.dt('Created'),
+            children__locality_created_dd = html.dd(locality.created),
+            children__locality_creator_dt = html.dt('Creator'),
+            children__locality_creator_dd = html.dd(locality.creator),
+            children__locality_modified_dt = html.dt('Modified'),
+            children__locality_modified_dd = html.dd(locality.modified),
+            children__locality_modifier_dt = html.dt('Modifier'),
+            children__locality_modifier_dd = html.dd(locality.modifier),
+        )
         
         hr1 = html.hr()
         
@@ -307,53 +309,54 @@ def user_view(request, user_id):
 
     class UserViewPage(Page):
         
-        h1 = html.h1('User View: ' + user)
+        h1 = html.h1('User View: ')# + user)
         
         user_h2 = html.h2('Details')
-        dl = html.dl()
-        user_id_dt = html.dt('ID')
-        user_id_dd = html.dd(user.id)
-        user_first_name_dt = html.dt('First Name')
-        user_first_name_dd = html.dd(user.first_name)
-        user_last_name_dt = html.dt('Last Name')
-        user_last_name_dd = html.dd(user.last_name)
-        user_chinese_name_dt = html.dt('Chinese Name')
-        user_chinese_name_dd = html.dd(user.chinese_name)
-        user_gender_dt = html.dt('Gender')
-        user_gender_dd = html.dd(user.gender)
-        user_locality_dt = html.dt('Locality')
-        user_locality_dd = html.dd(user.locality)
-        user_district_dt = html.dt('District')
-        user_district_dd = html.dd(user.district)
-        user_language_dt = html.dt('Primary Language')
-        user_language_dd = html.dd(user.language)
-        user_phone_number_dt = html.dt('Phone Number')
-        user_phone_number_dd = html.dd(user.phone_number)
-        user_email_dt = html.dt('Email')
-        user_email_dd = html.dd(user.email)
-        user_usertypes_dt = html.dt('User Types')
-        user_usertypes_dd = html.dd(user.usertypes)
-        user_is_staff_dt = html.dt('Is Staff?')
-        user_is_staff_dd = html.dd(user.is_staff)
-        user_is_superuser_dt = html.dt('Is Superuser?')
-        user_is_superuser_dd = html.dd(user.is_superuser)
-        user_last_login_dt = html.dt('Last Login')
-        user_last_login_dd = html.dd(user.last_login)
-        user_groups_dt = html.dt('Groups')
-        user_groups_dd = html.dd(user.groups)
-        user_user_permissions_dt = html.dt('User Permissions')
-        user_user_permissions_dd = html.dd(user.user_permissions)
-        user_created_dt = html.dt('Created')
-        user_created_dd = html.dd(user.created)
-        user_modified_dt = html.dt('Modified')
-        user_modified_dd = html.dd(user.modified)
-        user_modifier_dt = html.dt('Modifier')
-        user_modifier_dd = html.dd(user.modifier)
+        dl = html.dl(
+            children__user_id_dt = html.dt('ID'),
+            children__user_id_dd = html.dd(user.id),
+            children__user_first_name_dt = html.dt('First Name'),
+            children__user_first_name_dd = html.dd(user.first_name),
+            children__user_last_name_dt = html.dt('Last Name'),
+            children__user_last_name_dd = html.dd(user.last_name),
+            children__user_chinese_name_dt = html.dt('Chinese Name'),
+            children__user_chinese_name_dd = html.dd(user.chinese_name),
+            children__user_gender_dt = html.dt('Gender'),
+            children__user_gender_dd = html.dd(user.gender),
+            children__user_locality_dt = html.dt('Locality'),
+            children__user_locality_dd = html.dd(user.locality),
+            children__user_district_dt = html.dt('District'),
+            children__user_district_dd = html.dd(user.district),
+            children__user_language_dt = html.dt('Primary Language'),
+            children__user_language_dd = html.dd(user.language),
+            children__user_phone_number_dt = html.dt('Phone Number'),
+            children__user_phone_number_dd = html.dd(user.phone_number),
+            children__user_email_dt = html.dt('Email'),
+            children__user_email_dd = html.dd(user.email),
+            children__user_usertypes_dt = html.dt('User Types'),
+            children__user_usertypes_dd = html.dd(user.usertypes),
+            children__user_is_staff_dt = html.dt('Is Staff?'),
+            children__user_is_staff_dd = html.dd(user.is_staff),
+            children__user_is_superuser_dt = html.dt('Is Superuser?'),
+            children__user_is_superuser_dd = html.dd(user.is_superuser),
+            children__user_last_login_dt = html.dt('Last Login'),
+            children__user_last_login_dd = html.dd(user.last_login),
+            children__user_groups_dt = html.dt('Groups'),
+            children__user_groups_dd = html.dd(user.groups),
+            children__user_user_permissions_dt = html.dt('User Permissions'),
+            children__user_user_permissions_dd = html.dd(user.user_permissions),
+            children__user_created_dt = html.dt('Created'),
+            children__user_created_dd = html.dd(user.created),
+            children__user_modified_dt = html.dt('Modified'),
+            children__user_modified_dd = html.dd(user.modified),
+            children__user_modifier_dt = html.dt('Modifier'),
+            children__user_modifier_dd = html.dd(user.modifier),
+        )
         
         hr1 = html.hr()
         
         localities_h2 = html.h2('Locality')
-        localities = user.locality.all()
+        localities = user.locality
         
         localities_table = Table(
             auto__model = Locality,
@@ -374,7 +377,7 @@ def user_view(request, user_id):
         hr2 = html.hr()
         
         languages_h2 = html.h2('Languages')
-        languages = user.language.all()
+        languages = user.language
         
         languages_table = Table(
             auto__model = Language,
@@ -395,7 +398,7 @@ def user_view(request, user_id):
         hr3 = html.hr()
         
         usertypes_h2 = html.h2('User Types')
-        usertypes = user.usertypes.all()
+        usertypes = user.usertypes
         
         usertypes_table = Table(
             auto__model = UserType,
@@ -416,7 +419,7 @@ def user_view(request, user_id):
         hr4 = html.hr()
         
         groups_h2 = html.h2('Groups')
-        groups = user.groups.all()
+        groups = user.groups
         
         groups_table = Table(
             auto__model = Group,
@@ -428,7 +431,7 @@ def user_view(request, user_id):
         hr5 = html.hr()
         
         permissions_h2 = html.h2('User Permissions')
-        permissions = user.user_permissions.all()
+        permissions = user.user_permissions
         
         permissions_table = Table(
             auto__model = Permission,
@@ -523,8 +526,8 @@ def user_edit(request, user_id):
     return Form.edit(
         auto__model = User,
         auto__instance = User.objects.get(id = user_id),
-        auto__exclude = ['created', 'modified', 'modifier'],
-        context__html_title = 'User Edit | New Wine Training',
+        auto__exclude = ['password', 'last_login', 'created', 'modified', 'modifier'],
+#        context__html_title = 'User Edit | New Wine Training',
     )
 
 def user_delete(request, user_id):
@@ -549,21 +552,36 @@ def user_register(request):
         
         registration_form = Form(
             fields = dict(
-                box = html.div(
+                login_box = html.div(
                     attrs__class__box=True,
+                    children__title = html.h2('Login information'),
+                    children__instructions = html.p('Please enter your email and choose a password, then type the password twice. Please double-check your email; we will send you regular announcements and reminders via email, and you will use your email to log in.'),
                     children__email = Field.email(),
                     children__password = Field.password(),
                     children__password_confirmation = Field.password(),
                 ),
-                first_name = Field.text(),
-                last_name = Field.text()
+                name_box = html.div(
+                    attrs__class__box = True,
+                    children__title = html.h2('Name'),
+                    children__name_box_instructions = html.p('Fill in either your first and last name in English, or your Chinese name.'),
+                    children__first_name = Field.text(),
+                    children__last_name = Field.text(),
+                    children__chinese_name = Field(),
+                ),
+                personal_box = html.div(
+                    attrs__class__box = True,
+                    children__title = html.h2('Personal Information'),
+                    children__instructions = html.p('Please fill in the following information completely. All fields are required.'),
+                    children__gender = Field(),
+                    children__locality = Field(),
+                    children__district = Field(),
+                    children__language = Field(),
+                    children__phone_number = Field(
+                        help_text = 'Please fill in your cell phone number. We will send you text message announcements and reminders.'),
+                    ),
+                )
+                
             )
-            
-            
-            
-            
-        )
-        
                 
         class Meta:
             context = dict(
