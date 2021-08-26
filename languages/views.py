@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 
+from django.contrib import messages
+
 from newwinetraining.iommi import Page, Form, Table, Column
 
 from iommi import ( 
@@ -12,6 +14,8 @@ from iommi import (
     Action,
     Field,
 )
+
+from newwinetraining.views import save_post_handler
 
 from .models import Language, Translation, Translator
 
@@ -190,18 +194,40 @@ def language_view(request, language_id):
 
 def language_add(request):
     
+    def add_language_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Adding language failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved new language.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.create(
         auto__model = Language,
         auto__include = ['language', 'code'],
+        actions__submit__post_handler=add_language_save_post_handler,
 #        context__html_title = 'Language Create | New Wine Training',
     )
 
 def language_edit(request, language_id):
     
+    def edit_language_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Editing language failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved language.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.edit(
         auto__model = Language,
         auto__instance = Language.objects.get(id = language_id),
         auto__include = ['language', 'code'],
+        actions__submit__post_handler=edit_language_save_post_handler,
 #        context__html_title = 'Language Edit | New Wine Training',
     )
 
@@ -332,18 +358,40 @@ def translation_view(request, translation_id):
 
 def translation_add(request):
     
+    def add_translation_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Adding translation failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved new translation.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.create(
         auto__model = Translation,
         auto__include = ['language', 'text', 'content'],
+        actions__submit__post_handler=add_translation_save_post_handler,
 #        context__html_title = 'Translation Create | New Wine Training',
     )
 
 def translation_edit(request, translation_id):
     
+    def edit_translation_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Editing translation failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved translation.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.edit(
         auto__model = Translation,
         auto__instance = Translation.objects.get(id = translation_id),
         auto__include = ['language', 'text', 'content'],
+        actions__submit__post_handler=edit_translation_save_post_handler,
 #        context__html_title = 'Translation Edit | New Wine Training',
     )
 
@@ -473,18 +521,40 @@ def translator_view(request, translator_id):
 
 def translator_add(request):
     
+    def add_translator_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Adding translator failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved new translator.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.create(
         auto__model = Translator,
         auto__include = ['user', 'language'],
+        actions__submit__post_handler=add_translator_save_post_handler,
 #        context__html_title = 'Translator Create | New Wine Training',
     )
 
 def translator_edit(request, translator_id):
     
+    def edit_translator_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Editing translator failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved translator.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.edit(
         auto__model = Translator,
         auto__instance = Translator.objects.get(id = translator_id),
         auto__include = ['user', 'language'],
+        actions__submit__post_handler=edit_translator_save_post_handler,
 #        context__html_title = 'Translator Edit | New Wine Training',
     )
 

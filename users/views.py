@@ -6,6 +6,8 @@ from django.utils import timezone
 
 from django.contrib.auth import authenticate, login, logout
 
+from django.contrib import messages
+
 from newwinetraining.iommi import Page, Form, Table, Column, Menu, MenuItem
 
 from iommi import ( 
@@ -117,18 +119,40 @@ def usertype_view(request, usertype_id):
 
 def usertype_add(request):
     
+    def add_usertype_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Adding user type failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved new user type.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.create(
         auto__model = UserType,
         auto__include = ['name', 'description', 'active'],
+        actions__submit__post_handler=add_usertype_save_post_handler,
 #        context__html_title = 'User Type Create | New Wine Training',
     )
 
 def usertype_edit(request, usertype_id):
     
+    def edit_usertype_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Editing user type failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved user type.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.edit(
         auto__model = UserType,
         auto__instance = UserType.objects.get(id = usertype_id),
         auto__include = ['name', 'description', 'active'],
+        actions__submit__post_handler=edit_usertype_save_post_handler,
 #        context__html_title = 'User Type Edit | New Wine Training',
     )
 
@@ -238,18 +262,40 @@ def locality_view(request, locality_id):
 
 def locality_add(request):
     
+    def add_locality_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Adding locality failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved new locality.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.create(
         auto__model = Locality,
         auto__include = ['locality', 'active'],
+        actions__submit__post_handler=add_locality_save_post_handler,
 #        context__html_title = 'Locality Create | New Wine Training',
     )
 
 def locality_edit(request, locality_id):
     
+    def edit_locality_save_post_handler(form, **_):
+        if not form.is_valid():
+            messages.warning(request, 'Editing locality failed. Please check and fix any error messages below, and try again.')
+            return
+
+        form.apply(form.instance)
+        form.instance.save()
+        messages.success(request, 'Successfully saved locality.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     return Form.edit(
         auto__model = Locality,
         auto__instance = Locality.objects.get(id = locality_id),
         auto__include = ['locality', 'active'],
+        actions__submit__post_handler=edit_locality_save_post_handler,
 #        context__html_title = 'Locality Edit | New Wine Training',
     )
 
@@ -517,11 +563,13 @@ def user_add(request):
     
     def add_user_save_post_handler(form, **_):
         if not form.is_valid():
+            messages.warning(request, 'Adding user failed. Please check and fix any error messages below, and try again.')
             return
 
         form.apply(form.instance)
         form.instance.save()
-        return HttpResponseRedirect(reverse('users:user_index'))
+        messages.success(request, 'Successfully saved new user.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
     return Form.create(
         auto__model = User,
@@ -535,11 +583,13 @@ def user_edit(request, user_id):
     
     def edit_user_save_post_handler(form, **_):
         if not form.is_valid():
+            messages.warning(request, 'Editing user failed. Please check and fix any error messages below, and try again.')
             return
 
         form.apply(form.instance)
         form.instance.save()
-        return HttpResponseRedirect(reverse('users:user_index'))
+        messages.success(request, 'Successfully saved user.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
     return Form.edit(
         auto__model = User,
@@ -567,10 +617,12 @@ def user_register(request):
     
     def register_user_save_post_handler(form, **_):
         if not form.is_valid():
+            messages.warning(request, 'Failed to create your account. Please check and fix any error messages below, and try again.')
             return
 
         form.apply(form.instance)
         form.instance.save()
+        messages.sucess(request, 'Successfully created your account. Please log in with your email and password to proceed to training registration.')
         return HttpResponseRedirect(reverse('trainings:registration_add'))
     
     class UserRegisterPage(Page):
