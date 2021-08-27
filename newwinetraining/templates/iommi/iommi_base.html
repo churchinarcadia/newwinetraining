@@ -4,15 +4,16 @@
 
 {% block iommi_top %}
     {% include "newwinetraining/templates/iommi/my_menu.html" %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}>
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}
-
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
-    {% endfor %}
-</ul>
-{% endif %}
 
 {% block iommi_bottom %}
     {% include "newwinetraining/templates/iommi/my_footer.html" %}
