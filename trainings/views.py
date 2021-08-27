@@ -165,8 +165,8 @@ def term_add(request):
             messages.warning(request, 'Adding term failed. Please check and fix any error messages below, and try again.')
             return
 
-        form.apply(form.instance)
-        form.instance.save()
+        form.apply()
+        form.create()
         messages.success(request, 'Successfully saved new term.')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
