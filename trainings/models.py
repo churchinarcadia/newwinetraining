@@ -7,7 +7,7 @@ from django.utils import timezone
 # Create your models here.
 
 class Term(models.Model):
-    term = models.CharField(max_length = 10, choices = [('F','Fall'),('S','Spring')])
+    term = models.CharField(max_length = 10, choices = [('Fall','Fall'),('Spring','Spring')])
     year = models.IntegerField(
         validators = [
             MinValueValidator(2000, message='Please enter an appropriate year.'),
