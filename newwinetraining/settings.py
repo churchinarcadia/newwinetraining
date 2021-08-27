@@ -124,6 +124,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -171,14 +174,12 @@ PHONENUMBER_DEFAULT_REGION = 'US'
 #Iommi hook to use project style
 
 from iommi import Style, Asset
-from iommi.style_bootstrap import bootstrap, bulma, foundation, semantic_ui, water, django_admin
+from iommi.style_bootstrap import bootstrap
+
+
+IOMMI_DEFAULT_STYLE = 'water' #bootstrap, bulma, foundation, semantic_ui, water, django_admin
 
 """
-IOMMI_DEFAULT_STYLE = Style(
-    bootstrap,
-)
-"""
-
 IOMMI_DEFAULT_STYLE = Style(
     bootstrap,
     base_template='newwinetraining/templates/iommi/iommi_base.html',
@@ -188,6 +189,7 @@ IOMMI_DEFAULT_STYLE = Style(
         newwinetraining_sb_admin_2_js = Asset.js(attrs__src = STATIC_URL + 'js/sb-admin-2.min.js'),
     ),
 )
+"""
 
 #Disabling pycache for development environments
 #if env('DEBUG') == True:
@@ -195,20 +197,4 @@ IOMMI_DEFAULT_STYLE = Style(
 
 #os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {
-            'min_length': 8,
-        }
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+#sdfdsfjlkdsjf()
