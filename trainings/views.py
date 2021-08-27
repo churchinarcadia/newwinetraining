@@ -160,40 +160,20 @@ def term_view(request, term_id):
 
 def term_add(request):
     
-    def add_term_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Adding term failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply()
-        form.create()
-        messages.success(request, 'Successfully saved new term.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.create(
         auto__model = Term,
         auto__include = ['year', 'term', 'language', 'start_date', 'end_date'],
-        actions__submit__post_handler=add_term_save_post_handler,
+        extra__redirect_to = reverse('trainings:term_index'),
 #        context__html_title = 'Term Create | New Wine Training',
     )
 
 def term_edit(request, term_id):
     
-    def edit_term_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Editing term failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved term.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.edit(
         auto__model = Term,
         auto__instance = Term.objects.get(id = term_id),
         auto__include = ['year', 'term', 'language', 'start_date', 'end_date'],
-        actions__submit__post_handler=edit_term_save_post_handler,
+        extra__redirect_to = reverse('trainings:term_index'),
 #        context__html_title = 'Term Edit | New Wine Training',
     )
 
@@ -320,40 +300,20 @@ def exercisetype_view(request,exercisetype_id):
 
 def exercisetype_add(request):
     
-    def add_exercisetype_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Adding exercise type failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved new exercise type.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.create(
         auto__model = ExerciseType,
         auto__include = ['name', 'description'],
-        actions__submit__post_handler=add_exercisetype_save_post_handler,
+        extra__redirect_to = reverse('trainings:exercisetype_index'),
 #        context__html_title = 'Exercise Type Create | New Wine Training',
     )
 
 def exercisetype_edit(request, exercisetype_id):
     
-    def edit_exercisetype_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Editing exercise type failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved exercise type.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.edit(
         auto__model = ExerciseType,
         auto__instance = ExerciseType.objects.get(id = exercisetype_id),
         auto__include = ['name', 'description'],
-        actions__submit__post_handler=edit_exercisetype_save_post_handler,
+        extra__redirect_to = reverse('trainings:exercisetype_index'),
 #        context__html_title = 'Exercise Type Edit | New Wine Training',
     )
 
@@ -462,40 +422,20 @@ def recordinglocation_view(request, recordinglocation_id):
 
 def recordinglocation_add(request):
     
-    def add_recordinglocation_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Adding recording location failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved new recording location.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.create(
         auto__model = RecordingLocation,
         auto__include = ['location', 'code_before_url', 'code_after_url', 'url_identifier', 'notes'],
-        actions__submit__post_handler=add_recordinglocation_save_post_handler,
+        extra__redirect_to = reverse('trainings:recordinglocation_index'),
 #        context__html_title = 'Recording Location Create | New Wine Training',
     )
 
 def recordinglocation_edit(request, recordinglocation_id):
     
-    def edit_recordinglocation_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Editing recording location failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved recording location.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.edit(
         auto__model = RecordingLocation,
         auto__instance = RecordingLocation.objects.get(id = recordinglocation_id),
         auto__include = ['location', 'code_before_url', 'code_after_url', 'url_identifier', 'notes'],
-        actions__submit__post_handler=edit_recordinglocation_save_post_handler,
+        extra__redirect_to = reverse('trainings:recordinglocation_index'),
 #        context__html_title = 'Recording Location Edit | New Wine Training',
     )
 
@@ -654,40 +594,20 @@ def registration_view(request, registration_id):
 
 def registration_add(request):
     
-    def add_registration_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Adding registration failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved new registration.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.create(
         auto__model = Registration,
         auto__include = ['user', 'term', 'exercisetypes', 'signature'],
-        actions__submit__post_handler=add_registration_save_post_handler,
+        extra__redirect_to = reverse('trainings:registration_index'),
 #        context__html_title = 'Registration Create | New Wine Training',
     )
 
 def registration_edit(request, registration_id):
     
-    def edit_registration_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Editing registration failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved registration.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.edit(
         auto__model = Registration,
         auto__instance = Registration.objects.get(id = registration_id),
         auto__include = ['user', 'term', 'exercisetypes', 'signature'],
-        actions__submit__post_handler=edit_registration_save_post_handler,
+        extra__redirect_to = reverse('trainings:registration_index'),
 #        context__html_title = 'Registration Edit | New Wine Training',
     )
 
@@ -850,40 +770,20 @@ def trainingmeeting_view(request, trainingmeeting_id):
 
 def trainingmeeting_add(request):
     
-    def add_trainingmeeting_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Adding training meeting failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved new training meeting.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.create(
         auto__model = TrainingMeeting,
         auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'notes'],
-        actions__submit__post_handler=add_trainingmeeting_save_post_handler,
+        extra__redirect_to = reverse('trainings:trainingmeeting_index'),
 #        context__html_title = 'Training Meeting Create | New Wine Training',
     )
 
 def trainingmeeting_edit(request, trainingmeeting_id):
     
-    def edit_trainingmeeting_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Editing training meeting failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved training meeting.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.edit(
         auto__model = TrainingMeeting,
         auto__instance = TrainingMeeting.objects.get(id = trainingmeeting_id),
         auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'recording_url', 'recording_released_datetime', 'recording_released_by', 'notes'],
-        actions__submit__post_handler=edit_trainingmeeting_save_post_handler,
+        extra__redirect_to = reverse('trainings:trainingmeeting_index'),
 #        context__html_title = 'Training Meeting Edit | New Wine Training',
     )
 
@@ -1013,40 +913,20 @@ def userexercise_view(request, userexercise_id):
 
 def userexercise_add(request):
     
-    def add_userexercise_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Adding user exercise failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved new user exercise.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.create(
         auto__model = UserExercise,
         auto__include = ['date', 'user', 'exercisetypes'],
-        actions__submit__post_handler=add_userexercise_save_post_handler,
+        extra__redirect_to = reverse('trainings:userexercise_index'),
 #        context__html_title = 'User Exercise Create | New Wine Training',
     )
 
 def userexercise_edit(request, userexercise_id):
     
-    def edit_userexercise_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Editing user exercise failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved user exercise.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.edit(
         auto__model = UserExercise,
         auto__instance = UserExercise.objects.get(id = userexercise_id),
         auto__include = ['date', 'user', 'exercisetypes'],
-        actions__submit__post_handler=edit_userexercise_save_post_handler,
+        extra__redirect_to = reverse('trainings:userexercise_index'),
 #        context__html_title = 'User Exercise Edit | New Wine Training',
     )
 
@@ -1149,40 +1029,20 @@ def text_view(request, text_id):
 
 def text_add(request):
     
-    def add_text_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Adding text failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved new text.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.create(
         auto__model = Text,
         auto__include = ['name', 'description'],
-        actions__submit__post_handler=add_text_save_post_handler,
+        extra__redirect_to = reverse('trainings:text_index'),
 #        context__html_title = 'Text Create | New Wine Training',
     )
 
 def text_edit(request, text_id):
     
-    def edit_text_save_post_handler(form, **_):
-        if not form.is_valid():
-            messages.warning(request, 'Editing text failed. Please check and fix any error messages below, and try again.')
-            return
-
-        form.apply(form.instance)
-        form.instance.save()
-        messages.success(request, 'Successfully saved text.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
     return Form.edit(
         auto__model = Text,
         auto__instance = Text.objects.get(id = text_id),
         auto__include = ['name', 'description'],
-        actions__submit__post_handler=edit_text_save_post_handler,
+        extra__redirect_to = reverse('trainings:text_index'),
 #        context__html_title = 'Text Edit | New Wine Training',
     )
 
