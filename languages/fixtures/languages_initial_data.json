@@ -22,5 +22,13 @@
             "language": "Traditional Chinese",
             "code": "zh-tw"
         }
+    },
+    {
+        "model": "languages.language",
+        "pk": 4,
+        "fields": {
+            "language": "Spanish",
+            "code": "es-es"
+        }
     }
 ]

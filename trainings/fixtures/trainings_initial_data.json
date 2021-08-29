@@ -1,0 +1,10 @@
+[
+    {
+        "model": "trainings.recordinglocation",
+        "pk": 1,
+        "fields": {
+            "language": "English",
+            "code": "en-us"
+        }
+    }
+]
