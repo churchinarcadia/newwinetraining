@@ -23,7 +23,7 @@ class Term(models.Model):
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'term_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
-        return self.year + ' ' + self.term + ' (' + self.language + ')'
+        return str(self.year) + ' ' + self.term + ' (' + str(self.language) + ')'
 
 class ExerciseType(models.Model):
     name = models.CharField(max_length=100)
@@ -62,7 +62,7 @@ class Registration(models.Model):
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'registration_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
-        return self.user + ' (' + self.term + ')'
+        return self.user.get_full_name() + ' (' + str(self.term) + ')'
 
 class TrainingMeeting(models.Model):
     date = models.DateField()
@@ -80,7 +80,7 @@ class TrainingMeeting(models.Model):
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'trainingmeeting_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
-        return self.date + ' (' + self.language + ')'
+        return str(self.date) + ' (' + str(self.language) + ')'
 
 class UserExercise(models.Model):
     date = models.DateField(default = timezone.now)
@@ -92,7 +92,7 @@ class UserExercise(models.Model):
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'userexercise_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
-        return self.date + ' | ' + self.user
+        return str(self.date) + ' | ' + self.user.get_full_name()
 
 class Text(models.Model):
     name = models.CharField(max_length = 255)

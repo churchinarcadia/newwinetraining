@@ -104,13 +104,13 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
-        """
+#        return self.first_name + ' ' + self.last_name
+        
         if self.first_name != '':
-            return self.first_name + ' ' + self.last_name + ' (' + self.locality + ', ' + self.district+')'
+            return self.first_name + ' ' + self.last_name + ' (' + str(self.locality) + ', ' + self.district +')'
         else:
-            return self.chinese_name + ' (' + self.locality + ', '+self.district + ')'
-        """
+            return self.chinese_name + ' (' + str(self.locality) + ', '+ str(self.district) + ')'
+        
     
     def has_perm(self, perm, obj = None):
         "Does the user have a specific permission?"
@@ -133,3 +133,15 @@ class User(AbstractBaseUser):
         "Is the user a member of superusers?"
         #Simplest possible answer: All staff are staff
         return self.is_superuser
+    
+    def get_short_name(self):
+        if self.first_name != '':
+            return self.first_name
+        else:
+            return self.chinese_name
+    
+    def get_full_name(self):
+        if self.first_name != '':
+            return self.first_name + ' ' + self.last_name
+        else:
+            return self.chinese_name
