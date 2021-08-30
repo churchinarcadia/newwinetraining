@@ -872,6 +872,7 @@ def userexercise_view(request, userexercise_id):
         users_table = Table(
             auto__model = User,
             rows = users,
+            auto__exclude = ['password'],
             title = None,
             empty_message = 'No users',
             columns__first_name = Column(
