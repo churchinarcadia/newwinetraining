@@ -3,7 +3,7 @@
 {% block title %}{% if html_title %}{{ html_title }}{% else %}{{ title }}{% endif %}{% endblock %}
 
 {% block iommi_top %}
-    {% include "newwinetraining/templates/iommi/my_menu.html" %}
+    {% include "templates/iommi/my_menu.html" %}
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -16,5 +16,5 @@
 {% endblock %}
 
 {% block iommi_bottom %}
-    {% include "newwinetraining/templates/iommi/my_footer.html" %}
+    {% include "templates/iommi/my_footer.html" %}
 {% endblock %}

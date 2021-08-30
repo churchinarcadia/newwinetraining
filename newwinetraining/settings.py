@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     #third party apps
     'phonenumber_field',
     'iommi',
+    'stronghold',
 
     #own apps
     'languages',
@@ -73,6 +74,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    'stronghold.middleware.LoginRequiredMiddleware',
 
     'iommi.sql_trace.Middleware',
     'iommi.profiling.Middleware',
@@ -160,6 +163,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+MEDIA_URL = None
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -168,15 +173,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #Custom User database for auth
 AUTH_USER_MODEL = 'users.User'
 
-LOGIN_URL = 'accounts/login'
+LOGIN_URL = '/accounts/login'
 
 LOGIN_REDIRECT_URL = '/'
+
+#Stronghold settings
+
+STRONGHOLD_DEFAULTS = True
+
+STRONGHOLD_PUBLIC_URLS = ()
+
+STRONGHOLD_PUBLIC_NAMED_URLS = ()
+
+STRONGHOLD_USER_TEST_FUNC = lambda user: user.is_staff
 
 #Setting up default phone number region for validation
 PHONENUMBER_DEFAULT_REGION = 'US'
 
 #Iommi hook to use project style
 
+#Don't put any imports after this line
 from iommi import Style, Asset
 from iommi.style_bootstrap import bootstrap
 
@@ -185,7 +201,7 @@ from iommi.style_bootstrap import bootstrap
 
 IOMMI_DEFAULT_STYLE = Style(
     bootstrap,
-    base_template='newwinetraining/templates/iommi/iommi_base.html',
+    base_template='templates/iommi/iommi_base.html',
     root__assets=dict(
         newwinetraining_sb_admin_2_css = Asset.css(attrs__href = STATIC_URL + 'css/sb-admin-2.min.css'),
         newwinetraining_custom_css = Asset.css(attrs__href = STATIC_URL + 'css/custom.css'),
