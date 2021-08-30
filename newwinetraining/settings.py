@@ -125,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
-            'min_length': 8,
+            'min_length': 6,
         }
     },
     {
@@ -167,6 +167,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Custom User database for auth
 AUTH_USER_MODEL = 'users.User'
+
+LOGIN_URL = 'accounts/login'
+
+LOGIN_REDIRECT_URL = '/'
 
 #Setting up default phone number region for validation
 PHONENUMBER_DEFAULT_REGION = 'US'
