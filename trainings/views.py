@@ -60,7 +60,7 @@ def term_view(request, term_id):
 
     class TermViewPage(Page):
         
-        h1 = html.h1('Term View: ' + term.year + ' ' + term.term)
+        h1 = html.h1('Term View: ' + str(term.year) + ' ' + term.term)
         
         term_h2 = html.h2('Details')
         dl = html.dl(
@@ -110,7 +110,7 @@ def term_view(request, term_id):
         hr2 = html.hr()
         
         trainingmeeting_h2 = html.h2('Training Meetings')
-        trainingmeetings = TrainingMeeting.objects.filter(date__gte = term.start_date, date__lte = term.end_date)
+        trainingmeetings = TrainingMeeting.objects.filter(date__gte = term.start_date, date__lte = term.end_date, language = term.language)
         
         trainingmeetings_table = Table(
             auto__model = TrainingMeeting,
@@ -256,7 +256,7 @@ def exercisetype_view(request,exercisetype_id):
             rows = registrations,
             title = None,
             empty_message = 'No registrations',
-            auto_exclude = ['exercisetypes', 'signature'],
+            auto__exclude = ['exercisetypes', 'signature'],
             columns__user = Column(
                 display_name = 'Registrant',
                 cell__url = lambda row, **_: reverse('trainings:registration_view', args = (row.pk,))
@@ -489,7 +489,7 @@ def registration_view(request, registration_id):
 
     class RegistrationViewPage(Page):
         
-        h1 = html.h1('Registration View: ' + registration.user + ' (' + registration.term + ')')
+        h1 = html.h1('Registration View: ' + registration.user.get_full_name() + ' (' + str(registration.term) + ')')
         
         registration_h2 = html.h2('Details')
         dl = html.dl(
@@ -500,7 +500,7 @@ def registration_view(request, registration_id):
             children__registration_term_dt = html.dt('Term'),
             children__registration_term_dd = html.dd(registration.term),
             children__registration_exercisetypes_dt = html.dt('Exercise Types'),
-            children__registration_exercisetypes_dd = html.dd(registration.exercisetypes),
+            children__registration_exercisetypes_dd = html.dd(', '.join(list(registration.exercisetypes.values_list('name', flat = True)))),
             children__registration_signature_dt = html.dt('Signature'),
             children__registration_signature_dd = html.dd(registration.signature),
             children__registration_created_dt = html.dt('Created'),
@@ -516,14 +516,14 @@ def registration_view(request, registration_id):
         hr1 = html.hr()
         
         users_h2 = html.h2('Registrant')
-        users = User.object.filter(pk = registration.user.id)
+        users = User.objects.filter(pk = registration.user.id)
         
         users_table = Table(
             auto__model = User,
             rows = users,
             title = None,
             empty_message = 'No registrants',
-            auto_exclude = ['password'],
+            auto__exclude = ['password'],
             columns__first_name = Column(
                 cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
             ),
@@ -547,7 +547,7 @@ def registration_view(request, registration_id):
         terms = Term.objects.filter(pk = registration.term.id)
         
         terms_table = Table(
-            auto__model = Table,
+            auto__model = Term,
             rows = terms,
             title = None,
             empty_message = 'No terms',
@@ -567,7 +567,10 @@ def registration_view(request, registration_id):
         )
         
         exercisetypes_h2 = html.h2('Exercise Types')
-        exercisetypes = ExerciseType.object.filter(pk = registration.exercisetypes.id)
+        if registration.exercisetypes is not None:
+            exercisetypes = registration.exercisetypes.all()
+        else:
+            exercisetypes = ''
         
         exercisetypes_table = Table(
             auto__model = ExerciseType,
@@ -837,9 +840,9 @@ def userexercise_view(request, userexercise_id):
     
     userexercise = get_object_or_404(UserExercise, pk = userexercise_id)
 
-    class UserExerciseView(Page):
+    class UserExerciseViewPage(Page):
         
-        h1 = html.h1('User Exercise View: ' + userexercise.user + ' (' + userexercise.date + ')')
+        h1 = html.h1('User Exercise View: ' + userexercise.user.get_full_name() + ' (' + str(userexercise.date) + ')')
     
         userexercise_h2 = html.h2('Details')
         dl = html.dl(
@@ -850,7 +853,7 @@ def userexercise_view(request, userexercise_id):
             children__userexercise_user_dt = html.dt('User'),
             children__userexercise_user_dd = html.dd(userexercise.user),
             children__userexercise_exercisetypes_dt = html.dt('Exercise Types'),
-            children__userexercise_exercisetypes_dd = html.dd(userexercise.exercisetypes),
+            children__userexercise_exercisetypes_dd = html.dd(', '.join(list(userexercise.exercisetypes.values_list('name', flat = True)))),
             children__userexercise_created_dt = html.dt('Created'),
             children__userexercise_created_dd = html.dd(userexercise.created),
             children__userexercise_creator_dt = html.dt('Creator'),
@@ -888,7 +891,7 @@ def userexercise_view(request, userexercise_id):
         hr2 = html.hr()
         
         exercisetypes_h2 = html.h2('Exercise Types')
-        exercisetypes = ExerciseType.objects.filter(pk = userexercise.exercisetypes.id)
+        exercisetypes = userexercise.exercisetypes.all()
         
         exercisetypes_table = Table(
             auto__model = ExerciseType,
@@ -910,6 +913,8 @@ def userexercise_view(request, userexercise_id):
             context = dict(
                 html_title = 'User Exercise View | New Wine Training'
             )
+    
+    return UserExerciseViewPage()
 
 def userexercise_add(request):
     

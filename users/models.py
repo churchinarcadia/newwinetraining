@@ -105,11 +105,15 @@ class User(AbstractBaseUser):
 
     def __str__(self):
 #        return self.first_name + ' ' + self.last_name
-        
-        if self.first_name != '':
-            return self.first_name + ' ' + self.last_name + ' (' + str(self.locality) + ', ' + self.district +')'
+        if self.locality:
+            locality = ' (' + str(self.locality) + ', ' + self.district +')'
         else:
-            return self.chinese_name + ' (' + str(self.locality) + ', '+ str(self.district) + ')'
+            locality = ''
+            
+        if self.first_name != '':
+            return self.first_name + ' ' + self.last_name + locality
+        else:
+            return self.chinese_name + locality
         
     
     def has_perm(self, perm, obj = None):
