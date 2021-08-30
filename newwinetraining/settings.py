@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.asana',
     #'allauth.socialaccount.providers.auth0',
     #'allauth.socialaccount.providers.authentiq',
-    #'allauth.socialaccount.providers.azure',
+    'allauth.socialaccount.providers.azure',
     'allauth.socialaccount.providers.baidu',
     #'allauth.socialaccount.providers.basecamp',
     #'allauth.socialaccount.providers.battlenet',
@@ -90,7 +90,7 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.eveonline',
     #'allauth.socialaccount.providers.evernote',
     #'allauth.socialaccount.providers.exist',
-    #'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.facebook',
     #'allauth.socialaccount.providers.feedly',
     #'allauth.socialaccount.providers.figma',
     #'allauth.socialaccount.providers.fivehundredpx',
@@ -103,7 +103,7 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.globus',
     'allauth.socialaccount.providers.google',
     #'allauth.socialaccount.providers.hubic',
-    'allauth.socialaccount.providers.instagram',
+    #'allauth.socialaccount.providers.instagram',
     #'allauth.socialaccount.providers.jupyterhub',
     #'allauth.socialaccount.providers.kakao',
     #'allauth.socialaccount.providers.keycloak',
@@ -149,7 +149,7 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.vimeo',
     #'allauth.socialaccount.providers.vimeo_oauth2',
     #'allauth.socialaccount.providers.vk',
-    'allauth.socialaccount.providers.weibo',
+    #'allauth.socialaccount.providers.weibo',
     'allauth.socialaccount.providers.weixin',
     'allauth.socialaccount.providers.windowslive',
     #'allauth.socialaccount.providers.xing',
@@ -206,9 +206,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
-                # `allauth` needs this from django
-                'django.template.context_processors.request',
             ],
         },
     },
@@ -307,12 +304,40 @@ STRONGHOLD_DEFAULTS = True
 
 STRONGHOLD_PUBLIC_URLS = ()
 
-STRONGHOLD_PUBLIC_NAMED_URLS = ()
+STRONGHOLD_PUBLIC_NAMED_URLS = ('account_login', 'account_logout', 'account_set_password', 'account_signup', 'account_reset_password', 'users:user_register')
 
 STRONGHOLD_USER_TEST_FUNC = lambda user: user.is_staff
 
 #AllAuth Settings
 SITE_ID = 1
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/trainings/register/add/'
+
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/trainings/register/add/'
+
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory' #mandatory, optional, none
+
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[New Wine Training]'
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+
+ACCOUNT_USER_DISPLAY = 'get_short_name'
+
+
 
 #Iommi hook to use project style
 
