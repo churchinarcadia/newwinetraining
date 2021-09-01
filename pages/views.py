@@ -2,6 +2,8 @@
 
 from django.urls import reverse
 
+from django.utils.translation import gettext
+
 from newwinetraining.iommi import Page, Form, Table, Column
 
 from iommi import ( 
@@ -16,77 +18,77 @@ from iommi import (
 def page_index(request):
 
     class PageIndexPage(Page):
-        h1 = html.h1('NewWineTraining')
+        h1 = html.h1(gettext('NewWineTraining'))
         
-        construction_text = html.p('Under construction...')
+        construction_text = html.p(gettext('Under construction...'))
         
-        menu_h2 = html.h2('Temporary Menu')
+        menu_h2 = html.h2(gettext('Temporary Menu'))
         
         menu = [
             {
                 'app': 'languages',
                 'model': 'language',
-                'display': 'Languages'
+                'display': gettext('Languages')
             },
             {
                 'app': 'languages',
                 'model': 'translator',
-                'display': 'Translators'
+                'display': gettext('Translators')
             },
             {
                 'app': 'languages',
                 'model': 'translation',
-                'display': 'Translations'
+                'display': gettext('Translations')
             },
             {
                 'app': 'trainings',
                 'model': 'term',
-                'display': 'Terms'
+                'display': gettext('Terms')
             },
             {
                 'app': 'trainings',
                 'model': 'exercisetype',
-                'display': 'Exercise Types'
+                'display': gettext('Exercise Types')
             },
             {
                 'app': 'trainings',
                 'model': 'recordinglocation',
-                'display': 'Recording Locations'
+                'display': gettext('Recording Locations')
             },
             {
                 'app': 'trainings',
                 'model': 'registration',
-                'display': 'Registrations'
+                'display': gettext('Registrations')
             },
             {
                 'app': 'trainings',
                 'model': 'trainingmeeting',
-                'display': 'Training Meetings'
+                'display': gettext('Training Meetings')
             },
             {
                 'app': 'trainings',
                 'model': 'userexercise',
-                'display': 'User Exercises'
+                'display': gettext('User Exercises')
             },
             {
                 'app': 'trainings',
                 'model': 'text',
-                'display': 'Texts'
+                'display': gettext('Texts')
             },
             {
                 'app': 'users',
                 'model': 'usertype',
-                'display': 'User Types'
+                'display': gettext('User Types')
             },
             {
                 'app': 'users',
                 'model': 'locality',
-                'display': 'Localities'
+                'display': gettext('Localities')
             },
             {
                 'app': 'users',
                 'model': 'user',
-                'display': 'Users'
+                'display': gettext('Users')
             },
         ]
         
@@ -99,14 +101,14 @@ def page_index(request):
                 cell__url = lambda row, **_: reverse(row['app'] + ':' + row['model'] + '_index'),
             ),
             columns__add = Column(
-                cell__value = 'Add',
+                cell__value = gettext('Add'),
                 cell__url = lambda row, **_: reverse(row['app'] + ':' + row['model'] + '_add'),
             ),
         )
 
         class Meta:
             context = dict(
-                html_title = 'Home | New Wine Training',
+                html_title = gettext('Home | New Wine Training'),
             )
     
     return PageIndexPage()

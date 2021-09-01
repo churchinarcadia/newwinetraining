@@ -5,6 +5,9 @@ from django.urls import reverse
 from django.utils import timezone
 
 from django.contrib import messages
+from django.utils.translation import gettext
+
+from django.db.models import Q
 
 from newwinetraining.iommi import Page, Form, Table, Column
 
@@ -25,9 +28,9 @@ def term_index(request):
     
     class TermIndexPage(Page):
     
-        page_title = html.h1('Terms')
+        page_title = html.h1(gettext('Terms'))
     
-        instructions = html.p('Click on the year or term to view details about that term, as well as any associated data.')
+        instructions = html.p(gettext('Click on the year or term to view details about that term, as well as any associated data.'))
     
         table = Table(
             auto__model = Term,
@@ -42,14 +45,14 @@ def term_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:term_edit', args = (row.pk,)),
             ),
         )
     
         class Meta:
             context = dict(
-                html_title = 'Term Index | New Wine Training',
+                html_title = gettext('Term Index | New Wine Training'),
             )
 
     return TermIndexPage()
@@ -60,100 +63,100 @@ def term_view(request, term_id):
 
     class TermViewPage(Page):
         
-        h1 = html.h1('Term View: ' + str(term.year) + ' ' + term.term)
+        h1 = html.h1(gettext('Term View: ' + str(term.year) + ' ' + term.term))
         
-        term_h2 = html.h2('Details')
+        term_h2 = html.h2(gettext('Details'))
         dl = html.dl(
             children__term_id_dt = html.dt('ID'),
             children__term_id_dd = html.dd(term.id),
-            children__term_term_dt = html.dt('Term'),
-            children__term_term_dd = html.dd(term.term),
-            children__term_year_dt = html.dt('Year'),
+            children__term_term_dt = html.dt(gettext('Term')),
+            children__term_term_dd = html.dd(gettext(term.term)),
+            children__term_year_dt = html.dt(gettext('Year')),
             children__term_year_dd = html.dd(term.year),
-            children__term_language_dt = html.dt('Language'),
-            children__term_language_dd = html.dd(term.language),
-            children__term_start_date_dt = html.dt('Start Date'),
-            children__term_stert_date_dd = html.dd(term.start_date),
-            children__term_end_date_dt = html.dt('End Date'),
-            children__term_end_date_dd = html.dd(term.end_date),
-            children__term_created_dt = html.dt('Created'),
-            children__term_created_dd = html.dd(term.created),
-            children__term_creator_dt = html.dt('Creator'),
+            children__term_language_dt = html.dt(gettext('Language')),
+            children__term_language_dd = html.dd(gettext(term.language)),
+            children__term_start_date_dt = html.dt(gettext('Start Date')),
+            children__term_stert_date_dd = html.dd(gettext(term.start_date)),
+            children__term_end_date_dt = html.dt(gettext('End Date')),
+            children__term_end_date_dd = html.dd(gettext(term.end_date)),
+            children__term_created_dt = html.dt(gettext('Created')),
+            children__term_created_dd = html.dd(gettext(term.created)),
+            children__term_creator_dt = html.dt(gettext('Creator')),
             children__term_creator_dd = html.dd(term.creator),
-            children__term_modified_dt = html.dt('Modified'),
-            children__term_modified_dd = html.dd(term.modified),
-            children__term_modifier_dt = html.dt('Modifier'),
+            children__term_modified_dt = html.dt(gettext('Modified')),
+            children__term_modified_dd = html.dd(gettext(term.modified)),
+            children__term_modifier_dt = html.dt(gettext('Modifier')),
             children__term_modifier_dd = html.dd(term.modifier),
         )
         
         hr1 = html.hr()
         
-        language_h2 = html.h2('Language')
+        language_h2 = html.h2(gettext('Language'))
         languages = Language.objects.filter(pk = term.language.id)
         
         languages_table = Table(
             auto__model = Language,
             rows = languages,
             title = None,
-            empty_message = 'No languages',
+            empty_message = gettext('No languages'),
             columns__language = Column(
                 cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,)),
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
             ),
         )
         
         hr2 = html.hr()
         
-        trainingmeeting_h2 = html.h2('Training Meetings')
+        trainingmeeting_h2 = html.h2(gettext('Training Meetings'))
         trainingmeetings = TrainingMeeting.objects.filter(date__gte = term.start_date, date__lte = term.end_date, language = term.language)
         
         trainingmeetings_table = Table(
             auto__model = TrainingMeeting,
             rows = trainingmeetings,
             title = None,
-            empty_message = 'No training meetings',
+            empty_message = gettext('No training meetings'),
             columns__date = Column(
                 cell__url = lambda row, **_: reverse('trainings:trainingmeeting_view', args = (row.pk,)),
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:trainingmeeting_edit', args = (row.pk,)),
             ),
         )
         
         hr3 = html.hr()
         
-        registrations_h2 = html.h2('Registrations')
+        registrations_h2 = html.h2(gettext('Registrations'))
         registrations = term.registration_terms.all()
         
         registrations_table = Table(
             auto__model = Registration,
             rows = registrations,
             title = None,
-            empty_message = 'No registrations',
+            empty_message = gettext('No registrations'),
             auto__exclude = ['term'],
             columns__user = Column(
-                display_name = 'Registrant',
+                display_name = gettext('Registrant'),
                 cell__url = lambda row, **_: reverse('trainings:registration_view', args = (row.pk,))
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:registration_edit', args = (row.pk,)),
             ),
         )
         
         class Meta:
             context = dict(
-                html_title = 'Term View | New Wine Training',
+                html_title = gettext('Term View | New Wine Training'),
             )
     
     return TermViewPage()
@@ -180,22 +183,22 @@ def term_edit(request, term_id):
 def term_delete(request, term_id):
     
     class TermDeleteTemp(Page):
-        page_title = html.h1('Delete Term')
+        page_title = html.h1(gettext('Delete Term'))
         additional_spacing = html.p('')
-        temp_disabled = html.h3('This function is disabled for now.')
+        temp_disabled = html.h3(gettext('This function is disabled for now.'))
         
         class Meta:
             context = dict(
-                html_title = 'Term Delete | New Wine Training',
+                html_title = gettext('Term Delete | New Wine Training'),
             )
 
 def exercisetype_index(request):
     
     class ExerciseTypeIndexPage(Page):
         
-        page_title = html.h1('Exercise Types')
+        page_title = html.h1(gettext('Exercise Types'))
         
-        instructions = html.p('Click on the Exercise Type name to view details about that Exercise Type, as well as any associated data.')
+        instructions = html.p(gettext('Click on the Exercise Type name to view details about that Exercise Type, as well as any associated data.'))
         
         table = Table(
             auto__model = ExerciseType,
@@ -206,14 +209,14 @@ def exercisetype_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:exercisetype_edit', args = (row.pk,)),
             ),
         )
         
         class Meta:
             context = dict(
-                html_title = 'Exercise Type Index | New Wine Training'
+                html_title = gettext('Exercise Type Index | New Wine Training'),
             )
     
     return ExerciseTypeIndexPage()
@@ -224,61 +227,61 @@ def exercisetype_view(request,exercisetype_id):
 
     class ExerciseTypeViewPage(Page):
         
-        h1 = html.h1('Exercise Type View: ' + exercisetype.name)
+        h1 = html.h1(gettext('Exercise Type View: ' + exercisetype.name))
         
-        exercisetype_h2 = html.h2('Details')
+        exercisetype_h2 = html.h2(gettext('Details'))
         dl = html.dl(
             children__exercisetype_id_dt = html.dt('ID'),
             children__exercisetype_id_dd = html.dd(exercisetype.id),
-            children__exercisetype_name_dt = html.dt('Name'),
-            children__exercisetype_name_dd = html.dd(exercisetype.name),
-            children__exercisetype_active_dt = html.dt('Active?'),
+            children__exercisetype_name_dt = html.dt(gettext('Name')),
+            children__exercisetype_name_dd = html.dd(gettext(exercisetype.name)),
+            children__exercisetype_active_dt = html.dt(gettext('Active?')),
             children__exercisetype_active_dd = html.dd(exercisetype.active),
-            children__exercisetype_description_dt = html.dt('description'),
-            children__exercisetype_description_dd = html.dd(exercisetype.description),
-            children__exercisetype_created_dt = html.dt('Created'),
-            children__exercisetype_created_dd = html.dd(exercisetype.created),
-            children__exercisetype_creator_dt = html.dt('Creator'),
+            children__exercisetype_description_dt = html.dt(gettext('Description')),
+            children__exercisetype_description_dd = html.dd(gettext(exercisetype.description)),
+            children__exercisetype_created_dt = html.dt(gettext('Created')),
+            children__exercisetype_created_dd = html.dd(gettext(exercisetype.created)),
+            children__exercisetype_creator_dt = html.dt(gettext('Creator')),
             children__exercisetype_creator_dd = html.dd(exercisetype.creator),
-            children__exercisetype_modified_dt = html.dt('Modified'),
-            children__exercisetype_modified_dd = html.dd(exercisetype.modified),
-            children__exercisetype_modifier_dt = html.dt('Modifier'),
+            children__exercisetype_modified_dt = html.dt(gettext('Modified')),
+            children__exercisetype_modified_dd = html.dd(gettext(exercisetype.modified)),
+            children__exercisetype_modifier_dt = html.dt(gettext('Modifier')),
             children__exercisetype_modifier_dd = html.dd(exercisetype.modifier),
         )
         
         hr1 = html.hr()
         
-        registrations_h2 = html.h2('Registrations')
+        registrations_h2 = html.h2(gettext('Registrations'))
         registrations = exercisetype.registration_exercisetypes.all()
         
         registrations_table = Table(
             auto__model = Registration,
             rows = registrations,
             title = None,
-            empty_message = 'No registrations',
+            empty_message = gettext('No registrations'),
             auto__exclude = ['exercisetypes', 'signature'],
             columns__user = Column(
-                display_name = 'Registrant',
+                display_name = gettext('Registrant'),
                 cell__url = lambda row, **_: reverse('trainings:registration_view', args = (row.pk,))
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:registration_edit', args = (row.pk,)),
             ),
         )
         
         hr2 = html.hr()
         
-        userexercises_h2 = html.h2('User Exercises')
+        userexercises_h2 = html.h2(gettext('User Exercises'))
         userexercises = exercisetype.userexercise_exercisetypes.all()
         
         userexercises_table = Table(
             auto__model = UserExercise,
             rows = userexercises,
             title = None,
-            empty_message = 'No user exercises',
+            empty_message = gettext('No user exercises'),
             auto__exclude = ['exercisetypes'],
             columns__date = Column(
                 cell__url = lambda row, **_: reverse('trainings:userexercise_view', args = (row.pk,)),
@@ -286,14 +289,14 @@ def exercisetype_view(request,exercisetype_id):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:userexercise_edit', args = (row.pk,)),
             ),
         )
 
         class Meta:
             context = dict(
-                html_title = 'Exercise Type View | New Wine Training',
+                html_title = gettext('Exercise Type View | New Wine Training'),
             )
     
     return ExerciseTypeViewPage()
@@ -320,13 +323,13 @@ def exercisetype_edit(request, exercisetype_id):
 def exercisetype_delete(request, exercisetype_id):
     
     class ExerciseTypeDeleteTemp(Page):
-        page_title = html.h1('Delete Exercise Type')
+        page_title = html.h1(gettext('Delete Exercise Type'))
         additional_spacing = html.p('')
-        temp_disabled = html.h3('This function is disabled for now.')
+        temp_disabled = html.h3(gettext('This function is disabled for now.'))
         
         class Meta:
             context = dict(
-                html_title = 'Exercise Type Delete | New Wine Training',
+                html_title = gettext('Exercise Type Delete | New Wine Training'),
             )
     
     return ExerciseTypeDeleteTemp()
@@ -335,9 +338,9 @@ def recordinglocation_index(request):
     
     class RecordingLocationIndexPage(Page):
         
-        page_title = html.h1('Recording Locations')
+        page_title = html.h1(gettext('Recording Locations'))
         
-        instructions = html.p('Click on the recording location to view details about that recording location, as well as any associated data.')
+        instructions = html.p(gettext('Click on the recording location to view details about that recording location, as well as any associated data.'))
         
         table = Table(
             auto__model = RecordingLocation,
@@ -348,14 +351,14 @@ def recordinglocation_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:recordinglocation_edit', args = (row.pk,)),
             ),
         )
         
         class Meta:
             context = dict(
-                html_title = 'Recording Location Index | New Wine Training'
+                html_title = gettext('Recording Location Index | New Wine Training')
             )
         
     return RecordingLocationIndexPage()
@@ -366,56 +369,56 @@ def recordinglocation_view(request, recordinglocation_id):
     
     class RecordingLocationViewPage(Page):
         
-        h1 = html.h1('Recording Location View: ' + recordinglocation.location)
+        h1 = html.h1(gettext('Recording Location View: ') + recordinglocation.location)
         
-        recordinglocation_h2 = html.h2('Details')
+        recordinglocation_h2 = html.h2(gettext('Details'))
         dl = html.dl(
             children__recordinglocation_id_dt = html.dt('ID'),
             children__recordinglocation_id_dd = html.dd(recordinglocation.id),
-            children__recordinglocation_location_dt = html.dt('Location'),
+            children__recordinglocation_location_dt = html.dt(gettext('Location')),
             children__recordinglocation_location_dd = html.dd(recordinglocation.location),
-            children__recordinglocation_code_before_url_dt = html.dt('Code before URL'),
+            children__recordinglocation_code_before_url_dt = html.dt(gettext('Code before URL')),
             children__recordinglocation_code_before_url_dd = html.dd(recordinglocation.code_before_url),
-            children__recordinglocation_code_after_url_dt = html.dt('Code after URL'),
+            children__recordinglocation_code_after_url_dt = html.dt(gettext('Code after URL')),
             children__recordinglocation_code_after_url_dd = html.dd(recordinglocation.code_after_url),
-            children__recordinglocation_url_identifier_dt = html.dt('URL Identifier'),
+            children__recordinglocation_url_identifier_dt = html.dt(gettext('URL Identifier')),
             children__recordinglocation_url_identifier_dd = html.dd(recordinglocation.url_identifier),
-            children__recordinglocation_notes_dt = html.dt('Notes'),
-            children__recordinglocation_notes_dd = html.dd(recordinglocation.notes),
-            children__recordinglocation_created_dt = html.dt('Created'),
-            children__recordinglocation_created_dd = html.dd(recordinglocation.created),
-            children__recordinglocation_creator_dt = html.dt('Creator'),
+            children__recordinglocation_notes_dt = html.dt(gettext('Notes')),
+            children__recordinglocation_notes_dd = html.dd(gettext(recordinglocation.notes)),
+            children__recordinglocation_created_dt = html.dt(gettext('Created')),
+            children__recordinglocation_created_dd = html.dd(gettext(recordinglocation.created)),
+            children__recordinglocation_creator_dt = html.dt(gettext('Creator')),
             children__recordinglocation_creator_dd = html.dd(recordinglocation.creator),
-            children__recordinglocation_modified_dt = html.dt('Modified'),
-            children__recordinglocation_modified_dd = html.dd(recordinglocation.modified),
-            children__recordinglocation_modifier_dt = html.dt('Modifier'),
+            children__recordinglocation_modified_dt = html.dt(gettext('Modified')),
+            children__recordinglocation_modified_dd = html.dd(gettext(recordinglocation.modified)),
+            children__recordinglocation_modifier_dt = html.dt(gettext('Modifier')),
             children__recordinglocation_modifier_dd = html.dd(recordinglocation.modifier),
         )
         
         hr1 = html.hr()
         
-        trainingmeetings_h2 = html.h2('Training Meetings')
+        trainingmeetings_h2 = html.h2(gettext('Training Meetings'))
 #        trainingmeetings = TrainingMeeting.objects.filter() #TODO
 
         trainingmeetings_table = Table(
             auto__model = TrainingMeeting,
 #            rows = trainingmeetings, #TODO
             title = None,
-            empty_message = 'No training meetings',
+            empty_message = gettext('No training meetings'),
             columns__date = Column(
                 cell__url = lambda row, **_: reverse('trainings:trainingmeeting_view', args = (row.pk,)),
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:trainingmeeting_edit', args = (row.pk,)),
             ),
         )
         
         class Meta:
             context = dict(
-                html_title = 'Recording Location View | New Wine Training',
+                html_title = gettext('Recording Location View | New Wine Training'),
             )
         
     return RecordingLocationViewPage()
@@ -442,13 +445,13 @@ def recordinglocation_edit(request, recordinglocation_id):
 def recordinglocation_delete(request, recordinglocation_id):
     
     class RecordingLocationDeleteTemp(Page):
-        page_title = html.h1('Delete Recording Location')
+        page_title = html.h1(gettext('Delete Recording Location'))
         additional_spacing = html.p('')
-        temp_disabled = html.h3('This function is disabled for now.')
+        temp_disabled = html.h3(gettext('This function is disabled for now.'))
         
         class Meta:
             context = dict(
-                html_title = 'Recording Location Delete | New Wine Training',
+                html_title = gettext('Recording Location Delete | New Wine Training'),
             )
     
     return RecordingLocationDeleteTemp()
@@ -457,28 +460,28 @@ def registration_index(request):
     
     class RegistrationIndexPage(Page):
         
-        page_title = html.h1('Registrations')
+        page_title = html.h1(gettext('Registrations'))
         
-        instructions = html.p('Click on the name to view details about that registration, as well as any associated data.')
+        instructions = html.p(gettext('Click on the name to view details about that registration, as well as any associated data.'))
         
         table = Table(
             auto__model = Registration,
             title = None,
             columns__user = Column(
-                display_name = 'Registrant',
+                display_name = gettext('Registrant'),
                 cell__url = lambda row, **_: reverse('trainings:registration_view', args = (row.pk,))
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:registration_edit', args = (row.pk,)),
             ),
         )
         
         class Meta:
             context = dict(
-                html_title = 'Registration Index | New Wine Training'
+                html_title = gettext('Registration Index | New Wine Training'),
             )
             
     return RegistrationIndexPage()
@@ -489,40 +492,40 @@ def registration_view(request, registration_id):
 
     class RegistrationViewPage(Page):
         
-        h1 = html.h1('Registration View: ' + registration.user.get_full_name() + ' (' + str(registration.term) + ')')
+        h1 = html.h1(gettext('Registration View: ') + registration.user.get_full_name() + ' (' + gettext(str(registration.term)) + ')')
         
-        registration_h2 = html.h2('Details')
+        registration_h2 = html.h2(gettext('Details'))
         dl = html.dl(
             children__registration_id_dt = html.dt('ID'),
             children__registration_id_dd = html.dd(registration.id),
-            children__registration_user_dt = html.dt('Registrant'),
+            children__registration_user_dt = html.dt(gettext('Registrant')),
             children__registration_user_dd = html.dd(registration.user),
-            children__registration_term_dt = html.dt('Term'),
-            children__registration_term_dd = html.dd(registration.term),
-            children__registration_exercisetypes_dt = html.dt('Exercise Types'),
-            children__registration_exercisetypes_dd = html.dd(', '.join(list(registration.exercisetypes.values_list('name', flat = True)))),
-            children__registration_signature_dt = html.dt('Signature'),
+            children__registration_term_dt = html.dt(gettext('Term')),
+            children__registration_term_dd = html.dd(gettext(registration.term)),
+            children__registration_exercisetypes_dt = html.dt(gettext('Exercise Types')),
+            children__registration_exercisetypes_dd = html.dd(gettext(', '.join(list(registration.exercisetypes.values_list('name', flat = True))))),
+            children__registration_signature_dt = html.dt(gettext('Signature')),
             children__registration_signature_dd = html.dd(registration.signature),
-            children__registration_created_dt = html.dt('Created'),
-            children__registration_created_dd = html.dd(registration.created),
-            children__registration_creator_dt = html.dt('Creator'),
+            children__registration_created_dt = html.dt(gettext('Created')),
+            children__registration_created_dd = html.dd(gettext(registration.created)),
+            children__registration_creator_dt = html.dt(gettext('Creator')),
             children__registration_creator_dd = html.dd(registration.creator),
-            children__registration_modified_dt = html.dt('Modified'),
-            children__registration_modified_dd = html.dd(registration.modified),
-            children__registration_modifier_dt = html.dt('Modifier'),
+            children__registration_modified_dt = html.dt(gettext('Modified')),
+            children__registration_modified_dd = html.dd(gettext(registration.modified)),
+            children__registration_modifier_dt = html.dt(gettext('Modifier')),
             children__registration_modifier_dd = html.dd(registration.modifier),
         )
         
         hr1 = html.hr()
         
-        users_h2 = html.h2('Registrant')
+        users_h2 = html.h2(gettext('Registrant'))
         users = User.objects.filter(pk = registration.user.id)
         
         users_table = Table(
             auto__model = User,
             rows = users,
             title = None,
-            empty_message = 'No registrants',
+            empty_message = gettext('No registrants'),
             auto__exclude = ['password'],
             columns__first_name = Column(
                 cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
@@ -536,21 +539,21 @@ def registration_view(request, registration_id):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
             ),
         )
         
         hr2 = html.hr()
         
-        terms_h2 = html.h2('Term')
+        terms_h2 = html.h2(gettext('Term'))
         terms = Term.objects.filter(pk = registration.term.id)
         
         terms_table = Table(
             auto__model = Term,
             rows = terms,
             title = None,
-            empty_message = 'No terms',
+            empty_message = gettext('No terms'),
             columns__term = Column(
                 after = 'year',
                 cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
@@ -561,12 +564,12 @@ def registration_view(request, registration_id):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:term_edit', args = (row.pk,)),
             ),
         )
         
-        exercisetypes_h2 = html.h2('Exercise Types')
+        exercisetypes_h2 = html.h2(gettext('Exercise Types'))
         if registration.exercisetypes is not None:
             exercisetypes = registration.exercisetypes.all()
         else:
@@ -576,21 +579,21 @@ def registration_view(request, registration_id):
             auto__model = ExerciseType,
             rows = exercisetypes,
             title = None,
-            empty_message = 'No exercise types',
+            empty_message = gettext('No exercise types'),
             columns__name = Column(
                 cell__url = lambda row, **_: reverse('trainings:exercisetype_view', args = (row.pk,))
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:exercisetype_edit', args = (row.pk,)),
             ),
         )
 
         class Meta:
             context = dict(
-                html_title = 'Registration View | New Wine Training',
+                html_title = gettext('Registration View | New Wine Training'),
             )
     
     return RegistrationViewPage()
@@ -617,13 +620,13 @@ def registration_edit(request, registration_id):
 def registration_delete(request, registration_id):
     
     class RegistrationDeleteTemp(Page):
-        page_title = html.h1('Delete Registration')
+        page_title = html.h1(gettext('Delete Registration'))
         additional_spacing = html.p('')
-        temp_disabled = html.h3('This function is disabled for now.')
+        temp_disabled = html.h3(gettext('This function is disabled for now.'))
         
         class Meta:
             context = dict(
-                html_title = 'Registration Delete | New Wine Training',
+                html_title = gettext('Registration Delete | New Wine Training'),
             )
     
     return RegistrationDeleteTemp()
@@ -632,9 +635,9 @@ def trainingmeeting_index(request):
     
     class TrainingMeetingIndexPage(Page):
         
-        page_title = html.h1('Training Meetings')
+        page_title = html.h1(gettext('Training Meetings'))
         
-        instructions = html.p('Click on the date to view details about that training meeting, as well as any associated data.')
+        instructions = html.p(gettext('Click on the date to view details about that training meeting, as well as any associated data.'))
         
         table = Table(
             auto__model = TrainingMeeting,
@@ -645,14 +648,14 @@ def trainingmeeting_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:trainingmeeting_edit', args = (row.pk,)),
             ),
         )
         
         class Meta:
                 context = dict(
-                html_title = 'Training Meeting Index | New Wine Training',
+                html_title = gettext('Training Meeting Index | New Wine Training'),
             )
         
     return TrainingMeetingIndexPage()
@@ -663,50 +666,50 @@ def trainingmeeting_view(request, trainingmeeting_id):
     
     class TrainingMeetingViewPage(Page):
         
-        h1 = html.h1('Training Meeting View: ' + trainingmeeting.date)
+        h1 = html.h1(gettext('Training Meeting View: ' + trainingmeeting.date))
         
         trainingmeeting_h2 = html.h2('Details')
         dl = html.dl(
             children__trainingmeeting_id_dt = html.dt('ID'),
             children__trainingmeeting_id_dd = html.dd(trainingmeeting.id),
-            children__trainingmeeting_date_dt = html.dt('Date'),
-            children__trainingmeeting_date_dd = html.dd(trainingmeeting.date),
-            children__trainingmeeting_start_time_dt = html.dt('Start Time'),
-            children__trainingmeeting_start_time_dd = html.dd(trainingmeeting.start_time),
-            children__trainingmeeting_end_time_dt = html.dt('End Time'),
-            children__trainingmeeting_end_time_dd = html.dd(trainingmeeting.end_time),
-            children__trainingmeeting_language_dt = html.dt('Language'),
-            children__trainingmeeting_language_dd = html.dd(trainingmeeting.language),
-            children__trainingmeeting_location_dt = html.dt('Location'),
+            children__trainingmeeting_date_dt = html.dt(gettext('Date')),
+            children__trainingmeeting_date_dd = html.dd(gettext(trainingmeeting.date)),
+            children__trainingmeeting_start_time_dt = html.dt(gettext('Start Time')),
+            children__trainingmeeting_start_time_dd = html.dd(gettext(trainingmeeting.start_time)),
+            children__trainingmeeting_end_time_dt = html.dt(gettext('End Time')),
+            children__trainingmeeting_end_time_dd = html.dd(gettext(trainingmeeting.end_time)),
+            children__trainingmeeting_language_dt = html.dt(gettext('Language')),
+            children__trainingmeeting_language_dd = html.dd(gettext(trainingmeeting.language)),
+            children__trainingmeeting_location_dt = html.dt(gettext('Location')),
             children__trainingmeeting_location_dd = html.dd(trainingmeeting.location),
-            children__trainingmeeting_recording_url_dt = html.dt('Recording URL'),
+            children__trainingmeeting_recording_url_dt = html.dt(gettext('Recording URL')),
             children__trainingmeeting_recording_url_dd = html.dd(trainingmeeting.recording_url),
-            children__trainingmeeting_recording_released_datetime_dt = html.dt('Recording Released'),
+            children__trainingmeeting_recording_released_datetime_dt = html.dt(gettext('Recording Released')),
             children__trainingmeeting_recording_released_datetime_dd = html.dd(trainingmeeting.recording_released_datetime),
-            children__trainingmeeting_recording_released_by_dt = html.dt('Released By'),
+            children__trainingmeeting_recording_released_by_dt = html.dt(gettext('Released By')),
             children__trainingmeeting_recording_released_by_dd = html.dd(trainingmeeting.recording_released_by),
-            children__trainingmeeting_notes_dt = html.dt('Notes'),
-            children__trainingmeeting_notes_dd = html.dd(trainingmeeting.notes),
-            children__trainingmeeting_created_dt = html.dt('Created'),
-            children__trainingmeeting_created_dd = html.dd(trainingmeeting.created),
-            children__trainingmeeting_creator_dt = html.dt('Creator'),
+            children__trainingmeeting_notes_dt = html.dt(gettext('Notes')),
+            children__trainingmeeting_notes_dd = html.dd(gettext(trainingmeeting.notes)),
+            children__trainingmeeting_created_dt = html.dt(gettext('Created')),
+            children__trainingmeeting_created_dd = html.dd(gettext(trainingmeeting.created)),
+            children__trainingmeeting_creator_dt = html.dt(gettext('Creator')),
             children__trainingmeeting_creator_dd = html.dd(trainingmeeting.creator),
-            children__trainingmeeting_modified_dt = html.dt('Modified'),
-            children__trainingmeeting_modified_dd = html.dd(trainingmeeting.modified),
-            children__trainingmeeting_modifier_dt = html.dt('Modifier'),
+            children__trainingmeeting_modified_dt = html.dt(gettext('Modified')),
+            children__trainingmeeting_modified_dd = html.dd(gettext(trainingmeeting.modified)),
+            children__trainingmeeting_modifier_dt = html.dt(gettext('Modifier')),
             children__trainingmeeting_modifier_dd = html.dd(trainingmeeting.modifier),
         )
 
         hr1 = html.hr()
         
-        terms_h2 = html.h2('Term')
+        terms_h2 = html.h2(gettext('Term'))
         terms = Term.objects.filter(start_date__lte = trainingmeeting.date, end_date__gte = trainingmeeting.date)
 
         terms_table = Table(
             auto__model = Term,
 #            rows = terms,
             title = None,
-            empty_message = 'No terms',
+            empty_message = gettext('No terms'),
             columns__term = Column(
                 after = 'year',
                 cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
@@ -717,56 +720,56 @@ def trainingmeeting_view(request, trainingmeeting_id):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:term_edit', args = (row.pk,)),
             ),
         )
         
         hr2 = html.hr()
         
-        languages_h2 = html.h2('Language')
+        languages_h2 = html.h2(gettext('Language'))
         languages = Language.object.filter(pk = trainingmeeting.language.id)
         
         languages_table = Table(
             auto__model = Language,
             rows = languages,
             title = None,
-            empty_message = 'No languages',
+            empty_message = gettext('No languages'),
             columns__language = Column(
                 cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,))
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
             ),
         )
         
         hr3 = html.hr()
         
-        recordinglocations_h2 = html.h2('Recording Location')
+        recordinglocations_h2 = html.h2(gettext('Recording Location'))
 #        recordinglocations = RecordingLocation.objects. #TODO
 
         recordinglocations_table = Table(
             auto__model = RecordingLocation,
 #            rows = recordinglocations, #TODO
             title = None,
-            empty_message = 'No recording locations',
+            empty_message = gettext('No recording locations'),
             columns__location = Column(
                 cell__url = lambda row, **_: reverse('trainings:recordinglocation_view', args = (row.pk,))
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:recordinglocation_edit', args = (row.pk,)),
             ),
         )
         
         class Meta:
             context = dict(
-                html_title = 'Recording Location View | New Wine Training',
+                html_title = gettext('Recording Location View | New Wine Training'),
             )
             
     return TrainingMeetingViewPage()
@@ -793,13 +796,13 @@ def trainingmeeting_edit(request, trainingmeeting_id):
 def trainingmeeting_delete(request, trainingmeeting_id):
     
     class TrainingMeetingDeleteTemp(Page):
-        page_title = html.h1('Delete Training Meeting')
+        page_title = html.h1(gettext('Delete Training Meeting'))
         additional_spacing = html.p('')
-        temp_disabled = html.h3('This function is disabled for now.')
+        temp_disabled = html.h3(gettext('This function is disabled for now.'))
         
         class Meta:
             context = dict(
-                html_title = 'Training Meeting Delete | New Wine Training',
+                html_title = gettext('Training Meeting Delete | New Wine Training'),
             )
     
     return TrainingMeetingDeleteTemp()
@@ -808,7 +811,7 @@ def userexercise_index(request):
     
     class UserExerciseIndexPage(Page):
         
-        page_title = html.h1('User Exercises')
+        page_title = html.h1('User Exercises') #TODO
         
         instructions = html.p('Click on the date or user to view details about that user exercise, as well as any associated data.')
         

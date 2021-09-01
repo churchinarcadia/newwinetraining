@@ -59,12 +59,12 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.amazon',
     #'allauth.socialaccount.providers.amazon_cognito',
     #'allauth.socialaccount.providers.angellist',
-    'allauth.socialaccount.providers.apple',
+    #'allauth.socialaccount.providers.apple', #TODO
     #'allauth.socialaccount.providers.asana',
     #'allauth.socialaccount.providers.auth0',
     #'allauth.socialaccount.providers.authentiq',
-    'allauth.socialaccount.providers.azure',
-    'allauth.socialaccount.providers.baidu',
+    #'allauth.socialaccount.providers.azure', #TODO
+    #'allauth.socialaccount.providers.baidu',
     #'allauth.socialaccount.providers.basecamp',
     #'allauth.socialaccount.providers.battlenet',
     #'allauth.socialaccount.providers.bitbucket',
@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.dataporten',
     #'allauth.socialaccount.providers.daum',
     #'allauth.socialaccount.providers.digitalocean',
-    'allauth.socialaccount.providers.discord',
+    #'allauth.socialaccount.providers.discord', #TODO
     #'allauth.socialaccount.providers.disqus',
     #'allauth.socialaccount.providers.douban',
     #'allauth.socialaccount.providers.doximity',
@@ -90,7 +90,7 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.eveonline',
     #'allauth.socialaccount.providers.evernote',
     #'allauth.socialaccount.providers.exist',
-    'allauth.socialaccount.providers.facebook',
+    #'allauth.socialaccount.providers.facebook', #TODO
     #'allauth.socialaccount.providers.feedly',
     #'allauth.socialaccount.providers.figma',
     #'allauth.socialaccount.providers.fivehundredpx',
@@ -101,19 +101,19 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.github',
     #'allauth.socialaccount.providers.gitlab',
     #'allauth.socialaccount.providers.globus',
-    'allauth.socialaccount.providers.google',
+    #'allauth.socialaccount.providers.google', #TODO
     #'allauth.socialaccount.providers.hubic',
     #'allauth.socialaccount.providers.instagram',
     #'allauth.socialaccount.providers.jupyterhub',
     #'allauth.socialaccount.providers.kakao',
     #'allauth.socialaccount.providers.keycloak',
-    'allauth.socialaccount.providers.line',
+    #'allauth.socialaccount.providers.line', #TODO
     #'allauth.socialaccount.providers.linkedin',
     #'allauth.socialaccount.providers.linkedin_oauth2',
     #'allauth.socialaccount.providers.mailchimp',
     #'allauth.socialaccount.providers.mailru',
     #'allauth.socialaccount.providers.meetup',
-    'allauth.socialaccount.providers.microsoft',
+    #'allauth.socialaccount.providers.microsoft', #TODO
     #'allauth.socialaccount.providers.naver',
     #'allauth.socialaccount.providers.nextcloud',
     #'allauth.socialaccount.providers.odnoklassniki',
@@ -150,10 +150,10 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.vimeo_oauth2',
     #'allauth.socialaccount.providers.vk',
     #'allauth.socialaccount.providers.weibo',
-    'allauth.socialaccount.providers.weixin',
-    'allauth.socialaccount.providers.windowslive',
+    #'allauth.socialaccount.providers.weixin', #TODO
+    #'allauth.socialaccount.providers.windowslive', #TODO
     #'allauth.socialaccount.providers.xing',
-    'allauth.socialaccount.providers.yahoo',
+    #'allauth.socialaccount.providers.yahoo', #TODO
     #'allauth.socialaccount.providers.yandex',
     #'allauth.socialaccount.providers.ynab',
     #'allauth.socialaccount.providers.zoho',
@@ -167,14 +167,14 @@ INSTALLED_APPS = [
     'users',
     'pages',
 ]
-
+"""
 try:
     import django_fastdev
 except ImportError:
     pass
 else:
     INSTALLED_APPS += ['django_fastdev']
-
+"""
 MIDDLEWARE = [
     'iommi.live_edit.Middleware', #Must be first in the list
 
@@ -302,9 +302,21 @@ PHONENUMBER_DEFAULT_REGION = 'US'
 
 STRONGHOLD_DEFAULTS = True
 
-STRONGHOLD_PUBLIC_URLS = ()
+STRONGHOLD_PUBLIC_URLS = (
+    r'^/accounts/login.+$',
+    r'^/accounts/apple/login.*$',
+    r'^/accounts/azure/login.*$',
+    r'^/accounts/baidu/login.*$',
+    r'^/accounts/discord/login.*$',
+    r'^/accounts/google/login.*$',
+    r'^/accounts/line/login.*$',
+    r'^/accounts/microsoft/login.*$',
+    r'^/accounts/weixin/login.*$',
+    r'^/accounts/windowslive/login.*$',
+    r'^/accounts/yahoo/login.*$',
+)
 
-STRONGHOLD_PUBLIC_NAMED_URLS = ('account_login', 'account_logout', 'account_set_password', 'account_signup', 'account_reset_password', 'users:user_register')
+STRONGHOLD_PUBLIC_NAMED_URLS = ('account_logout', 'account_set_password', 'account_signup', 'account_reset_password', 'users:user_register')
 
 STRONGHOLD_USER_TEST_FUNC = lambda user: user.is_staff
 
