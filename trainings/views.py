@@ -811,9 +811,9 @@ def userexercise_index(request):
     
     class UserExerciseIndexPage(Page):
         
-        page_title = html.h1('User Exercises') #TODO
+        page_title = html.h1(gettext('User Exercises'))
         
-        instructions = html.p('Click on the date or user to view details about that user exercise, as well as any associated data.')
+        instructions = html.p(gettext('Click on the date or user to view details about that user exercise, as well as any associated data.'))
         
         table = Table(
             auto__model = UserExercise,
@@ -827,14 +827,14 @@ def userexercise_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:userexercise_edit', args = (row.pk,)),
             ),
         )
         
         class Meta:
             context = dict(
-                html_title = 'User Exercise Index | New Wine Training'
+                html_title = gettext('User Exercise Index | New Wine Training'),
             )
         
     return UserExerciseIndexPage()
@@ -845,31 +845,31 @@ def userexercise_view(request, userexercise_id):
 
     class UserExerciseViewPage(Page):
         
-        h1 = html.h1('User Exercise View: ' + userexercise.user.get_full_name() + ' (' + str(userexercise.date) + ')')
+        h1 = html.h1(gettext('User Exercise View: ') + userexercise.user.get_full_name() + ' (' + str(userexercise.date) + ')')
     
         userexercise_h2 = html.h2('Details')
         dl = html.dl(
             children__userexercise_id_dt = html.dt('ID'),
             children__userexercise_id_dd = html.dd(userexercise.id),
-            children__userexercise_date_dt = html.dt('Date'),
-            children__userexercise_date_dd = html.dd(userexercise.date),
-            children__userexercise_user_dt = html.dt('User'),
+            children__userexercise_date_dt = html.dt(gettext('Date')),
+            children__userexercise_date_dd = html.dd(gettext(userexercise.date)),
+            children__userexercise_user_dt = html.dt(gettext('User')),
             children__userexercise_user_dd = html.dd(userexercise.user),
-            children__userexercise_exercisetypes_dt = html.dt('Exercise Types'),
-            children__userexercise_exercisetypes_dd = html.dd(', '.join(list(userexercise.exercisetypes.values_list('name', flat = True)))),
-            children__userexercise_created_dt = html.dt('Created'),
-            children__userexercise_created_dd = html.dd(userexercise.created),
-            children__userexercise_creator_dt = html.dt('Creator'),
+            children__userexercise_exercisetypes_dt = html.dt(gettext('Exercise Types')),
+            children__userexercise_exercisetypes_dd = html.dd(gettext(', '.join(list(userexercise.exercisetypes.values_list('name', flat = True))))),
+            children__userexercise_created_dt = html.dt(gettext('Created')),
+            children__userexercise_created_dd = html.dd(gettext(userexercise.created)),
+            children__userexercise_creator_dt = html.dt(gettext('Creator')),
             children__userexercise_creator_dd = html.dd(userexercise.creator),
-            children__userexercise_modified_dt = html.dt('Modified'),
-            children__userexercise_modified_dd = html.dd(userexercise.modified),
-            children__userexercise_modifier_dt = html.dt('Modifier'),
+            children__userexercise_modified_dt = html.dt(gettext('Modified')),
+            children__userexercise_modified_dd = html.dd(gettext(userexercise.modified)),
+            children__userexercise_modifier_dt = html.dt(gettext('Modifier')),
             children__userexercise_modifier_dd = html.dd(userexercise.modifier),
         )
         
         hr1 = html.hr()
         
-        users_h2 = html.h2('User')
+        users_h2 = html.h2(gettext('User'))
         users = User.objects.filter(pk = userexercise.user.id)
         
         users_table = Table(
@@ -877,7 +877,7 @@ def userexercise_view(request, userexercise_id):
             rows = users,
             auto__exclude = ['password'],
             title = None,
-            empty_message = 'No users',
+            empty_message = gettext('No users'),
             columns__first_name = Column(
                 cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
             ),
@@ -887,35 +887,35 @@ def userexercise_view(request, userexercise_id):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
             ),
         )
         
         hr2 = html.hr()
         
-        exercisetypes_h2 = html.h2('Exercise Types')
+        exercisetypes_h2 = html.h2(gettext('Exercise Types'))
         exercisetypes = userexercise.exercisetypes.all()
         
         exercisetypes_table = Table(
             auto__model = ExerciseType,
             rows = exercisetypes,
             title = None,
-            empty_message = 'No exercise types',
+            empty_message = gettext('No exercise types'),
             columns__name = Column(
                 cell__url = lambda row, **_: reverse('trainings:exercisetype_view', args = (row.pk,))
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('trainings:exercisetype_edit', args = (row.pk,)),
             ),
         )
         
         class Meta:
             context = dict(
-                html_title = 'User Exercise View | New Wine Training'
+                html_title = gettext('User Exercise View | New Wine Training'),
             )
     
     return UserExerciseViewPage()
@@ -942,13 +942,13 @@ def userexercise_edit(request, userexercise_id):
 def userexercise_delete(request, userexercise_id):
     
     class UserExerciseDeleteTemp(Page):
-        page_title = html.h1('Delete User Exercise')
+        page_title = html.h1(gettext('Delete User Exercise'))
         additional_spacing = html.p('')
-        temp_disabled = html.h3('This function is disabled for now.')
+        temp_disabled = html.h3(gettext('This function is disabled for now.'))
         
         class Meta:
             context = dict(
-                html_title = 'User Exercise Delete | New Wine Training',
+                html_title = gettext('User Exercise Delete | New Wine Training'),
             )
     
     return UserExerciseDeleteTemp()
@@ -957,9 +957,9 @@ def text_index(request):
     
     class TextIndexPage(Page):
         
-        page_title = html.h1('Texts')
+        page_title = html.h1(gettext('Texts'))
 
-        instructions = html.p('Click on the text name to view details about that text, as well as any associated data.')
+        instructions = html.p(gettext('Click on the text name to view details about that text, as well as any associated data.'))
         
         table = Table(
             auto__model = Text,
@@ -977,7 +977,7 @@ def text_index(request):
         
         class Meta:
             context = dict(
-                html_title = 'Text Index | New Wine Training',
+                html_title = gettext('Text Index | New Wine Training'),
             )
         
     return TextIndexPage()
@@ -988,51 +988,51 @@ def text_view(request, text_id):
 
     class TextViewPage(Page):
         
-        h1 = html.h1('Text View: ' + text.name)
+        h1 = html.h1(gettext('Text View: ') + text.name)
         
-        text_h2 = html.h2('Details')
+        text_h2 = html.h2(gettext('Details'))
         dl = html.dl(
             children__text_id_dt = html.dt('ID'),
             children__text_id_dd = html.dd(text.id),
-            children__text_name_dt = html.dt('Name'),
+            children__text_name_dt = html.dt(gettext('Name')),
             children__text_name_dd = html.dd(text.name),
-            children__text_description_dt = html.dt('Description'),
-            children__text_description_dd = html.dd(text.description),
-            children__text_created_dt = html.dt('Created'),
-            children__text_created_dd = html.dd(text.created),
-            children__text_creator_dt = html.dt('Creator'),
+            children__text_description_dt = html.dt(gettext('Description')),
+            children__text_description_dd = html.dd(gettext(text.description)),
+            children__text_created_dt = html.dt(gettext('Created')),
+            children__text_created_dd = html.dd(gettext(text.created)),
+            children__text_creator_dt = html.dt(gettext('Creator')),
             children__text_creator_dd = html.dd(text.creator),
-            children__text_modified_dt = html.dt('Modified'),
-            children__text_modified_dd = html.dd(text.modified),
-            children__text_modifier_dt = html.dt('Modifier'),
+            children__text_modified_dt = html.dt(gettext('Modified')),
+            children__text_modified_dd = html.dd(gettext(text.modified)),
+            children__text_modifier_dt = html.dt(gettext('Modifier')),
             children__text_modifier_dd = html.dd(text.modifier),
         )
         
         h1 = html.h1()
         
-        translations_h2 = html.h2('Translations')
+        translations_h2 = html.h2(gettext('Translations'))
         translations = text.translation_texts.all()
         
         translations_table = Table(
             auto__model = Translation,
             rows = translations,
             title = None,
-            empty_message = 'No translations',
+            empty_message = gettext('No translations'),
             auto__exclude = ['text'],
             columns__content = Column(
-                display_name = 'Translation',
+                display_name = gettext('Translation'),
                 cell__value = lambda row, **_: row.content[0 : 50] + '...' if len(row.content) > 50 else row.content
             ),
             columns__edit = Column(
                 attr = '',
                 display_name = '',
-                cell__value = 'Edit',
+                cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('languages:translation_edit', args = (row.pk,)),
             ),
         )
     
         class Meta:
-            title = 'Text View | New Wine Training'
+            title = gettext('Text View | New Wine Training'),
     
     return TextViewPage()
 
@@ -1058,13 +1058,13 @@ def text_edit(request, text_id):
 def text_delete(request, text_id):
     
     class TextDeleteTemp(Page):
-        page_title = html.h1('Delete Text')
+        page_title = html.h1(gettext('Delete Text'))
         additional_spacing = html.p('')
-        temp_disabled = html.h3('This function is disabled for now.')
+        temp_disabled = html.h3(gettext('This function is disabled for now.'))
         
         class Meta:
             context = dict(
-                html_title = 'Text Delete | New Wine Training',
+                html_title = gettext('Text Delete | New Wine Training'),
             )
     
     return TextDeleteTemp()

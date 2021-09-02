@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from newwinetraining.models import BaseModel
 
 from django.contrib.auth.models import Group, Permission
 
@@ -10,27 +11,29 @@ from django.contrib.auth.models import (
 from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import RegexValidator, validate_email
 
+from django.utils.translation import gettext
+
 # Create your models here.
 
 class UserType(models.Model):
-    name = models.CharField(max_length = 100)
-    description = models.CharField(max_length = 255)
-    active = models.BooleanField(default = True)
-    created = models.DateTimeField(auto_now_add = True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_creators', on_delete = models.RESTRICT, blank = True, null = True)
-    modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
+    name = models.CharField(max_length = 100, verbose_name = gettext('Name'))
+    description = models.CharField(max_length = 255, verbose_name = gettext('Description'))
+    active = models.BooleanField(default = True, verbose_name = gettext('Active'))
+    created = models.DateTimeField(auto_now_add = True, verbose_name = gettext('Created'))
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_creators', verbose_name = gettext('Creator'), on_delete = models.RESTRICT, blank = True, null = True)
+    modified = models.DateTimeField(auto_now = True, verbose_name = gettext('Modified'))
+    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'usertype_modifiers', verbose_name = gettext('Modifier'), on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
         return self.name
 
 class Locality(models.Model):
-    locality = models.CharField(max_length = 100)
-    active = models.BooleanField(default = True)
-    created = models.DateTimeField(auto_now_add = True)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_creators', on_delete = models.RESTRICT, blank = True, null = True)
-    modified = models.DateTimeField(auto_now = True)
-    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
+    locality = models.CharField(max_length = 100, verbose_name = gettext('Locality'))
+    active = models.BooleanField(default = True, verbose_name = gettext('Active'))
+    created = models.DateTimeField(auto_now_add = True, verbose_name = gettext('Created'))
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_creators', verbose_name = gettext('Creator'), on_delete = models.RESTRICT, blank = True, null = True)
+    modified = models.DateTimeField(auto_now = True, verbose_name = gettext('Modified'))
+    modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'locality_modifiers', verbose_name = gettext('Modifier'), on_delete = models.RESTRICT, blank = True, null = True)
 
     def __str__(self):
         return self.locality
@@ -42,7 +45,7 @@ class UserManager(BaseUserManager):
         """
 
         if not email:
-            raise ValueError('Users must have an email address.')
+            raise ValueError(gettext('Users must have an email address.'))
 
         user = self.model(
             email = self.normalize_email(email),
@@ -72,31 +75,31 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser):
-    first_name = models.CharField(max_length = 120, blank = True)
-    last_name = models.CharField(max_length = 120, blank = True)
-    chinese_name = models.CharField(max_length = 6, blank = True)
-    gender = models.CharField(max_length = 10, choices = [('B','Brother'),('S','Sister')], blank = True, null = True)
-    locality = models.ForeignKey(Locality, related_name = 'user_localities', on_delete = models.RESTRICT, blank = True, null = True)
-    district = models.CharField(max_length = 8, blank = True, null = True)
-    language = models.ForeignKey('languages.Language', related_name = 'user_languages', verbose_name = 'Primary Language', on_delete = models.RESTRICT, blank = True, null = True)
+    first_name = models.CharField(max_length = 120, blank = True, verbose_name = gettext('First Name'))
+    last_name = models.CharField(max_length = 120, blank = True, verbose_name = gettext('Last Name'))
+    chinese_name = models.CharField(max_length = 6, blank = True, verbose_name = gettext('Chinese Name'))
+    gender = models.CharField(max_length = 10, choices = [('B',gettext('Brother')),('S',gettext('Sister'))], verbose_name = gettext('Gender'), blank = True, null = True)
+    locality = models.ForeignKey(Locality, related_name = 'user_localities', verbose_name = gettext('Locality'), on_delete = models.RESTRICT, blank = True, null = True)
+    district = models.CharField(max_length = 8, verbose_name = gettext('District'), blank = True, null = True)
+    language = models.ForeignKey('languages.Language', related_name = 'user_languages', verbose_name = gettext('Primary Language'), on_delete = models.RESTRICT, blank = True, null = True)
     
     #phone_regex = RegexValidator(regex=r'^[(]?[2-9]\d{2}[) -.]{0,2}\d{3}[ -.]?\d{4}$', message="Please enter your 10-digit phone number including your area code.")
     #phone_number = PhoneNumberField(validators = [phone_regex], max_length = 12, blank = True, null = True) # validators should be a list
-    phone_number = PhoneNumberField(max_length = 12, blank = True, null = True)
+    phone_number = PhoneNumberField(max_length = 12, verbose_name = gettext('Phone Number'), blank = True, null = True)
 
-    email = models.CharField(validators = [validate_email], max_length = 255, unique = True)
-    usertypes = models.ManyToManyField(UserType, related_name = 'user_usertypes', blank = True)
+    email = models.CharField(validators = [validate_email], max_length = 255, verbose_name = gettext('Email'), unique = True)
+    usertypes = models.ManyToManyField(UserType, related_name = 'user_usertypes', verbose_name = gettext('User Types'), blank = True)
 
-    is_staff = models.BooleanField(default = False)
-    is_superuser = models.BooleanField(default = False)
-    last_login = models.DateTimeField(blank = True, null = True)
+    is_staff = models.BooleanField(default = False, verbose_name = gettext('Is Staff'))
+    is_superuser = models.BooleanField(default = False, verbose_name = gettext('Is Superuser'))
+    last_login = models.DateTimeField(verbose_name = gettext('Last Login'), blank = True, null = True)
 
-    groups = models.ManyToManyField(Group, related_name = 'user_groups', blank = True)
-    user_permissions = models.ManyToManyField(Permission, related_name = 'user_userpermissions', blank = True)
+    groups = models.ManyToManyField(Group, related_name = 'user_groups', verbose_name = gettext('Groups'), blank = True)
+    user_permissions = models.ManyToManyField(Permission, related_name = 'user_userpermissions', verbose_name = gettext('User-specific Permissions'), blank = True)
 
-    created = models.DateTimeField(auto_now_add = True, null = True)
-    modified = models.DateTimeField(auto_now = True, null = True)
-    modifier = models.ForeignKey('self', related_name = 'user_modifiers', on_delete = models.RESTRICT, blank = True, null = True)
+    created = models.DateTimeField(auto_now_add = True, verbose_name = gettext('Created'), null = True)
+    modified = models.DateTimeField(auto_now = True, verbose_name = gettext('Modified'), null = True)
+    modifier = models.ForeignKey('self', related_name = 'user_modifiers', verbose_name = gettext('Modifier'), on_delete = models.RESTRICT, blank = True, null = True)
 
     objects = UserManager()
 
