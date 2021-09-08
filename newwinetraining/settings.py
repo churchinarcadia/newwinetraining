@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from inspect import EndOfBlock
 from pathlib import Path
 
 import environ
@@ -49,7 +50,7 @@ INSTALLED_APPS = [
     #third party apps
     'phonenumber_field',
     'iommi',
-    'stronghold',
+#    'stronghold',
     
     'allauth',
     'allauth.account',
@@ -101,7 +102,7 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.github',
     #'allauth.socialaccount.providers.gitlab',
     #'allauth.socialaccount.providers.globus',
-    #'allauth.socialaccount.providers.google', #TODO
+    'allauth.socialaccount.providers.google',
     #'allauth.socialaccount.providers.hubic',
     #'allauth.socialaccount.providers.instagram',
     #'allauth.socialaccount.providers.jupyterhub',
@@ -185,6 +186,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'BrokenLinkEmailsMiddleware',
     
     'stronghold.middleware.LoginRequiredMiddleware',
 
@@ -228,6 +230,15 @@ DATABASES = {
     }
 }
 
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_SUBJECT_PREFIX = '[New Wine Training]'
+EMAIL_USE_LOCALTIME = True
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+SERVER_EMAIL = env('SERVER_EMAIL')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -295,6 +306,12 @@ LOGIN_URL = '/accounts/login'
 
 LOGIN_REDIRECT_URL = '/'
 
+ADMINS = env('ADMINS')
+
+LANGUAGE_COOKIE_AGE = None
+
+MANAGERS = env('ADMINS')
+
 #Setting up default phone number region for validation
 PHONENUMBER_DEFAULT_REGION = 'US'
 
@@ -314,9 +331,10 @@ STRONGHOLD_PUBLIC_URLS = (
     r'^/accounts/weixin/login.*$',
     r'^/accounts/windowslive/login.*$',
     r'^/accounts/yahoo/login.*$',
+    r'^/accounts/confirm-email.*$',
 )
 
-STRONGHOLD_PUBLIC_NAMED_URLS = ('account_logout', 'account_set_password', 'account_signup', 'account_reset_password', 'users:user_register')
+STRONGHOLD_PUBLIC_NAMED_URLS = ('account_logout', 'account_set_password', 'account_signup', 'account_confirm_email','account_reset_password', 'users:user_register')
 
 STRONGHOLD_USER_TEST_FUNC = lambda user: user.is_staff
 
@@ -329,9 +347,9 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 ACCOUNT_USERNAME_REQUIRED = False
 
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/trainings/register/add/'
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/trainings/registration/add/'
 
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/trainings/register/add/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/trainings/registration/add/'
 
 ACCOUNT_EMAIL_REQUIRED = True
 
@@ -346,10 +364,6 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
-
-ACCOUNT_USER_DISPLAY = 'get_short_name'
-
-
 
 #Iommi hook to use project style
 
