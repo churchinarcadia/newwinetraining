@@ -7,7 +7,22 @@ from django.utils import timezone
 
 from django.utils.translation import gettext
 
+from dateutil.relativedelta import relativedelta
+
 # Create your models here.
+
+class TermManager(models.Manager):
+    def current_terms(self):
+        return super(TermManager, self).get_queryset().filter(start_date < timezone.now(), end_date > timezone.now()).values_list('id', flat = True)
+    
+    def current_or_future_terms(self):
+        if len(super(TermManager, self).current_terms()) > 0:
+            return super(TermManager, self).current_terms()
+        else:
+            return super(TermManager, self).get_queryset().filter(timezone.now()< start_date < timezone.now() + relativedelta(months = +6)).values_list('id', flat = True)
+    
+    def last_terms(self):
+        return super(TermManager, self).get_queryset().filter(timezone.now() - relativedelta(months = -6) < start-date < timezone.now()).values_list('id', flat = True)
 
 class Term(models.Model):
     term = models.CharField(max_length = 10, choices = [('Fall',gettext('Fall')),('Spring',gettext('Spring'))], verbose_name = gettext('Term'))
@@ -25,6 +40,8 @@ class Term(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'term_creators', verbose_name = gettext('Creator'), on_delete = models.RESTRICT, blank = True, null = True)
     modified = models.DateTimeField(auto_now = True, verbose_name = gettext('Modified'))
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'term_modifiers', verbose_name = gettext('Modifier'), on_delete = models.RESTRICT, blank = True, null = True)
+    
+    objects = TermManager
 
     def __str__(self):
         return str(self.year) + ' ' + self.term + ' (' + str(self.language) + ')'

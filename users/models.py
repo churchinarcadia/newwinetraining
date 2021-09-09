@@ -13,6 +13,8 @@ from django.core.validators import RegexValidator, validate_email
 
 from django.utils.translation import gettext
 
+from trainings.models import Term, Registration
+
 # Create your models here.
 
 class UserType(models.Model):
@@ -152,3 +154,35 @@ class User(AbstractBaseUser):
             return self.first_name + ' ' + self.last_name
         else:
             return self.chinese_name
+    
+    def has_role(self, target):
+        
+        roles = list(self.groups.values_list('name', flat = True))
+        
+        registered_this_term = self.registration_users.filter(pk = Term.objects.current_terms())
+        registered_last_term = self.registration_users.filter(pk = Term.objects.last_terms())
+        
+        if not registered_this_term.exists() and not registered_last_term.exists():
+            if 'Trainee' in roles:
+                roles.remove('Trainee')
+            
+        if target == '' or len(target.intersection(roles)) > 0:
+            return True
+        else:
+            return False
+    
+    def registered_this_term(self):
+        registered_this_term = self.registration_users.filter(pk = Term.objects.current_terms())
+        
+        if registered_this_term.exists():
+            return True
+        else:
+            return False
+    
+    def registered_last_term(self):
+        registered_last_term = self.registration_users.filter(pk = Term.objects.last_terms())
+        
+        if registered_last_term.exists():
+            return True
+        else:
+            return False
