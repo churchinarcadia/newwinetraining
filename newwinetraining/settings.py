@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     #third party apps
     'phonenumber_field',
     'iommi',
-#    'stronghold',
+    'stronghold',
     
     'allauth',
     'allauth.account',
@@ -179,6 +179,7 @@ else:
 MIDDLEWARE = [
     'iommi.live_edit.Middleware', #Must be first in the list
 
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -186,7 +187,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'BrokenLinkEmailsMiddleware',
     
     'stronghold.middleware.LoginRequiredMiddleware',
 
@@ -302,7 +302,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #Custom User database for auth
 AUTH_USER_MODEL = 'users.User'
 
-LOGIN_URL = '/accounts/login'
+LOGIN_URL = '/accounts/login/'
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -336,8 +336,6 @@ STRONGHOLD_PUBLIC_URLS = (
 
 STRONGHOLD_PUBLIC_NAMED_URLS = ('account_logout', 'account_set_password', 'account_signup', 'account_confirm_email','account_reset_password', 'users:user_register')
 
-STRONGHOLD_USER_TEST_FUNC = lambda user: user.is_staff
-
 #AllAuth Settings
 SITE_ID = 1
 
@@ -353,11 +351,11 @@ ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/trainings/registration
 
 ACCOUNT_EMAIL_REQUIRED = True
 
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory' #mandatory, optional, none
+ACCOUNT_EMAIL_VERIFICATION = env('ACCOUNT_EMAIL_VERIFICATION') #mandatory, optional, none
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[New Wine Training]'
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = env('ACCOUNT_DEFAULT_HTTP_PROTOCOL')
 
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
