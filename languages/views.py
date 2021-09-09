@@ -1,3 +1,4 @@
+from django.http.response import Http404
 from django.shortcuts import render, get_object_or_404
 
 from django.http import HttpResponseRedirect
@@ -27,6 +28,9 @@ from trainings.models import Term, TrainingMeeting, Text
 # Create your views here.
 
 def language_index(request):
+    
+    if request.user.has_staff_perms == False:
+        raise Http404
     
     class LanguageIndexPage(Page):
         
@@ -275,17 +279,17 @@ def translation_view(request, translation_id):
             children__translation_id_dt = html.dt('ID'),
             children__translation_id_dd = html.dd(translation.id),
             children__translation_langauge_dt = html.dt(gettext('Language')),
-            children__translation_language_dd = html.dd(gettext(translation.language)),
+            children__translation_language_dd = html.dd(gettext(str(translation.language))),
             children__translation_text_dt = html.dt(gettext('Text Description')),
             children__translation_text_dd = html.dd(translation.text),
             children__translation_content_dt = html.dt(gettext('Translation')),
             children__translation_content_dd = html.dd(translation.content),
             children__translation_created_dt = html.dt(gettext('Created')),
-            children__translation_created_dd = html.dd(gettext(translation.created)),
+            children__translation_created_dd = html.dd(translation.created),
             children__translation_creator_dt = html.dt(gettext('Creator')),
             children__translation_creator_dd = html.dd(translation.creator),
             children__translation_modified_dt = html.dt(gettext('Modified')),
-            children__translation_modified_dd = html.dd(gettext(translation.modified)),
+            children__translation_modified_dd = html.dd(translation.modified),
             children__translation_modifier_dt = html.dt(gettext('Modifier')),
             children__translation_modifier_dd = html.dd(translation.modifier),
         )
@@ -417,13 +421,13 @@ def translator_view(request, translator_id):
             children__translator_user_dt = html.dt(gettext('Translator')),
             children__translator_user_dd = html.dd(translator.user),
             children__translator_language_dt = html.dt(gettext('Language')),
-            children__translator_language_dd = html.dd(gettext(translator.language)),
+            children__translator_language_dd = html.dd(gettext(str(translator.language))),
             children__translator_created_dt = html.dt(gettext('Created')),
-            children__translator_created_dd = html.dd(gettext(translator.created)),
+            children__translator_created_dd = html.dd(translator.created),
             children__translator_creator_dt = html.dt(gettext('Creator')),
             children__translator_creator_dd = html.dd(translator.creator),
             children__translator_modified_dt = html.dt(gettext('Modified')),
-            children__translator_modified_dd = html.dd(gettext(translator.modified)),
+            children__translator_modified_dd = html.dd(translator.modified),
             children__translator_modifier_dt = html.dt(gettext('Modifier')),
             children__translator_modifier_dd = html.dd(translator.modifier),
         )
