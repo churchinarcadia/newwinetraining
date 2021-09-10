@@ -1,9 +1,9 @@
 from django.http.response import Http404
 from django.shortcuts import render, get_object_or_404
 
-from django.http import HttpResponseRedirect
+#from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.utils import timezone
+#from django.utils import timezone
 
 from django.contrib import messages
 from django.utils.translation import gettext
@@ -29,7 +29,8 @@ from trainings.models import Term, TrainingMeeting, Text
 
 def language_index(request):
     
-    if request.user.has_staff_perms == False:
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
         raise Http404
     
     class LanguageIndexPage(Page):
@@ -61,6 +62,10 @@ def language_index(request):
     return LanguageIndexPage()
 
 def language_view(request, language_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     language = get_object_or_404(Language, pk = language_id)
     
@@ -201,6 +206,10 @@ def language_view(request, language_id):
 
 def language_add(request):
     
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = Language,
         auto__include = ['language', 'code'],
@@ -209,6 +218,10 @@ def language_add(request):
     )
 
 def language_edit(request, language_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = Language,
@@ -219,6 +232,10 @@ def language_edit(request, language_id):
     )
 
 def language_delete(request, language_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class LangaugeDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Language'))
@@ -233,6 +250,10 @@ def language_delete(request, language_id):
     return LangaugeDeleteTemp()
 
 def translation_index(request):
+    
+    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TranslationIndexPage(Page):
         
@@ -267,6 +288,10 @@ def translation_index(request):
     return TranslationIndexPage()
 
 def translation_view(request, translation_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     translation = get_object_or_404(Translation, pk = translation_id)
 
@@ -345,6 +370,10 @@ def translation_view(request, translation_id):
 
 def translation_add(request):
     
+    allowed_roles = ['Translator', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = Translation,
         auto__include = ['language', 'text', 'content'],
@@ -353,6 +382,10 @@ def translation_add(request):
     )
 
 def translation_edit(request, translation_id):
+    
+    allowed_roles = ['Translator', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = Translation,
@@ -363,6 +396,10 @@ def translation_edit(request, translation_id):
     )
 
 def translation_delete(request, translation_id):
+    
+    allowed_roles = ['Translator', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TranslationDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Translation'))
@@ -377,6 +414,10 @@ def translation_delete(request, translation_id):
     return TranslationDeleteTemp()
 
 def translator_index(request):
+    
+    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TranslatorIndexPage(Page):
         
@@ -407,6 +448,10 @@ def translator_index(request):
     return TranslatorIndexPage()
 
 def translator_view(request, translator_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     translator = get_object_or_404(Translator, pk = translator_id)
 
@@ -488,6 +533,10 @@ def translator_view(request, translator_id):
 
 def translator_add(request):
     
+    allowed_roles = ['Training Adminstrator', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = Translator,
         auto__include = ['user', 'language'],
@@ -496,6 +545,10 @@ def translator_add(request):
     )
 
 def translator_edit(request, translator_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = Translator,
@@ -506,6 +559,10 @@ def translator_edit(request, translator_id):
     )
 
 def translator_delete(request, translator_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TranslatorDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Translator'))

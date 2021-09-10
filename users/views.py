@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
-from django.utils import timezone
+#from django.utils import timezone
 
 from django.contrib.auth import authenticate, login, logout
 
@@ -28,7 +28,146 @@ from trainings.models import Registration, UserExercise
 
 # Create your views here.
 
+def group_index(request):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
+    class GroupIndexPage(Page):
+        
+        page_title = html.h1(gettext('Groups'))
+        
+        instructions = html.p(gettext('Click on the group name to view details about that user type, as well as any associated data.'))
+        
+        table = Table(
+            auto__model = Group,
+            title = None,
+            columns__name = Column(
+                cell__url = lambda row, **_: reverse('users:group_view', args = (row.pk,))
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = gettext('Edit'),
+                cell__url = lambda row, **_: reverse('users:group_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = gettext('Group Index | New Wine Training'),
+            )
+    
+    return GroupIndexPage()
+
+def group_view(request, group_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
+    group = get_object_or_404(Group, pk = group_id)
+    
+    class GroupViewPage(Page):
+        
+        h1 = html.h1(gettext('Group View: ' + group.name))
+        
+        group_h2 = html.h2(gettext('Details'))
+        dl = html.dl(
+            children__group_id_dt = html.dt('ID'),
+            children__group_id_dd = html.dd(group.id),
+            children__group_name_dt = html.dt(gettext('Name')),
+            children__group_name_dd = html.dd(gettext(group.name)),
+            children__group_name_dt = html.dt(gettext('Permissions')),
+            children__group_name_dd = html.dd(gettext(', '.join(list(group.permissions.values_list('name', flat = True))))),
+        )
+        
+        hr1 = html.hr()
+        
+        users_h2 = html.h2(gettext('Users'))
+        users = group.user_set.all()
+        
+        users_table = Table(
+            auto__model = User,
+            rows = users,
+            title = None,
+            empty_message = gettext('No users'),
+            auto__exclude = ['phone_number', 'email'],
+            columns__first_name = Column(
+                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+            ),
+            columns__last_name = Column(
+                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+            ),
+            columns__chinese_name = Column(
+                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+            ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                cell__value = gettext('Edit'),
+                cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
+            ),
+        )
+        
+        class Meta:
+            context = dict(
+                html_title = gettext('Group View | New Wine Training'),
+            )
+    
+    return GroupViewPage()
+
+def group_add(request):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
+    return Form.create(
+        auto__model = Group,
+        auto__include = ['name', 'description', 'active'],
+        extra__redirect_to = reverse('users:group_index'),
+#        context__html_title = 'Group Create | New Wine Training',
+    )
+
+def group_edit(request, group_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
+    return Form.edit(
+        auto__model = Group,
+        auto__instance = Group.objects.get(id = group_id),
+        auto__include = ['name', 'description', 'active'],
+        extra__redirect_to = reverse('users:group_index'),
+#        context__html_title = 'Group Edit | New Wine Training',
+    )
+
+def group_delete(request, group_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
+    class GroupDeleteTemp(Page):
+        page_title = html.h1(gettext('Delete Group'))
+        additional_spacing = html.p('')
+        temp_disabled = html.h3(gettext('This function is disabled for now.'))
+        
+        class Meta:
+            context = dict(
+                html_title = gettext('Group Delete | New Wine Training'),
+            )
+    
+    return GroupDeleteTemp()
+
 def usertype_index(request):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class UserTypeIndexPage(Page):
         
@@ -58,6 +197,10 @@ def usertype_index(request):
     return UserTypeIndexPage()
 
 def usertype_view(request, usertype_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     usertype = get_object_or_404(UserType, pk = usertype_id)
     
@@ -122,6 +265,10 @@ def usertype_view(request, usertype_id):
 
 def usertype_add(request):
     
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = UserType,
         auto__include = ['name', 'description', 'active'],
@@ -130,6 +277,10 @@ def usertype_add(request):
     )
 
 def usertype_edit(request, usertype_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = UserType,
@@ -140,6 +291,10 @@ def usertype_edit(request, usertype_id):
     )
 
 def usertype_delete(request, usertype_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class UserTypeDeleteTemp(Page):
         page_title = html.h1(gettext('Delete User Type'))
@@ -154,6 +309,10 @@ def usertype_delete(request, usertype_id):
     return UserTypeDeleteTemp()
 
 def locality_index(request):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class LocalityIndexPage(Page):
         
@@ -183,6 +342,10 @@ def locality_index(request):
     return LocalityIndexPage()
 
 def locality_view(request, locality_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     locality = get_object_or_404(Locality, pk = locality_id)
 
@@ -245,6 +408,10 @@ def locality_view(request, locality_id):
 
 def locality_add(request):
     
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = Locality,
         auto__include = ['locality', 'active'],
@@ -253,6 +420,10 @@ def locality_add(request):
     )
 
 def locality_edit(request, locality_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = Locality,
@@ -263,6 +434,10 @@ def locality_edit(request, locality_id):
     )
 
 def locality_delete(request, locality_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class LocalityDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Locality'))
@@ -277,6 +452,10 @@ def locality_delete(request, locality_id):
     return LocalityDeleteTemp()
 
 def user_index(request):
+    
+    allowed_roles = ['District Responsible', 'Church Responsible', 'Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class UserIndexPage(Page):
         
@@ -543,6 +722,10 @@ def user_edit(request, user_id):
     )
 
 def user_delete(request, user_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class UserDeleteTemp(Page):
         page_title = html.h1(gettext('Delete User'))

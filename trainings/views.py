@@ -1,8 +1,10 @@
+from django.http.response import Http404
+
 from django.shortcuts import render, get_object_or_404
 
-from django.http import HttpResponseRedirect
+#from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.utils import timezone
+#from django.utils import timezone
 
 from django.contrib import messages
 from django.utils.translation import gettext
@@ -25,6 +27,10 @@ from users.models import User
 # Create your views here.
 
 def term_index(request):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TermIndexPage(Page):
     
@@ -58,6 +64,10 @@ def term_index(request):
     return TermIndexPage()
 
 def term_view(request, term_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     term = get_object_or_404(Term, pk = term_id)
 
@@ -163,6 +173,10 @@ def term_view(request, term_id):
 
 def term_add(request):
     
+    allowed_roles = ['Training Adminstrator', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = Term,
         auto__include = ['year', 'term', 'language', 'start_date', 'end_date'],
@@ -171,6 +185,10 @@ def term_add(request):
     )
 
 def term_edit(request, term_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = Term,
@@ -181,6 +199,10 @@ def term_edit(request, term_id):
     )
 
 def term_delete(request, term_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TermDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Term'))
@@ -193,6 +215,10 @@ def term_delete(request, term_id):
             )
 
 def exercisetype_index(request):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class ExerciseTypeIndexPage(Page):
         
@@ -222,6 +248,10 @@ def exercisetype_index(request):
     return ExerciseTypeIndexPage()
 
 def exercisetype_view(request,exercisetype_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     exercisetype = get_object_or_404(ExerciseType, pk = exercisetype_id)
 
@@ -303,6 +333,10 @@ def exercisetype_view(request,exercisetype_id):
 
 def exercisetype_add(request):
     
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = ExerciseType,
         auto__include = ['name', 'description'],
@@ -311,6 +345,10 @@ def exercisetype_add(request):
     )
 
 def exercisetype_edit(request, exercisetype_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = ExerciseType,
@@ -321,6 +359,10 @@ def exercisetype_edit(request, exercisetype_id):
     )
 
 def exercisetype_delete(request, exercisetype_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class ExerciseTypeDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Exercise Type'))
@@ -335,6 +377,10 @@ def exercisetype_delete(request, exercisetype_id):
     return ExerciseTypeDeleteTemp()
 
 def recordinglocation_index(request):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class RecordingLocationIndexPage(Page):
         
@@ -364,6 +410,10 @@ def recordinglocation_index(request):
     return RecordingLocationIndexPage()
 
 def recordinglocation_view(request, recordinglocation_id):
+    
+    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     recordinglocation = get_object_or_404(RecordingLocation, pk = recordinglocation_id)
     
@@ -425,6 +475,10 @@ def recordinglocation_view(request, recordinglocation_id):
 
 def recordinglocation_add(request):
     
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = RecordingLocation,
         auto__include = ['location', 'code_before_url', 'code_after_url', 'url_identifier', 'notes'],
@@ -433,6 +487,10 @@ def recordinglocation_add(request):
     )
 
 def recordinglocation_edit(request, recordinglocation_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = RecordingLocation,
@@ -443,6 +501,10 @@ def recordinglocation_edit(request, recordinglocation_id):
     )
 
 def recordinglocation_delete(request, recordinglocation_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class RecordingLocationDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Recording Location'))
@@ -457,6 +519,10 @@ def recordinglocation_delete(request, recordinglocation_id):
     return RecordingLocationDeleteTemp()
 
 def registration_index(request):
+    
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Trainer', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class RegistrationIndexPage(Page):
         
@@ -487,6 +553,10 @@ def registration_index(request):
     return RegistrationIndexPage()
 
 def registration_view(request, registration_id):
+    
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Trainer', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     registration = get_object_or_404(Registration, pk = registration_id)
 
@@ -609,6 +679,10 @@ def registration_add(request):
 
 def registration_edit(request, registration_id):
     
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.edit(
         auto__model = Registration,
         auto__instance = Registration.objects.get(id = registration_id),
@@ -618,6 +692,14 @@ def registration_edit(request, registration_id):
     )
 
 def registration_delete(request, registration_id):
+    
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class RegistrationDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Registration'))
@@ -632,6 +714,10 @@ def registration_delete(request, registration_id):
     return RegistrationDeleteTemp()
 
 def trainingmeeting_index(request):
+    
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Trainer', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TrainingMeetingIndexPage(Page):
         
@@ -661,6 +747,10 @@ def trainingmeeting_index(request):
     return TrainingMeetingIndexPage()
 
 def trainingmeeting_view(request, trainingmeeting_id):
+    
+    allowed_roles = ['Training Adminstrator','Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     trainingmeeting = get_object_or_404(TrainingMeeting, pk = trainingmeeting_id)
     
@@ -776,6 +866,10 @@ def trainingmeeting_view(request, trainingmeeting_id):
 
 def trainingmeeting_add(request):
     
+    allowed_roles = ['Training Adminstrator','Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = TrainingMeeting,
         auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'notes'],
@@ -784,6 +878,10 @@ def trainingmeeting_add(request):
     )
 
 def trainingmeeting_edit(request, trainingmeeting_id):
+    
+    allowed_roles = ['Training Adminstrator','Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = TrainingMeeting,
@@ -794,6 +892,10 @@ def trainingmeeting_edit(request, trainingmeeting_id):
     )
 
 def trainingmeeting_delete(request, trainingmeeting_id):
+    
+    allowed_roles = ['Training Adminstrator','Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TrainingMeetingDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Training Meeting'))
@@ -808,6 +910,10 @@ def trainingmeeting_delete(request, trainingmeeting_id):
     return TrainingMeetingDeleteTemp()
 
 def userexercise_index(request):
+    
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Trainer', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class UserExerciseIndexPage(Page):
         
@@ -840,6 +946,10 @@ def userexercise_index(request):
     return UserExerciseIndexPage()
 
 def userexercise_view(request, userexercise_id):
+    
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Trainer', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     userexercise = get_object_or_404(UserExercise, pk = userexercise_id)
 
@@ -922,6 +1032,10 @@ def userexercise_view(request, userexercise_id):
 
 def userexercise_add(request):
     
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = UserExercise,
         auto__include = ['date', 'user', 'exercisetypes'],
@@ -930,6 +1044,10 @@ def userexercise_add(request):
     )
 
 def userexercise_edit(request, userexercise_id):
+    
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = UserExercise,
@@ -940,6 +1058,10 @@ def userexercise_edit(request, userexercise_id):
     )
 
 def userexercise_delete(request, userexercise_id):
+    
+    allowed_roles = ['Trainee', 'District Responsible', 'Church Responsible', 'Training Adminstrator', 'Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class UserExerciseDeleteTemp(Page):
         page_title = html.h1(gettext('Delete User Exercise'))
@@ -954,6 +1076,10 @@ def userexercise_delete(request, userexercise_id):
     return UserExerciseDeleteTemp()
 
 def text_index(request):
+    
+    allowed_roles = ['Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TextIndexPage(Page):
         
@@ -983,6 +1109,10 @@ def text_index(request):
     return TextIndexPage()
 
 def text_view(request, text_id):
+    
+    allowed_roles = ['Staff', 'Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     text = get_object_or_404(Text, pk = text_id)
 
@@ -1038,6 +1168,10 @@ def text_view(request, text_id):
 
 def text_add(request):
     
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
+    
     return Form.create(
         auto__model = Text,
         auto__include = ['name', 'description'],
@@ -1046,6 +1180,10 @@ def text_add(request):
     )
 
 def text_edit(request, text_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     return Form.edit(
         auto__model = Text,
@@ -1056,6 +1194,10 @@ def text_edit(request, text_id):
     )
 
 def text_delete(request, text_id):
+    
+    allowed_roles = ['Superuser']
+    if request.user.has_role(allowed_roles) == False:
+        raise Http404
     
     class TextDeleteTemp(Page):
         page_title = html.h1(gettext('Delete Text'))
