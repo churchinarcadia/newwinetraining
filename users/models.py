@@ -162,9 +162,15 @@ class User(AbstractBaseUser):
         registered_this_term = self.registration_users.filter(pk = Term.objects.current_terms())
         registered_last_term = self.registration_users.filter(pk = Term.objects.last_terms())
         
-        if not registered_this_term.exists() and not registered_last_term.exists():
+        if (Term.objects.current_terms.exists() and not registered_this_term.exists()) or (not Term.objects.current_term.exists() and not registered_last_term.exists()):
             if 'Trainee' in roles:
                 roles.remove('Trainee')
+        
+        if self.has_staff_perms:
+            roles += 'Staff'
+        
+        if self.has_superuser_perms:
+            roles += 'Superuser'
             
         if target == '' or len(target.intersection(roles)) > 0:
             return True
