@@ -12,17 +12,29 @@ from dateutil.relativedelta import relativedelta
 # Create your models here.
 
 class TermManager(models.Manager):
-    def current_terms(self):
-        return super(TermManager, self).get_queryset().filter(start_date < timezone.now(), end_date > timezone.now()).values_list('id', flat = True)
+    def current_terms(self, language_id = None):
+        conditions = 'start_date < timezone.now(), end_date > timezone.now()'
+        if language_id != None:
+            conditions += ', language_id = ' + language_id
+            
+        return super(TermManager, self).get_queryset().filter(conditions).values_list('id', flat = True)
     
-    def current_or_future_terms(self):
-        if len(super(TermManager, self).current_terms()) > 0:
-            return super(TermManager, self).current_terms()
+    def current_or_future_terms(self, language_id = None):
+        conditions = 'timezone.now()< start_date < timezone.now() + relativedelta(months = +6)'
+        if language_id != None:
+            conditions += ', language_id = ' + language_id
+        
+        if len(super(TermManager, self).current_terms(language_id)) > 0:
+            return super(TermManager, self).current_terms(language_id)
         else:
-            return super(TermManager, self).get_queryset().filter(timezone.now()< start_date < timezone.now() + relativedelta(months = +6)).values_list('id', flat = True)
+            return super(TermManager, self).get_queryset().filter(conditions).values_list('id', flat = True)
     
-    def last_terms(self):
-        return super(TermManager, self).get_queryset().filter(timezone.now() - relativedelta(months = -6) < start-date < timezone.now()).values_list('id', flat = True)
+    def last_terms(self, language_id = None):
+        conditions = 'timezone.now() - relativedelta(months = -6) < start-date < timezone.now()'
+        if language_id != None:
+            conditions += ', language_id = ' + language_id
+        
+        return super(TermManager, self).get_queryset().filter(conditions).values_list('id', flat = True)
 
 class Term(models.Model):
     term = models.CharField(max_length = 10, choices = [('Fall',gettext('Fall')),('Spring',gettext('Spring'))], verbose_name = gettext('Term'))

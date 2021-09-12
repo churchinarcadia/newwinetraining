@@ -19,11 +19,11 @@ from iommi import (
     Field,
 )
 
-#from newwinetraining.views import save_post_handler
-
 from .models import Language, Translation, Translator
 
 from trainings.models import Term, TrainingMeeting, Text
+
+from .functions import translation_index_perm, translation_table_rows
 
 # Create your views here.
 
@@ -210,10 +210,13 @@ def language_add(request):
     if request.user.has_role(allowed_roles) == False:
         raise Http404
     
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
+    
     return Form.create(
         auto__model = Language,
         auto__include = ['language', 'code'],
-        extra__redirect_to = reverse('languages:language_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'Language Create | New Wine Training',
     )
 
@@ -223,11 +226,14 @@ def language_edit(request, language_id):
     if request.user.has_role(allowed_roles) == False:
         raise Http404
     
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
+    
     return Form.edit(
         auto__model = Language,
         auto__instance = Language.objects.get(id = language_id),
         auto__include = ['language', 'code'],
-        extra__redirect_to = reverse('languages:language_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'Language Edit | New Wine Training',
     )
 
@@ -263,15 +269,18 @@ def translation_index(request):
     
         table = Table(
             auto__model = Translation,
+            auto__row = Translation.objects.filter(translation_rows()),
             title = None,
             columns__text = Column(
                 display_name = gettext('Text'),
+                filter__include = True,
                 cell__url = lambda row, **_: reverse('languages:translation_view', args = (row.pk,)),
             ),
             columns__content = Column(
                 display_name = gettext('Translation'),
                 cell__value = lambda row, **_: row.content[0 : 50] + '...' if len(row.content) > 50 else row.content
             ),
+            columns__language__filter__include = True,
             columns__edit = Column(
                 attr = '',
                 display_name = '',
