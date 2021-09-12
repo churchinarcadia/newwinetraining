@@ -1,6 +1,8 @@
 from django.http.response import Http404
 
-from .models import Language, Translator, Translation
+from .models import Language
+
+from trainings.functions import current_terms, last_terms
 
 def language_index_perm(request):
     """
@@ -208,12 +210,40 @@ def translation_table_rows(request, language_id):
 
 def language_choices(request):
     
-    base_roles = ['Translator']
     admin_roles = ['Staff', 'Superuser']
     
     if request.user.has_role(admin_roles):
         conditions = ''
-    elif request.use.has_role(base_roles):
+    elif request.user.has_role(['Translator']):
         conditions = 'id = ' + request.user.translator_users.language_id
-    
+    elif request.user.has_role(['Training Adminstrator']):
+        current_registration_language = request.user.registration_users.values_list('language_id', term_id = current_terms()).distinct()
+        past_registration_language = request.user.registration_users.values_list('language_id', term_id = last_terms()).distinct()
+        
+        if current_registration_language.exists():
+            conditions = 'id = ' + current_registration_language
+        elif past_registration_language.exists():
+            conditions = 'id = ' + past_registration_language
+        else:
+            conditions = 'id = ' + request.user.language_id
+            
     return Language.objects.filter(conditions)
+
+def language_choice_initial(request, translation = False):
+    if translation:
+        if not request.user.has_role(['Translator']) or not request.user.translation_users.exists():
+            raise Http404
+        else:
+            return request.user.translator_users.language
+    else:
+        current_registration_language = request.user.registration_users.values_list('language_id', term_id = current_terms()).distinct()
+        past_registration_language = request.user.registration_users.values_list('language_id', term_id = last_terms()).distinct()
+        
+        if current_registration_language.exists():
+            conditions = 'id = ' + current_registration_language
+        elif past_registration_language.exists():
+            conditions = 'id = ' + past_registration_language
+        else:
+            conditions = 'id = ' + request.user.language_id
+            
+        return Language.objects.get(conditions)

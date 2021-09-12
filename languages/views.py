@@ -26,7 +26,9 @@ from trainings.models import Term, TrainingMeeting, Text
 from .functions import language_index_perm, language_view_perm, language_add_perm, language_edit_perm, language_delete_perm
 from .functions import translation_index_perm, translation_view_perm, translation_add_perm, translation_edit_perm, translation_delete_perm
 from .functions import translator_index_perm, translator_view_perm, translator_add_perm, translator_edit_perm, translator_delete_perm
-from .functions import translation_table_rows, language_choices
+from .functions import translation_table_rows, language_choices, language_choice_initial
+
+from trainings.functions import term_index_perm, term_edit_perm, trainingmeeting_index_perm, trainingmeeting_edit_perm, text_index_perm, text_edit_perm
 
 # Create your views here.
 
@@ -581,7 +583,13 @@ def translator_add(request):
     
     return Form.create(
         auto__model = Translator,
-        auto__include = ['user', 'language'],
+        auto__include = ['user'],
+        fields__language = Field(
+            include = True,
+            initial = language_choice_initial,
+            choices = language_choices,
+            editable = lambda language_choices, **_: len(language_choices) > 1,
+        ),
         extra__redirect_to = referer,
 #        context__html_title = 'Translator Create | New Wine Training',
     )
@@ -597,7 +605,11 @@ def translator_edit(request, translator_id):
     return Form.edit(
         auto__model = Translator,
         auto__instance = Translator.objects.get(id = translator_id),
-        auto__include = ['user', 'language'],
+        auto__include = ['user'],
+        fields__language = Field(
+            include = True,
+            editable = lambda language_choices, **_: len(language_choices) > 1,
+        ),
         extra__redirect_to = referer,
 #        context__html_title = 'Translator Edit | New Wine Training',
     )
