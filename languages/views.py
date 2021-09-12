@@ -48,17 +48,14 @@ def language_index(request):
                 #cell__url = lambda row, **_: row.get_absolute_url(),
                 cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,))
             ),
+            columns__edit = Column(
+                attr = '',
+                display_name = '',
+                include = language_edit_perm,
+                cell__value = gettext('Edit'),
+                cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
+            ),
         )
-        
-        if language_edit_perm:
-            table += Table(
-                columns__edit = Column(
-                    attr = '',
-                    display_name = '',
-                    cell__value = gettext('Edit'),
-                    cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
-                ),
-            )
         
         class Meta:
             context = dict(
