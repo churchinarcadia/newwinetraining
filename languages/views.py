@@ -311,7 +311,7 @@ def translation_view(request, translation_id):
     translation = get_object_or_404(Translation, pk = translation_id)
 
     class TranslationViewPage(Page):
-        #h1 = html.h1('NewWineTraining')
+        
         h1 = html.h1(gettext('Translation View'))
 
         translation_h2 = html.h2(gettext('Details'))
@@ -408,11 +408,14 @@ def translation_edit(request, translation_id):
     if not translation_edit_perm():
         raise Http404
     
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
+    
     return Form.edit(
         auto__model = Translation,
         auto__instance = Translation.objects.get(id = translation_id),
-        auto__include = ['language', 'text', 'content'],
-        extra__redirect_to = reverse('languages:translation_index')
+        auto__include = ['text', 'content'],
+        extra__redirect_to = referer,
 #        context__html_title = 'Translation Edit | New Wine Training',
     )
 
@@ -449,7 +452,7 @@ def translator_index(request):
             title = None,
             columns__user = Column(
                 display_name = gettext('Translator'),
-                 cell__url = lambda row, **_: reverse('languages:translator_view', args = (row.pk,))
+                cell__url = lambda row, **_: reverse('languages:translator_view', args = (row.pk,))
             ),
             columns__edit = Column(
                 attr = '',
@@ -495,52 +498,56 @@ def translator_view(request, translator_id):
             children__translator_modifier_dd = html.dd(translator.modifier),
         )
         
-        hr1 = html.hr()
+        if language_index_perm():
         
-        language_h2 = html.h2(gettext('Language'))
-        languages = Language.objects.filter(pk = translator.language.id)
+            hr1 = html.hr()
+            
+            language_h2 = html.h2(gettext('Language'))
+            languages = Language.objects.filter(pk = translator.language.id)
+            
+            languages_table = Table(
+                auto__model = Language,
+                rows = languages,
+                title = None,
+                empty_message = gettext('No languages'),
+                columns__language = Column(
+                    cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,)),
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
+                ),
+            )
         
-        languages_table = Table(
-            auto__model = Language,
-            rows = languages,
-            title = None,
-            empty_message = gettext('No languages'),
-            columns__language = Column(
-                cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,)),
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
-            ),
-        )
+        if translation_index_perm():
         
-        hr2 = html.hr()
-        
-        translation_h2 = html.h2(gettext('Translations'))
-        translations = Translation.objects.filter(Q(creator__id = translator.user.id) | Q(modifier__id = translator.user.id))
-        
-        table = Table(
-            auto__model = Translation,
-            rows = translations,
-            title = None,
-            empty_message = gettext('No translations'),
-            columns__text = Column(
-                display_name = gettext('Text'),
-                cell__url = lambda row, **_: reverse('languages:translation_view', args = (row.pk,)),
-            ),
-            columns__content = Column(
-                display_name = gettext('Translation'),
-                cell__value = lambda row, **_: row.content[0 : 50] + '...' if len(row.content) > 50 else row.content
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('languages:translation_edit', args = (row.pk,)),
-            ),
-        )
+            hr2 = html.hr()
+            
+            translation_h2 = html.h2(gettext('Translations'))
+            translations = Translation.objects.filter(Q(creator__id = translator.user.id) | Q(modifier__id = translator.user.id))
+            
+            table = Table(
+                auto__model = Translation,
+                rows = translations,
+                title = None,
+                empty_message = gettext('No translations'),
+                columns__text = Column(
+                    display_name = gettext('Text'),
+                    cell__url = lambda row, **_: reverse('languages:translation_view', args = (row.pk,)),
+                ),
+                columns__content = Column(
+                    display_name = gettext('Translation'),
+                    cell__value = lambda row, **_: row.content[0 : 50] + '...' if len(row.content) > 50 else row.content
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('languages:translation_edit', args = (row.pk,)),
+                ),
+            )
 
         class Meta:
             context = dict(
@@ -554,10 +561,13 @@ def translator_add(request):
     if not translator_add_perm():
         raise Http404
     
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
+    
     return Form.create(
         auto__model = Translator,
         auto__include = ['user', 'language'],
-        extra__redirect_to = reverse('languages:translator_index')
+        extra__redirect_to = referer,
 #        context__html_title = 'Translator Create | New Wine Training',
     )
 
@@ -566,11 +576,14 @@ def translator_edit(request, translator_id):
     if not translator_edit_perm():
         raise Http404
     
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
+    
     return Form.edit(
         auto__model = Translator,
         auto__instance = Translator.objects.get(id = translator_id),
         auto__include = ['user', 'language'],
-        extra__redirect_to = reverse('languages:translator_index')
+        extra__redirect_to = referer,
 #        context__html_title = 'Translator Edit | New Wine Training',
     )
 
