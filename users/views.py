@@ -26,12 +26,20 @@ from .models import UserType, User, Locality
 from languages.models import Language, Translator
 from trainings.models import Registration, UserExercise
 
+from .functions import group_index_perm, group_view_perm, group_add_perm, group_edit_perm, group_delete_perm
+from .functions import usertype_index_perm, usertype_view_perm, usertype_add_perm, usertype_edit_perm, usertype_delete_perm
+from .functions import locality_index_perm, locality_view_perm, locality_add_perm, locality_edit_perm, locality_delete_perm
+from .functions import user_index_perm, user_view_perm, user_add_perm, user_edit_perm, user_delete_perm
+#from .functions import 
+
+from languages.functions import language_index_perm, language_edit_perm, translator_index_perm, translator_edit_perm
+from trainings.functions import registration_index_perm, registration_edit_perm, userexercise_index_perm, userexercise_edit_perm
+
 # Create your views here.
 
 def group_index(request):
     
-    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not group_index_perm():
         raise Http404
     
     class GroupIndexPage(Page):
@@ -49,6 +57,7 @@ def group_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
+                include = group_edit_perm,
                 cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('users:group_edit', args = (row.pk,)),
             ),
@@ -63,8 +72,7 @@ def group_index(request):
 
 def group_view(request, group_id):
     
-    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not group_view_perm():
         raise Http404
     
     group = get_object_or_404(Group, pk = group_id)
@@ -83,33 +91,36 @@ def group_view(request, group_id):
             children__group_name_dd = html.dd(gettext(', '.join(list(group.permissions.values_list('name', flat = True))))),
         )
         
-        hr1 = html.hr()
+        if user_index_perm():
         
-        users_h2 = html.h2(gettext('Users'))
-        users = group.user_set.all()
-        
-        users_table = Table(
-            auto__model = User,
-            rows = users,
-            title = None,
-            empty_message = gettext('No users'),
-            auto__exclude = ['phone_number', 'email'],
-            columns__first_name = Column(
-                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
-            ),
-            columns__last_name = Column(
-                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
-            ),
-            columns__chinese_name = Column(
-                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
-            ),
-        )
+            hr1 = html.hr()
+            
+            users_h2 = html.h2(gettext('Users'))
+            users = group.user_set.all()
+            
+            users_table = Table(
+                auto__model = User,
+                rows = users,
+                title = None,
+                empty_message = gettext('No users'),
+                auto__exclude = ['phone_number', 'email'],
+                columns__first_name = Column(
+                    cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+                ),
+                columns__last_name = Column(
+                    cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+                ),
+                columns__chinese_name = Column(
+                    cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    include = user_edit_perm,
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
+                ),
+            )
         
         class Meta:
             context = dict(
@@ -120,35 +131,38 @@ def group_view(request, group_id):
 
 def group_add(request):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not group_add_perm():
         raise Http404
+    
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
     
     return Form.create(
         auto__model = Group,
         auto__include = ['name', 'description', 'active'],
-        extra__redirect_to = reverse('users:group_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'Group Create | New Wine Training',
     )
 
 def group_edit(request, group_id):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not group_edit_perm():
         raise Http404
+    
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
     
     return Form.edit(
         auto__model = Group,
         auto__instance = Group.objects.get(id = group_id),
         auto__include = ['name', 'description', 'active'],
-        extra__redirect_to = reverse('users:group_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'Group Edit | New Wine Training',
     )
 
 def group_delete(request, group_id):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not group_delete_perm():
         raise Http404
     
     class GroupDeleteTemp(Page):
@@ -165,8 +179,7 @@ def group_delete(request, group_id):
 
 def usertype_index(request):
     
-    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not usertype_index_perm():
         raise Http404
     
     class UserTypeIndexPage(Page):
@@ -184,6 +197,7 @@ def usertype_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
+                include = usertype_edit_perm,
                 cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('users:usertype_edit', args = (row.pk,)),
             ),
@@ -198,8 +212,7 @@ def usertype_index(request):
 
 def usertype_view(request, usertype_id):
     
-    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not usertype_view_perm():
         raise Http404
     
     usertype = get_object_or_404(UserType, pk = usertype_id)
@@ -228,33 +241,36 @@ def usertype_view(request, usertype_id):
             children__usertype_modifier_dd = html.dd(usertype.modifier),
         )
         
-        hr1 = html.hr()
+        if user_index_perm():
         
-        users_h2 = html.h2(gettext('Users'))
-        users = usertype.user_usertypes.all()
-        
-        users_table = Table(
-            auto__model = User,
-            rows = users,
-            title = None,
-            empty_message = gettext('No users'),
-            auto__exclude = ['phone_number', 'email'],
-            columns__first_name = Column(
-                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
-            ),
-            columns__last_name = Column(
-                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
-            ),
-            columns__chinese_name = Column(
-                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
-            ),
-        )
+            hr1 = html.hr()
+            
+            users_h2 = html.h2(gettext('Users'))
+            users = usertype.user_usertypes.all()
+            
+            users_table = Table(
+                auto__model = User,
+                rows = users,
+                title = None,
+                empty_message = gettext('No users'),
+                auto__exclude = ['phone_number', 'email'],
+                columns__first_name = Column(
+                    cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+                ),
+                columns__last_name = Column(
+                    cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+                ),
+                columns__chinese_name = Column(
+                    cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    include = usertype_edit_perm,
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
+                ),
+            )
         
         class Meta:
             context = dict(
@@ -265,35 +281,38 @@ def usertype_view(request, usertype_id):
 
 def usertype_add(request):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not usertype_add_perm():
         raise Http404
+    
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
     
     return Form.create(
         auto__model = UserType,
         auto__include = ['name', 'description', 'active'],
-        extra__redirect_to = reverse('users:usertype_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'User Type Create | New Wine Training',
     )
 
 def usertype_edit(request, usertype_id):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not usertype_edit_perm():
         raise Http404
+    
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
     
     return Form.edit(
         auto__model = UserType,
         auto__instance = UserType.objects.get(id = usertype_id),
         auto__include = ['name', 'description', 'active'],
-        extra__redirect_to = reverse('users:usertype_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'User Type Edit | New Wine Training',
     )
 
 def usertype_delete(request, usertype_id):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not usertype_delete_perm():
         raise Http404
     
     class UserTypeDeleteTemp(Page):
@@ -310,8 +329,7 @@ def usertype_delete(request, usertype_id):
 
 def locality_index(request):
     
-    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not locality_index_perm():
         raise Http404
     
     class LocalityIndexPage(Page):
@@ -329,6 +347,7 @@ def locality_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
+                include = locality_edit_perm,
                 cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('users:locality_edit', args = (row.pk,)),
             ),
@@ -343,8 +362,7 @@ def locality_index(request):
 
 def locality_view(request, locality_id):
     
-    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not locality_view_perm():
         raise Http404
     
     locality = get_object_or_404(Locality, pk = locality_id)
@@ -371,33 +389,36 @@ def locality_view(request, locality_id):
             children__locality_modifier_dd = html.dd(locality.modifier),
         )
         
-        hr1 = html.hr()
+        if user_edit_perm():
         
-        users_h2 = html.h2(gettext('Users'))
-        users = locality.user_localities.all()
-        
-        users_table = Table(
-            auto__model = User,
-            rows = users,
-            title = None,
-            empty_message = gettext('No users'),
-            auto__exclude = ['locality'],
-            columns__first_name = Column(
-                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
-            ),
-            columns__last_name = Column(
-                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
-            ),
-            columns__chinese_name = Column(
-                cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
-            ),
-        )
+            hr1 = html.hr()
+            
+            users_h2 = html.h2(gettext('Users'))
+            users = locality.user_localities.all()
+            
+            users_table = Table(
+                auto__model = User,
+                rows = users,
+                title = None,
+                empty_message = gettext('No users'),
+                auto__exclude = ['locality'],
+                columns__first_name = Column(
+                    cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+                ),
+                columns__last_name = Column(
+                    cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+                ),
+                columns__chinese_name = Column(
+                    cell__url = lambda row, **_: reverse('users:user_view', args = (row.pk,)),
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    include = user_edit_perm,
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
+                ),
+            )
         
         class Meta:
             context = dict(
@@ -408,35 +429,38 @@ def locality_view(request, locality_id):
 
 def locality_add(request):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not locality_add_perm():
         raise Http404
+    
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
     
     return Form.create(
         auto__model = Locality,
         auto__include = ['locality', 'active'],
-        extra__redirect_to = reverse('users:locality_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'Locality Create | New Wine Training',
     )
 
 def locality_edit(request, locality_id):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not locality_edit_perm():
         raise Http404
+    
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
     
     return Form.edit(
         auto__model = Locality,
         auto__instance = Locality.objects.get(id = locality_id),
         auto__include = ['locality', 'active'],
-        extra__redirect_to = reverse('users:locality_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'Locality Edit | New Wine Training',
     )
 
 def locality_delete(request, locality_id):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not locality_delete_perm():
         raise Http404
     
     class LocalityDeleteTemp(Page):
@@ -453,8 +477,7 @@ def locality_delete(request, locality_id):
 
 def user_index(request):
     
-    allowed_roles = ['District Responsible', 'Church Responsible', 'Training Adminstrator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not user_index_perm():
         raise Http404
     
     class UserIndexPage(Page):
@@ -462,7 +485,7 @@ def user_index(request):
         page_title = html.h1(gettext('Users'))
 
         instructions = html.p(gettext('Click on the user name to view details about that user, as well as any associated data.'))
-        
+        #TODO auto-filter users based on role
         table = Table(
             auto__model = User,
             title = None,
@@ -479,6 +502,7 @@ def user_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
+                include = user_edit_perm,
                 cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('users:user_edit', args = (row.pk,)),
             ),
@@ -492,6 +516,9 @@ def user_index(request):
     return UserIndexPage()
 
 def user_view(request, user_id):
+    
+    if not user_view_perm():
+        raise Http404
     
     user = get_object_or_404(User, pk = user_id)
 
@@ -541,80 +568,91 @@ def user_view(request, user_id):
             children__user_modifier_dd = html.dd(user.modifier),
         )
         
-        hr1 = html.hr()
+        if locality_index_perm():
         
-        localities_h2 = html.h2(gettext('Locality'))
-        localities = Locality.objects.filter(pk = user.locality.id)
+            hr1 = html.hr()
+            
+            localities_h2 = html.h2(gettext('Locality'))
+            localities = Locality.objects.filter(pk = user.locality.id)
+            
+            localities_table = Table(
+                auto__model = Locality,
+                rows = localities,
+                title = None,
+                empty_message = gettext('No localities'),
+                columns__locality = Column(
+                    cell__url = lambda row, **_: reverse('users:locality_view', args = (row.pk,))
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    include = locality_edit_perm,
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('users:locality_edit', args = (row.pk,)),
+                ),
+            )
         
-        localities_table = Table(
-            auto__model = Locality,
-            rows = localities,
-            title = None,
-            empty_message = gettext('No localities'),
-            columns__locality = Column(
-                cell__url = lambda row, **_: reverse('users:locality_view', args = (row.pk,))
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('users:locality_edit', args = (row.pk,)),
-            ),
-        )
+        if language_index_perm():
         
-        hr2 = html.hr()
+            hr2 = html.hr()
+            
+            languages_h2 = html.h2(gettext('Languages'))
+            languages = Language.objects.filter(pk = user.language.id)
+            
+            languages_table = Table(
+                auto__model = Language,
+                rows = languages,
+                title = None,
+                empty_message = gettext('No languages'),
+                columns__language = Column(
+                    cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,))
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    include = language_edit_perm,
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
+                ),
+            )
         
-        languages_h2 = html.h2(gettext('Languages'))
-        languages = Language.objects.filter(pk = user.language.id)
+        if usertype_index_perm():
         
-        languages_table = Table(
-            auto__model = Language,
-            rows = languages,
-            title = None,
-            empty_message = gettext('No languages'),
-            columns__language = Column(
-                cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,))
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
-            ),
-        )
+            hr3 = html.hr()
+            
+            usertypes_h2 = html.h2(gettext('User Types'))
+            usertypes = user.usertypes.all()
+            
+            usertypes_table = Table(
+                auto__model = UserType,
+                rows = usertypes,
+                title = None,
+                empty_message = gettext('No user types'),
+                columns__name = Column(
+                    cell__url = lambda row, **_: reverse('users:usertype_view', args = (row.pk,))
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    include = usertype_edit_perm,
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('users:usertype_edit', args = (row.pk,)),
+                ),
+            )
         
-        hr3 = html.hr()
+        if group_index_perm():
         
-        usertypes_h2 = html.h2(gettext('User Types'))
-        usertypes = user.usertypes.all()
-        
-        usertypes_table = Table(
-            auto__model = UserType,
-            rows = usertypes,
-            title = None,
-            empty_message = gettext('No user types'),
-            columns__name = Column(
-                cell__url = lambda row, **_: reverse('users:usertype_view', args = (row.pk,))
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('users:usertype_edit', args = (row.pk,)),
-            ),
-        )
-        
-        hr4 = html.hr()
-        
-        groups_h2 = html.h2(gettext('Groups'))
-        groups = user.groups.all()
-        
-        groups_table = Table(
-            auto__model = Group,
-            rows = groups,
-            title = None,
-            empty_message = gettext('No groups'),
-        )
+            hr4 = html.hr()
+            
+            groups_h2 = html.h2(gettext('Groups'))
+            groups = user.groups.all()
+            
+            groups_table = Table(
+                auto__model = Group,
+                rows = groups,
+                title = None,
+                empty_message = gettext('No groups'),
+            )
         
         hr5 = html.hr()
         
@@ -628,71 +666,80 @@ def user_view(request, user_id):
             empty_message = gettext('No user-specific permissions'),
         )
         
-        hr6 = html.hr()
+        if translator_index_perm():
         
-        translators_h2 = html.h2(gettext('Translator'))
-        translators = user.translator_users.all()
+            hr6 = html.hr()
+            
+            translators_h2 = html.h2(gettext('Translator'))
+            translators = user.translator_users.all()
+            
+            translators_table = Table(
+                auto__model = Translator,
+                rows = translators,
+                title = None,
+                empty_message = gettext('No translator roles'),
+                auto__exclude = ['user'],
+                columns__language = Column(
+                    cell__url = lambda row, **_: reverse('languages:translator_view', args = (row.pk,))
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    include = translator_edit_perm,
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('languages:translator_edit', args = (row.pk,)),
+                ),
+            )
         
-        translators_table = Table(
-            auto__model = Translator,
-            rows = translators,
-            title = None,
-            empty_message = gettext('No translator roles'),
-            auto__exclude = ['user'],
-            columns__language = Column(
-                 cell__url = lambda row, **_: reverse('languages:translator_view', args = (row.pk,))
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('languages:translator_edit', args = (row.pk,)),
-            ),
-        )
+        if registration_index_perm():
         
-        hr7 = html.hr()
+            hr7 = html.hr()
+            
+            registrations_h2 = html.h2(gettext('Registrations'))
+            registrations = user.registration_users.all()
+            
+            registrations_table = Table(
+                auto__model = Registration,
+                rows = registrations,
+                title = None,
+                empty_message = gettext('No registrations'),
+                auto__exclude = ['user'],
+                columns__term = Column(
+                    cell__url = lambda row, **_: reverse('trainings:registration_view', args = (row.pk,))
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    include = registration_edit_perm,
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('trainings:registration_edit', args = (row.pk,)),
+                ),
+            )
         
-        registrations_h2 = html.h2(gettext('Registrations'))
-        registrations = user.registration_users.all()
+        if userexercise_index_perm():
         
-        registrations_table = Table(
-            auto__model = Registration,
-            rows = registrations,
-            title = None,
-            empty_message = gettext('No registrations'),
-            auto__exclude = ['user'],
-            columns__term = Column(
-                cell__url = lambda row, **_: reverse('trainings:registration_view', args = (row.pk,))
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('trainings:registration_edit', args = (row.pk,)),
-            ),
-        )
-        
-        hr8 = html.hr()
-        
-        userexercises_h2 = html.h2(gettext('Exercises'))
-        userexercises = user.userexercise_users.all()
-        
-        userexercises_table = Table(
-            auto__model = UserExercise,
-            rows = userexercises,
-            title = None,
-            empty_message = gettext('No user exercises'),
-            auto__exclude = ['user'],
-            columns__date = Column(
-                cell__url = lambda row, **_: reverse('trainings:userexercise_view', args = (row.pk,))
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('trainings:userexercise_edit', args = (row.pk,)),
-            ),
-        )
+            hr8 = html.hr()
+            
+            userexercises_h2 = html.h2(gettext('Exercises'))
+            userexercises = user.userexercise_users.all()
+            
+            userexercises_table = Table(
+                auto__model = UserExercise,
+                rows = userexercises,
+                title = None,
+                empty_message = gettext('No user exercises'),
+                auto__exclude = ['user'],
+                columns__date = Column(
+                    cell__url = lambda row, **_: reverse('trainings:userexercise_view', args = (row.pk,))
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    include = userexercise_edit_perm,
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('trainings:userexercise_edit', args = (row.pk,)),
+                ),
+            )
         
         class Meta:
             context = dict(
@@ -703,28 +750,39 @@ def user_view(request, user_id):
 
 def user_add(request):
     
+    if not user_add_perm():
+        raise Http404
+    
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
+    
     return Form.create(
         auto__model = User,
         auto__exclude = ['usertypes', 'is_staff', 'is_superuser', 'last_login', 'groups', 'user_permissions', 'created', 'modified', 'modifier'],
-        extra__redirect_to = reverse('users:user_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'User Create | New Wine Training',
 
     )
 
 def user_edit(request, user_id):
     
+    if not user_edit_perm():
+        raise Http404
+    
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
+    
     return Form.edit(
         auto__model = User,
         auto__instance = User.objects.get(id = user_id),
         auto__exclude = ['password', 'last_login', 'created', 'modified', 'modifier'],
-        extra__redirect_to = reverse('users:user_index'),
+        extra__redirect_to = referer,
 #        context__html_title = 'User Edit | New Wine Training',
     )
 
 def user_delete(request, user_id):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not user_delete_perm():
         raise Http404
     
     class UserDeleteTemp(Page):
