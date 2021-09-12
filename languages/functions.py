@@ -146,7 +146,7 @@ def translator_view_perm(request):
         #TODO add logging
         return False
 
-def language_add_perm(request):
+def translator_add_perm(request):
     """
     Analyzes if the user has one of the required roles to see this view. Returns boolean.
     """
@@ -158,7 +158,7 @@ def language_add_perm(request):
         #TODO add logging
         return False
     
-def language_edit_perm(request):
+def translator_edit_perm(request):
     """
     Analyzes if the user has one of the required roles to see this view. Returns boolean.
     """
@@ -170,7 +170,7 @@ def language_edit_perm(request):
         #TODO add logging
         return False
 
-def language_delete_perm(request):
+def translator_delete_perm(request):
     """
     Analyzes if the user has one of the required roles to see this view. Returns boolean.
     """
@@ -206,3 +206,14 @@ def translation_table_rows(request, language_id):
             #TODO add logging and message
             raise Http404
 
+def language_choices(request):
+    
+    base_roles = ['Translator']
+    admin_roles = ['Staff', 'Superuser']
+    
+    if request.user.has_role(admin_roles):
+        conditions = ''
+    elif request.use.has_role(base_roles):
+        conditions = 'id = ' + request.user.translator_users.language_id
+    
+    return Language.objects.filter(conditions)

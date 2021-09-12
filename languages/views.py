@@ -26,7 +26,7 @@ from trainings.models import Term, TrainingMeeting, Text
 from .functions import language_index_perm, language_view_perm, language_add_perm, language_edit_perm, language_delete_perm
 from .functions import translation_index_perm, translation_view_perm, translation_add_perm, translation_edit_perm, translation_delete_perm
 from .functions import translator_index_perm, translator_view_perm, translator_add_perm, translator_edit_perm, translator_delete_perm
-from .functions import translation_table_rows
+from .functions import translation_table_rows, language_choices
 
 # Create your views here.
 
@@ -113,6 +113,7 @@ def language_view(request, language_id):
                 columns__edit = Column(
                     attr = '',
                     display_name = '',
+                    include = translator_edit_perm,
                     cell__value = gettext('Edit'),
                     cell__url = lambda row, **_: reverse('languages:translator_edit', args = (row.pk,)),
                 ),
@@ -142,6 +143,7 @@ def language_view(request, language_id):
                 columns__edit = Column(
                     attr = '',
                     display_name = '',
+                    include = translation_edit_perm,
                     cell__value = gettext('Edit'),
                     cell__url = lambda row, **_: reverse('languages:translation_edit', args = (row.pk,)),
                 ),
@@ -170,6 +172,7 @@ def language_view(request, language_id):
                 columns__edit = Column(
                     attr = '',
                     display_name = '',
+                    include = term_edit_perm,
                     cell__value = gettext('Edit'),
                     cell__url = lambda row, **_: reverse('trainings:term_edit', args = (row.pk,)),
                 ),
@@ -200,6 +203,7 @@ def language_view(request, language_id):
                 columns__edit = Column(
                     attr = '',
                     display_name = '',
+                    include = trainingmeeting_edit_perm,
                     cell__value = gettext('Edit'),
                     cell__url = lambda row, **_: reverse('trainings:trainingmeeting_edit', args = (row.pk,)),
                 ),
@@ -288,6 +292,7 @@ def translation_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
+                include = translation_edit_perm,
                 cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('languages:translation_edit', args = (row.pk,)),
             ),
@@ -349,6 +354,7 @@ def translation_view(request, translation_id):
                 columns__edit = Column(
                     attr = '',
                     display_name = '',
+                    include = text_edit_perm,
                     cell__value = gettext('Edit'),
                     cell__url = lambda row, **_: reverse('trainings:text_edit', args = (row.pk,)),
                 ),
@@ -372,6 +378,7 @@ def translation_view(request, translation_id):
                 columns__edit = Column(
                     attr = '',
                     display_name = '',
+                    include = language_edit_perm,
                     cell__value = gettext('Edit'),
                     cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
                 ),
@@ -394,8 +401,13 @@ def translation_add(request):
     
     return Form.create(
         auto__model = Translation,
-        auto__include = ['language', 'text', 'content'],
-        #TODO filter language choices
+        auto__include = ['text', 'content'],
+        fields__language = Field(
+            include = True,
+            choices = language_choices,
+            initial = request.user.translation_users.language,
+            editable = request.user.has_role(['Superuser']),
+        ),
         extra__redirect_to = referer,
 #        context__html_title = 'Translation Create | New Wine Training',
     )
@@ -412,6 +424,9 @@ def translation_edit(request, translation_id):
         auto__model = Translation,
         auto__instance = Translation.objects.get(id = translation_id),
         auto__include = ['text', 'content'],
+        fields__language = Field(
+            editable = False,
+        ),
         extra__redirect_to = referer,
 #        context__html_title = 'Translation Edit | New Wine Training',
     )
@@ -454,6 +469,7 @@ def translator_index(request):
             columns__edit = Column(
                 attr = '',
                 display_name = '',
+                include = translator_edit_perm,
                 cell__value = gettext('Edit'),
                 cell__url = lambda row, **_: reverse('languages:translator_edit', args = (row.pk,)),
             ),
@@ -513,6 +529,7 @@ def translator_view(request, translator_id):
                 columns__edit = Column(
                     attr = '',
                     display_name = '',
+                    include = language_edit_perm,
                     cell__value = gettext('Edit'),
                     cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
                 ),
@@ -541,6 +558,7 @@ def translator_view(request, translator_id):
                 columns__edit = Column(
                     attr = '',
                     display_name = '',
+                    include = translation_edit_perm,
                     cell__value = gettext('Edit'),
                     cell__url = lambda row, **_: reverse('languages:translation_edit', args = (row.pk,)),
                 ),
