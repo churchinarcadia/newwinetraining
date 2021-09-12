@@ -23,14 +23,16 @@ from .models import Language, Translation, Translator
 
 from trainings.models import Term, TrainingMeeting, Text
 
-from .functions import translation_index_perm, translation_table_rows
+from .functions import language_index_perm, language_view_perm, language_add_perm, language_edit_perm, language_delete_perm
+from .functions import translation_index_perm, translation_view_perm, translation_add_perm, translation_edit_perm, translation_delete_perm
+from .functions import translator_index_perm, translator_view_perm, translator_add_perm, translator_edit_perm, translator_delete_perm
+from .functions import translation_table_rows
 
 # Create your views here.
 
 def language_index(request):
     
-    allowed_roles = ['Training Adminstrator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not language_index_perm():
         raise Http404
     
     class LanguageIndexPage(Page):
@@ -46,13 +48,17 @@ def language_index(request):
                 #cell__url = lambda row, **_: row.get_absolute_url(),
                 cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,))
             ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
-            ),
         )
+        
+        if language_edit_perm:
+            table += Table(
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
+                ),
+            )
         
         class Meta:
             context = dict(
@@ -63,8 +69,7 @@ def language_index(request):
 
 def language_view(request, language_id):
     
-    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not language_view_perm():
         raise Http404
     
     language = get_object_or_404(Language, pk = language_id)
@@ -91,10 +96,10 @@ def language_view(request, language_id):
             children__language_modifier_dd = html.dd(language.modifier),
         )
 
-        hr1 = html.hr()
-
-        if language.language != 'English':
+        if language.language != 'English' and translator_index_perm():
         
+            hr1 = html.hr()
+
             translators_h2 = html.h2(gettext('Translators'))
             translators = language.translator_languages.all()
         
@@ -116,86 +121,92 @@ def language_view(request, language_id):
                 ),
             )
         
+        if translation_index_perm():
+        
             hr2 = html.hr()
 
-        translations_h2 = html.h2(gettext('Translations'))
-        translations = language.translation_languages.all()
+            translations_h2 = html.h2(gettext('Translations'))
+            translations = language.translation_languages.all()
 
-        translations_table = Table(
-            auto__model = Translation,
-            rows = translations,
-            title = None,
-            empty_message = gettext('No translations'),
-            auto__exclude = ['language'],
-            columns__text = Column(
-                display_name = gettext('Text'),
-                cell__url = lambda row, **_: reverse('languages:translation_view', args = (row.pk,)),
-            ),
-            columns__content = Column(
-                display_name = gettext('Translation'),
-                cell__value = lambda row, **_: row.content[0 : 50] + '...' if len(row.content) > 50 else row.content
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('languages:translation_edit', args = (row.pk,)),
-            ),
-        )
+            translations_table = Table(
+                auto__model = Translation,
+                rows = translations,
+                title = None,
+                empty_message = gettext('No translations'),
+                auto__exclude = ['language'],
+                columns__text = Column(
+                    display_name = gettext('Text'),
+                    cell__url = lambda row, **_: reverse('languages:translation_view', args = (row.pk,)),
+                ),
+                columns__content = Column(
+                    display_name = gettext('Translation'),
+                    cell__value = lambda row, **_: row.content[0 : 50] + '...' if len(row.content) > 50 else row.content
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('languages:translation_edit', args = (row.pk,)),
+                ),
+            )
         
-        hr3 = html.hr()
-
-        terms_h2 = html.h2(gettext('Terms'))
-        terms = language.term_languages.all()
-
-        terms_table = Table(
-            auto__model = Term,
-            rows = terms,
-            title = None,
-            empty_message = gettext('No terms'),
-            auto__exclude = ['language'],
-            columns__term = Column(
-                after = 'year',
-                cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
-            ),
-            columns__year = Column(
-                cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('trainings:term_edit', args = (row.pk,)),
-            ),
-        )
+        if term_index_perm():
         
-        hr4 = html.hr()
+            hr3 = html.hr()
 
-        trainingmeetings_h2 = html.h2(gettext('Training Meetings'))
-        trainingmeetings = language.trainingmeeting_languages.all()
+            terms_h2 = html.h2(gettext('Terms'))
+            terms = language.term_languages.all()
 
-        trainingmeetings_table = Table(
-            auto__model = TrainingMeeting,
-            rows = trainingmeetings,
-            title = None,
-            empty_message = gettext('No training meetings'),
-            auto__exclude = ['language'],
-            columns__date = Column(
-                cell__url = lambda row, **_: reverse('trainings:trainingmeeting_view', args = (row.pk,)),
-            ),
-            columns__recording_released_datetime = Column(
-                display_name = gettext('Recording Released'),
-            ),
-            columns__recording_released_by = Column(
-                display_name = gettext('Released By'),
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('trainings:trainingmeeting_edit', args = (row.pk,)),
-            ),
-        )
+            terms_table = Table(
+                auto__model = Term,
+                rows = terms,
+                title = None,
+                empty_message = gettext('No terms'),
+                auto__exclude = ['language'],
+                columns__term = Column(
+                    after = 'year',
+                    cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
+                ),
+                columns__year = Column(
+                    cell__url = lambda row, **_: reverse('trainings:term_view', args = (row.pk,)),
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('trainings:term_edit', args = (row.pk,)),
+                ),
+            )
+        
+        if trainingmeeting_index_perm():
+        
+            hr4 = html.hr()
+
+            trainingmeetings_h2 = html.h2(gettext('Training Meetings'))
+            trainingmeetings = language.trainingmeeting_languages.all()
+
+            trainingmeetings_table = Table(
+                auto__model = TrainingMeeting,
+                rows = trainingmeetings,
+                title = None,
+                empty_message = gettext('No training meetings'),
+                auto__exclude = ['language'],
+                columns__date = Column(
+                    cell__url = lambda row, **_: reverse('trainings:trainingmeeting_view', args = (row.pk,)),
+                ),
+                columns__recording_released_datetime = Column(
+                    display_name = gettext('Recording Released'),
+                ),
+                columns__recording_released_by = Column(
+                    display_name = gettext('Released By'),
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('trainings:trainingmeeting_edit', args = (row.pk,)),
+                ),
+            )
 
         class Meta:
             context = dict(
@@ -206,8 +217,7 @@ def language_view(request, language_id):
 
 def language_add(request):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not language_add_perm():
         raise Http404
     
     if request.method != 'POST':
@@ -222,8 +232,7 @@ def language_add(request):
 
 def language_edit(request, language_id):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not language_edit_perm():
         raise Http404
     
     if request.method != 'POST':
@@ -239,8 +248,7 @@ def language_edit(request, language_id):
 
 def language_delete(request, language_id):
     
-    allowed_roles = ['Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not language_delete_perm():
         raise Http404
     
     class LangaugeDeleteTemp(Page):
@@ -257,8 +265,7 @@ def language_delete(request, language_id):
 
 def translation_index(request):
     
-    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translation_index_perm():
         raise Http404
     
     class TranslationIndexPage(Page):
@@ -269,7 +276,7 @@ def translation_index(request):
     
         table = Table(
             auto__model = Translation,
-            auto__row = Translation.objects.filter(translation_rows()),
+            auto__row = Translation.objects.filter(translation_table_rows()),
             title = None,
             columns__text = Column(
                 display_name = gettext('Text'),
@@ -298,8 +305,7 @@ def translation_index(request):
 
 def translation_view(request, translation_id):
     
-    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translation_view_perm():
         raise Http404
     
     translation = get_object_or_404(Translation, pk = translation_id)
@@ -328,47 +334,51 @@ def translation_view(request, translation_id):
             children__translation_modifier_dd = html.dd(translation.modifier),
         )
         
-        hr1 = html.hr()
+        if text_index_perm():
         
-        text_h2 = html.h2(gettext('Text'))
-        texts = Text.objects.filter(pk = translation.text.id)
+            hr1 = html.hr()
+            
+            text_h2 = html.h2(gettext('Text'))
+            texts = Text.objects.filter(pk = translation.text.id)
+            
+            text_table = Table(
+                auto__model = Text,
+                rows = texts,
+                title = None,
+                empty_message = gettext('No texts'),
+                columns__name = Column(
+                    cell__url = lambda row, **_: reverse('trainings:text_view', args = (row.pk,)),
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('trainings:text_edit', args = (row.pk,)),
+                ),
+            )
         
-        text_table = Table(
-            auto__model = Text,
-            rows = texts,
-            title = None,
-            empty_message = gettext('No texts'),
-            columns__name = Column(
-                cell__url = lambda row, **_: reverse('trainings:text_view', args = (row.pk,)),
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('trainings:text_edit', args = (row.pk,)),
-            ),
-        )
+        if language_index_perm():
         
-        hr2 = html.hr()
-        
-        language_h2 = html.h2(gettext('Language'))
-        languages = Language.objects.filter(pk = translation.language.id)
-        
-        language_table = Table(
-            auto__model = Language,
-            rows = languages,
-            title = None,
-            empty_message = gettext('No languages'),
-            columns__language = Column(
-                cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,)),
-            ),
-            columns__edit = Column(
-                attr = '',
-                display_name = '',
-                cell__value = gettext('Edit'),
-                cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
-            ),
-        )
+            hr2 = html.hr()
+            
+            language_h2 = html.h2(gettext('Language'))
+            languages = Language.objects.filter(pk = translation.language.id)
+            
+            language_table = Table(
+                auto__model = Language,
+                rows = languages,
+                title = None,
+                empty_message = gettext('No languages'),
+                columns__language = Column(
+                    cell__url = lambda row, **_: reverse('languages:language_view', args = (row.pk,)),
+                ),
+                columns__edit = Column(
+                    attr = '',
+                    display_name = '',
+                    cell__value = gettext('Edit'),
+                    cell__url = lambda row, **_: reverse('languages:language_edit', args = (row.pk,)),
+                ),
+            )
         
         class Meta:
             context = dict(
@@ -379,21 +389,23 @@ def translation_view(request, translation_id):
 
 def translation_add(request):
     
-    allowed_roles = ['Translator', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translation_add_perm():
         raise Http404
+    
+    if request.method != 'POST':
+        referer = request.META.get('HTTP_REFERER')
     
     return Form.create(
         auto__model = Translation,
         auto__include = ['language', 'text', 'content'],
-        extra__redirect_to = reverse('languages:translation_index')
+        #TODO filter language choices
+        extra__redirect_to = referer,
 #        context__html_title = 'Translation Create | New Wine Training',
     )
 
 def translation_edit(request, translation_id):
     
-    allowed_roles = ['Translator', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translation_edit_perm():
         raise Http404
     
     return Form.edit(
@@ -406,8 +418,7 @@ def translation_edit(request, translation_id):
 
 def translation_delete(request, translation_id):
     
-    allowed_roles = ['Translator', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translation_delete_perm():
         raise Http404
     
     class TranslationDeleteTemp(Page):
@@ -424,8 +435,7 @@ def translation_delete(request, translation_id):
 
 def translator_index(request):
     
-    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translator_index_perm():
         raise Http404
     
     class TranslatorIndexPage(Page):
@@ -458,8 +468,7 @@ def translator_index(request):
 
 def translator_view(request, translator_id):
     
-    allowed_roles = ['Training Adminstrator', 'Translator', 'Staff', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translator_view_perm():
         raise Http404
     
     translator = get_object_or_404(Translator, pk = translator_id)
@@ -542,8 +551,7 @@ def translator_view(request, translator_id):
 
 def translator_add(request):
     
-    allowed_roles = ['Training Adminstrator', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translator_add_perm():
         raise Http404
     
     return Form.create(
@@ -555,8 +563,7 @@ def translator_add(request):
 
 def translator_edit(request, translator_id):
     
-    allowed_roles = ['Training Adminstrator', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translator_edit_perm():
         raise Http404
     
     return Form.edit(
@@ -569,8 +576,7 @@ def translator_edit(request, translator_id):
 
 def translator_delete(request, translator_id):
     
-    allowed_roles = ['Training Adminstrator', 'Superuser']
-    if request.user.has_role(allowed_roles) == False:
+    if not translator_delete_perm():
         raise Http404
     
     class TranslatorDeleteTemp(Page):
