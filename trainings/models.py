@@ -53,7 +53,7 @@ class Term(models.Model):
     modified = models.DateTimeField(auto_now = True, verbose_name = gettext('Modified'))
     modifier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'term_modifiers', verbose_name = gettext('Modifier'), on_delete = models.RESTRICT, blank = True, null = True)
     
-    objects = TermManager
+#    objects = TermManager
 
     def __str__(self):
         return str(self.year) + ' ' + self.term + ' (' + str(self.language) + ')'
@@ -103,6 +103,7 @@ class TrainingMeeting(models.Model):
     end_time = models.TimeField(verbose_name = gettext('End Time'), blank = True, null = True)
     language = models.ForeignKey('languages.Language', related_name = 'trainingmeeting_languages', verbose_name = gettext('Language'), on_delete = models.RESTRICT)
     location = models.CharField(max_length = 255, verbose_name = gettext('Location'), blank = True)
+    recordinglocation = models.ForeignKey('RecordingLocation', related_name = 'trainingmeeting_recordinglocations', verbose_name = gettext('Recording Location'), blank = True, null = True, on_delete = models.RESTRICT)
     recording_url = models.URLField(max_length = 255, verbose_name = gettext('Recording URL'), blank = True, null = True)
     recording_released_datetime = models.DateTimeField(verbose_name = gettext('Recording Released'), blank = True, null = True)
     recording_released_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'recordingreleased_user', verbose_name = gettext('Recording Released By'), blank = True, null = True, on_delete = models.RESTRICT)
