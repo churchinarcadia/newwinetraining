@@ -1,4 +1,5 @@
 from django.utils import timezone
+import datetime
 from dateutil.relativedelta import relativedelta
 
 from .models import Term, ExerciseType, RecordingLocation, Registration, TrainingMeeting, UserExercise, Text
@@ -442,14 +443,28 @@ def last_terms(language_id = None):
     
     return Term.objects.filter(conditions).values_list('id', flat = True)
 
-#TODO function to get today's date related to userexercise (before 2am keep previous date)
 def userexercise_today():
-    pass
+    if timezone.now().time() < datetime.time(2,0):
+        return timezone.now().date() + relativedelta(days = -1)
+    else:
+        return timezone.now().date()
 
 def user_choices(request):
     pass
 
 #TODO function to get term of training meeting
-#TODO function to get recording location of trainning meeting
+def trainingmeeting_term(trainingmeeting_id):
+    trainingmeeting = TrainingMeeting.objects.get(pk = trainingmeeting_id)
+    return Term.objects.get(language_id = trainingmeeting.language_id, start_date__lte = trainingmeeting.date, end_date__gte = trainingmeeting.date)
+
+#TODO function to get recording location of training meeting
+def trainingmeeting_recordinglocation(trainingmeeting_id):
+    trainingmeeting = TrainingMeeting.objects.get(pk = trainingmeeting_id)
+    
+
 #TODO function to get training meetings of a term
+
+
 #TODO function to get training meetings of a recording location
+
+#TODO add recordinglocation_id to training meeting
