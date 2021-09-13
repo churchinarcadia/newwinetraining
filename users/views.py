@@ -87,8 +87,8 @@ def group_view(request, group_id):
             children__group_id_dd = html.dd(group.id),
             children__group_name_dt = html.dt(gettext('Name')),
             children__group_name_dd = html.dd(gettext(group.name)),
-            children__group_name_dt = html.dt(gettext('Permissions')),
-            children__group_name_dd = html.dd(gettext(', '.join(list(group.permissions.values_list('name', flat = True))))),
+            children__group_permissions_dt = html.dt(gettext('Permissions')),
+            children__group_permissions_dd = html.dd(gettext(', '.join(list(group.permissions.values_list('name', flat = True))))),
         )
         
         if user_index_perm():
