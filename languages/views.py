@@ -312,6 +312,9 @@ def translation_view(request, translation_id):
     if not translation_view_perm():
         raise Http404
     
+    if translation_id not in translation_table_rows():
+        raise Http404
+    
     translation = get_object_or_404(Translation, pk = translation_id)
 
     class TranslationViewPage(Page):

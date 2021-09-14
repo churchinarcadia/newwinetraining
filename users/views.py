@@ -30,7 +30,7 @@ from .functions import group_index_perm, group_view_perm, group_add_perm, group_
 from .functions import usertype_index_perm, usertype_view_perm, usertype_add_perm, usertype_edit_perm, usertype_delete_perm
 from .functions import locality_index_perm, locality_view_perm, locality_add_perm, locality_edit_perm, locality_delete_perm
 from .functions import user_index_perm, user_view_perm, user_add_perm, user_edit_perm, user_delete_perm
-#from .functions import 
+from .functions import user_choices, group_choices
 
 from languages.functions import language_index_perm, language_edit_perm, translator_index_perm, translator_edit_perm
 from trainings.functions import registration_index_perm, registration_edit_perm, userexercise_index_perm, userexercise_edit_perm

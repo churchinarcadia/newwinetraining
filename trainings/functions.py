@@ -449,22 +449,10 @@ def userexercise_today():
     else:
         return timezone.now().date()
 
-def user_choices(request):
-    pass
-
-#TODO function to get term of training meeting
 def trainingmeeting_term(trainingmeeting_id):
     trainingmeeting = TrainingMeeting.objects.get(pk = trainingmeeting_id)
     return Term.objects.get(language_id = trainingmeeting.language_id, start_date__lte = trainingmeeting.date, end_date__gte = trainingmeeting.date)
 
-#TODO function to get recording location of training meeting
-def trainingmeeting_recordinglocation(trainingmeeting_id):
-    trainingmeeting = TrainingMeeting.objects.get(pk = trainingmeeting_id)
-    
-
-#TODO function to get training meetings of a term
-
-
-#TODO function to get training meetings of a recording location
-
-#TODO add recordinglocation_id to training meeting
+def term_trainingmeetings(term_id):
+    term = Term.objects.get(pk = term_id)
+    return TrainingMeeting.objects.filter(language_id = term.language_id, date__gte = term.start_date, date__lte = term.end_date)

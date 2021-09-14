@@ -184,7 +184,7 @@ def translator_delete_perm(request):
         #TODO add logging
         return False
 
-def translation_table_rows(request, language_id):
+def translation_table_rows(request, language_id = None):
     """
     Returns the arguments to be included in filter() or 404 error if not allowed
     """

@@ -3,6 +3,8 @@ from django.http.response import Http404
 from .models import Locality, User, UserType
 from django.contrib.auth.models import Group, Permission
 
+from languages.functions import langauge_choice_initial, language_choice_initial
+
 def group_index_perm(request):
     """
     Analyzes if the user has one of the required roles to see this view. Returns boolean.
@@ -225,10 +227,32 @@ def user_delete_perm(request):
         #TODO add logging
         return False
 
+def user_choices(request):
+    
+    if request.user.has_role(['Staff', 'Superuser']):
+        return User.objects.all()
+    elif request.user.has_role(['Training Adminstrator']):
+        return User.objects.filter(language_id = language_choice_initial())
+    elif request.user.has_role(['Church Responsible']):
+        return User.objects.filter(locality = request.user.locality_id)
+    elif request.user.has_role(['District Responsible']):
+        return User.objects.filter(locality = request.user.locality_id, district = request.user.district)
+    elif request.user.has_role(['Trainee']):
+        return request.user
+    else:
+        return ''
 
+def group_choices(request):
+    if request.user.has_role(['Staff', 'Superuser', 'Training Adminstrator']):
+        return Group.objects.all()
+    elif request.user.has_role(['Church Responsible']):
+        return Group.objects.filter(name__in = ['Church Responsible', 'District Responsible', 'Trainee'])
+    elif request.user.has_role(['District Responsible']):
+        return User.objects.filter(name__in = ['District Responsible', 'Trainee'])
+    elif request.user.has_role(['Trainee']):
+        return User.objects.filter(name__exact = 'Trainee')
+    else:
+        return ''
 
-
-
-
-#TODO function to generate list of possible users as choice based on role
-#TODO function to generate list of group choices based on role
+#TODO user index table filtering based on role
+#TODO user edit perm based on id of user edited and user role

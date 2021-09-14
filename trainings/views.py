@@ -31,10 +31,10 @@ from .functions import registration_index_perm, registration_view_perm, registra
 from .functions import trainingmeeting_index_perm, trainingmeeting_view_perm, trainingmeeting_add_perm, trainingmeeting_edit_perm, trainingmeeting_delete_perm
 from .functions import userexercise_index_perm, userexercise_view_perm, userexercise_add_perm, userexercise_edit_perm, userexercise_delete_perm
 from .functions import text_index_perm, text_view_perm, text_add_perm, text_edit_perm, text_delete_perm
-from .functions import current_terms, current_or_future_terms, last_terms, userexercise_today, user_choices
+from .functions import current_terms, current_or_future_terms, last_terms, userexercise_today
 
 from languages.functions import language_index_perm, language_edit_perm, translation_index_perm, translation_edit_perm
-from users.functions import user_index_perm, user_edit_perm
+from users.functions import user_index_perm, user_edit_perm, user_choices
 
 # Create your views here.
 
@@ -480,11 +480,11 @@ def recordinglocation_view(request, recordinglocation_id):
             hr1 = html.hr()
             
             trainingmeetings_h2 = html.h2(gettext('Training Meetings'))
-    #        trainingmeetings = TrainingMeeting.objects.filter() #TODO
+            trainingmeetings = recordinglocation.trainingmeeting_recordinglocations.all()
 
             trainingmeetings_table = Table(
                 auto__model = TrainingMeeting,
-    #            rows = trainingmeetings, #TODO
+                rows = trainingmeetings,
                 title = None,
                 empty_message = gettext('No training meetings'),
                 columns__date = Column(
@@ -831,6 +831,8 @@ def trainingmeeting_view(request, trainingmeeting_id):
             children__trainingmeeting_language_dd = html.dd(gettext(str(trainingmeeting.language))),
             children__trainingmeeting_location_dt = html.dt(gettext('Location')),
             children__trainingmeeting_location_dd = html.dd(trainingmeeting.location),
+            children__trainingmeeting_recordinglocation_dt = html.dt(gettext('Recording Location')),
+            children__trainingmeeting_recordinglocation_dd = html.dd(trainingmeeting.recordinglocation),
             children__trainingmeeting_recording_url_dt = html.dt(gettext('Recording URL')),
             children__trainingmeeting_recording_url_dd = html.dd(trainingmeeting.recording_url),
             children__trainingmeeting_recording_released_datetime_dt = html.dt(gettext('Recording Released')),
@@ -906,11 +908,11 @@ def trainingmeeting_view(request, trainingmeeting_id):
             hr3 = html.hr()
             
             recordinglocations_h2 = html.h2(gettext('Recording Location'))
-    #        recordinglocations = RecordingLocation.objects. #TODO
+            recordinglocations = RecordingLocation.objects.filter(pk = trainingmeeting.recordinglocation.id)
 
             recordinglocations_table = Table(
                 auto__model = RecordingLocation,
-    #            rows = recordinglocations, #TODO
+                rows = recordinglocations,
                 title = None,
                 empty_message = gettext('No recording locations'),
                 columns__location = Column(
@@ -958,7 +960,7 @@ def trainingmeeting_edit(request, trainingmeeting_id):
     return Form.edit(
         auto__model = TrainingMeeting,
         auto__instance = TrainingMeeting.objects.get(id = trainingmeeting_id),
-        auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'recording_url', 'recording_released_datetime', 'recording_released_by', 'notes'],
+        auto__include = ['date', 'start_time', 'end_time', 'language', 'location', 'recordinglocation', 'recording_url', 'recording_released_datetime', 'recording_released_by', 'notes'],
         extra__redirect_to = referer,
 #        context__html_title = 'Training Meeting Edit | New Wine Training',
     )
